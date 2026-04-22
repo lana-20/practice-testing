@@ -1,5 +1,172 @@
 # Practice Testing — Test Reports
 
+## Session: 2026-04-22 — Batch 2 (5 sites)
+
+---
+
+### 6. Evil Tester
+**URL:** https://testpages.eviltester.com/styled/index.html
+**Type:** Multi-section automation & exploratory testing practice (Pages, Apps, Challenges)
+
+#### Reachability
+[PASS] Site loaded. Well-organized index with tag cloud and category filters.
+
+#### Structure
+- Sections: Pages (Basics, Input Elements, Forms, CSS, Navigation, Embedded Content, Files, Storage, Interaction, Mobile, Errors, Auth, Web Components), Apps, Challenges (Locator + Synchronization), Reference
+- Content volume: 22 Basics, 17 Intermediate, 11 Advanced, 12 Challenges, 24 Micro Apps
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Site navigation | All top-level sections reachable, sidebar collapses/expands correctly |
+| PASS | JS Alerts page | alert(), confirm(), prompt() all trigger and respond correctly |
+| NOTE | JS Alerts with vibium | Must stub `window.alert/confirm/prompt` via eval BEFORE clicking — clicking first blocks the socket |
+| PASS | HTML Form submit | All field types present (text, password, textarea, file, checkbox, radio, multi-select, dropdown, image, reset, submit) |
+| BUG | HTML Form — textarea fill | `vibium fill` fails on textarea; must use `vibium click` + `vibium type` instead (appends, doesn't clear) |
+| BUG | HTML Form — textarea placeholder persists | Textarea has "Comments..." placeholder that gets included in submitted value when using `type` |
+| BUG | HTML Form — cb3 pre-checked | Checkbox 3 is pre-checked by default without any visible indication |
+| PASS | Dynamic Buttons 01 challenge | All 4 sequential buttons clicked using `vibium wait "#buttonNN"` — "All Buttons Clicked" confirmed |
+
+#### Bugs Found
+1. **`vibium fill` fails on textarea elements** — `fill` throws an error on the textarea; `type` must be used instead, which appends rather than replaces. Workaround: `click` then `type`. — Severity: **Low** (vibium limitation, not site bug)
+2. **Textarea placeholder text included in submission** — "Comments..." placeholder is not cleared on type, appearing in submitted value as "Comments...Test comment". — Severity: **Medium**
+3. **Checkbox 3 pre-checked by default** — cb3 is checked on page load with no visual indicator or label marking it as default. Submitted data includes cb3 even without user interaction. — Severity: **Low**
+
+#### Notes
+- JS Alerts: `vibium click` on an alert-triggering button blocks the socket indefinitely. Daemon must be killed and restarted. Workaround: call `vibium eval 'window.alert = () => {}; window.confirm = () => true; window.prompt = () => "val"'` BEFORE clicking.
+- Synchronization Challenges are well-suited for automation practice — dynamic buttons respond correctly to `vibium wait "#id"` + `vibium click`
+- Site is actively maintained (converted to Javalin 2026-02-01, new Infinite Scroll challenge added)
+- Form submit with image button (`input[type=image]`) also works as a submit trigger
+
+---
+
+### 7. Gefälscht CompuTech
+**URL:** https://webtestingcourse.dequecloud.com/
+**Type:** Fake e-commerce site by Deque Systems — intentionally inaccessible for accessibility training
+
+#### Reachability
+[PASS] Site loaded.
+
+#### Structure
+- Nav: Home, Laptops & Notebooks, Desktops, Cart, Support, Contact
+- Products: 3 laptops (Fregatte 17, Abgenutzt 15, Backstein 21), 3 desktops
+- Cart: pre-populated with 3 items ($1234.56 each, subtotal $3703.68)
+- Contact form: Name, Email, Message fields (not mapped by vibium — no labels/ids)
+- Search: returns placeholder result page
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Navigation | All nav links functional |
+| PASS | Product listing page | Loads with 3 products and specs |
+| BUG | Product detail page | No "Add to Cart" button — no way to add products to cart from product pages |
+| BUG | Cart pre-populated | Cart shows 3 items at $1234.56 each with no way to add/remove them from the UI |
+| BUG | Breadcrumb on Cart page | Shows "Home > Category > Topic" instead of "Home > Cart" |
+| PASS | Search | Executes query (URL params correct), returns graceful placeholder message |
+| PASS | Contact form | Submits successfully to /thanks.php with honest "fake form" message |
+| BUG | Contact form fields | Not accessible — no labels, no ids; vibium map omits them; must use `input[name=x]` selectors |
+
+#### Bugs Found (intentional accessibility issues)
+1. **No Add to Cart button on product pages** — product pages show specs only; no mechanism to add to cart. — Severity: **High** (intentional for training)
+2. **Cart pre-populated with hardcoded items** — cart always shows 3 items regardless of user actions. — Severity: **High** (intentional for training)
+3. **Breadcrumb shows generic "Category > Topic" placeholder** — not specific to the actual page. — Severity: **Medium** (intentional for training)
+4. **Contact form fields have no labels or ids** — inaccessible; only reachable by `name` attribute selectors. — Severity: **High** (intentional for accessibility training)
+
+#### Notes
+- This site is intentionally inaccessible — all "bugs" are by design for Deque accessibility training
+- Good practice site for: missing labels, inaccessible navigation, breadcrumb testing, fake search
+- Prices are uniform ($1234.56 for every product) — another intentional signal
+
+---
+
+### 8. Magento Demo Store
+**URL:** https://magento.softwaretestingboard.com/
+**Type:** E-commerce demo store
+
+#### Reachability
+[FAIL] Site down — Cloudflare Error 526 (Invalid SSL certificate). Both HTTPS and HTTP return the same error.
+
+#### Bugs Found
+1. **SSL certificate expired or invalid** — Cloudflare 526 on all requests. Site completely inaccessible. — Severity: **Critical**
+
+#### Notes
+- This is an infrastructure issue, not an application bug
+- Re-test at a later date; SSL issues on demo/free-tier hosting are common
+
+---
+
+### 9. Parabank
+**URL:** https://parabank.parasoft.com/parabank/admin.htm
+**Type:** Simulated bank website by Parasoft
+
+#### Reachability
+[PASS] Admin page, registration, login, and lookup pages all load.
+
+#### Structure
+- Pages: Home, Admin, Register, Login, Customer Lookup, Account Services (Open Account, Overview, Transfer, Bill Pay, Find Transactions, Update Contact, Request Loan)
+- Admin controls: DB Initialize, DB Clean, JMS status, Data Access Mode (SOAP/REST XML/REST JSON/JDBC), endpoint config, loan settings
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Admin page loads | DB Initialize button works — "Database Initialized" confirmed |
+| PASS | Registration form | All fields map correctly; submission creates user and shows "Account Services" nav |
+| BUG | Registration auto-login | After successful registration, auto-login fails — redirects to login page with error |
+| BUG | Login with any credentials | "An internal error has occurred and has been logged." — backend auth broken |
+| BUG | Accounts Overview | "An internal error has occurred" — authenticated page broken |
+| BUG | Open New Account | "An internal error has occurred" — authenticated page broken |
+| PASS | Empty login form | Correct validation: "Please enter a username and password." |
+| PASS | Customer Lookup empty submit | Field-level validation: all 7 required fields show individual error messages |
+| PASS | Customer Lookup with data | Returns graceful "could not be found" when account doesn't exist |
+
+#### Bugs Found
+1. **Login always fails with internal error** — no credentials work (john/demo, newly registered users). Backend authentication endpoint returning 500. — Severity: **Critical**
+2. **Registration auto-login broken** — after successful user creation, the automatic login redirect fails. User must log in manually but manual login also fails. — Severity: **High**
+3. **All authenticated pages return internal error** — Accounts Overview, Open New Account inaccessible. Backend API down for all account operations. — Severity: **Critical**
+
+#### Notes
+- DB Initialize must be run from /parabank/admin.htm before testing — resets to default state
+- After DB reinit, any previously registered users are wiped
+- Data access mode switching (SOAP/REST/JDBC) does not fix the login issue
+- Registration form itself works correctly — the bug is in the post-registration auth flow and the login endpoint
+- Customer Lookup form has the best validation on the site — all fields individually validated
+
+---
+
+### 10. Parking Cost Calculator
+**URL:** https://www.shino.de/parkcalc/
+**Type:** Simple PHP web app — date/time-based parking cost calculator
+
+#### Reachability
+[PASS] Site loaded.
+
+#### Structure
+- Parking lots: Valet, Short-Term, Economy, Long-Term Garage, Long-Term Surface
+- Inputs: entry date, entry time (AM/PM), leaving date, leaving time (AM/PM)
+- Output: estimated cost + duration breakdown
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Valet 2h stay | $12.00 (correct — 5h or less flat rate) |
+| PASS | Short-Term 2h stay | $4.00 (correct — $2 first hour + $1 each additional half-hour) |
+| PASS | Short-Term 24h stay | $24.00 (correct — daily maximum applied) |
+| PASS | Economy 7-day stay | $54.00 (correct — weekly rate) |
+| BUG | Leaving time before entry time | Shows "-1 Days, 22 Hours, 0 Minutes" and $0.00 — no validation |
+| BUG | Invalid date input ("not-a-date") | Blank white page returned — server error with no error message |
+| NOTE | Dropdown selection | Must use option value ("Short", "Economy", "Long-Garage") not display text |
+
+#### Bugs Found
+1. **No validation for leaving time before entry time** — negative duration "-1 Days, 22 Hours" displayed; cost shows $0.00. User gets no error. — Severity: **High**
+2. **Invalid date input causes blank page** — entering non-date strings renders a blank white page (PHP error suppressed). No error message shown. — Severity: **High**
+
+#### Notes
+- Calculator is otherwise accurate across all 5 lot types and multiple duration scenarios
+- Weekly rates applied correctly (e.g. Economy $54/week, Long-Term Garage $72/week)
+- AM/PM radios use separate `name` attributes per field — `vibium check` works correctly
+
+---
+
 ## Session: 2026-04-22 — Batch 1 (5 sites)
 
 ---

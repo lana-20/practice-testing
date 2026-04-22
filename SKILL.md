@@ -27,11 +27,11 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 | Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | Most puzzles need Flash — only 22, 24, 26b, 29, 31, 33, 34 work; use `mouse click x y` not map refs |
 | BookCart | https://bookcart.azurewebsites.net/ | Azure-hosted; backend frequently hibernated — products may not load |
 | Cnarios | https://www.cnarios.com/ | Challenges work; /concepts/* pages render blank (React routing bug) |
-| Evil Tester | https://testpages.eviltester.com/styled/index.html | Automation & exploratory testing pages |
-| Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | Fake site by Deque Systems |
-| Magento | https://magento.softwaretestingboard.com/ | Demo store, no orders fulfilled |
-| Parabank | https://parabank.parasoft.com/parabank/admin.htm | Bank website for testing |
-| Parking Cost Calculator | https://www.shino.de/parkcalc/ | Simple web app for exploration |
+| Evil Tester | https://testpages.eviltester.com/styled/index.html | Stub alert/confirm/prompt via eval BEFORE clicking alert buttons |
+| Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | Intentionally inaccessible; contact form fields need `input[name=x]` selectors |
+| Magento | https://magento.softwaretestingboard.com/ | DOWN — Cloudflare 526 SSL error as of 2026-04-22 |
+| Parabank | https://parabank.parasoft.com/parabank/admin.htm | Run DB Initialize first; login broken — use for form/validation testing only |
+| Parking Cost Calculator | https://www.shino.de/parkcalc/ | Use option values not text for lot dropdown; invalid dates cause blank page |
 | PHP Travels | http://phptravels.com/demo/ | Demo travel site |
 | Polymer Shop | https://shop.polymer-project.org/ | E-commerce for testing |
 | Practice Software Testing | https://practicesoftwaretesting.com/ | Angular app + REST API + Swagger |
