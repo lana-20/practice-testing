@@ -1,5 +1,224 @@
 # Practice Testing — Test Reports
 
+## Session: 2026-04-22 — Batch 3 (3 sites completed, 1 partial)
+
+---
+
+### 11. PHP Travels
+**URL:** http://phptravels.com/demo/
+**Type:** Travel booking SaaS marketing/demo page
+
+#### Reachability
+[PASS] Site loaded in ~3s
+
+#### Structure
+- Navigation: Product (dropdown), Features, Company, Blog, Demo, Pricing, Login, Talk to Sales
+- Forms: 0 — inputs exist but no `<form>` element; JS-handled submission
+- Interactive elements: 65 (nav links, form inputs, FAQ accordions, zoom buttons)
+
+#### Navigation
+[PASS] Blog → https://phptravels.com/blog
+[PASS] Pricing → https://phptravels.com/pricing
+[BUG] Login nav link → redirects back to demo page (https://phptravels.com/demo/), not a login page
+
+#### Core Functionality
+| Action | Result | Notes |
+|--------|--------|-------|
+| Submit form empty | PASS | HTML5 validation — WhatsApp field required error shown |
+| Country select | PASS (not required) | Country is `required=false` — can submit without it |
+| FAQ accordion via vibium click | FAIL | `aria-expanded` stays `false`; content max-height stays 0 |
+| FAQ accordion via eval click | PASS | `aria-expanded` flips to `true`; content renders correctly |
+| Submit button click | BUG | Deadlocks vibium daemon socket (B3); pre-stub dialogs required |
+
+#### Bugs Found
+1. **Login nav link broken** — Steps: click "Login" in header nav → redirects to `phptravels.com/demo/` instead of a login form — Severity: High
+2. **FAQ accordion: vibium click ignored** — Steps: click FAQ button via `vibium click @eN` → `aria-expanded` remains `false`, panel stays collapsed; eval click works — Severity: Medium
+3. **Submit button deadlocks daemon** — Steps: `vibium click @e20` (Submit) → i/o timeout; daemon hangs — workaround: pre-stub `window.alert = () => {}` — Severity: High (B3 repro)
+4. **Country field not required** — Form shows WhatsApp + Email + name fields as required, but Country (marked with asterisk visually) has `required=false` — Severity: Low
+
+#### Notes
+- This is a lead-generation landing page, not an accessible demo. Actual travel booking demo requires form submission and credentials sent by email; no public demo URL.
+- The form has no `<form>` element — all 6 inputs are in a `<div id="demo-form">` with JS submit handler.
+- Navigation works for Blog and Pricing. The dropdown menus (Product, Features, Company) were not fully tested as they use hover + JS expansion.
+
+---
+
+### 12. Polymer Shop
+**URL:** https://shop.polymer-project.org/
+**Type:** E-commerce demo built with Polymer Web Components
+
+#### Reachability
+[PASS] Site loaded in ~2s; Web Components initialized in ~5s total
+
+#### Structure
+- Navigation: Home, Men's Outerwear, Ladies Outerwear, Men's T-Shirts, Ladies T-Shirts (all via shadow DOM)
+- Forms: 1 (checkout — in shadow DOM)
+- Interactive elements: 0 via `vibium map` (all elements inside shadow DOM; map returns nothing)
+
+#### Navigation
+[PASS] Men's Outerwear → https://shop.polymer-project.org/list/mens_outerwear (via direct URL)
+[PASS] Product detail → https://shop.polymer-project.org/detail/mens_outerwear/Men+s+Tech+Shell+Full-Zip
+[PASS] Cart → https://shop.polymer-project.org/cart
+[PASS] Checkout → https://shop.polymer-project.org/checkout
+
+#### Core Functionality
+| Action | Result | Notes |
+|--------|--------|-------|
+| vibium map on any page | FAIL | Returns "No interactive elements found" — all UI in shadow DOM |
+| Get nav links via eval | PASS | `shadowRoot.querySelectorAll("a")` returns 8 links |
+| Product listing (16 items) | PASS | Loaded via direct URL; names and hrefs accessible via eval |
+| Product detail (name, price) | PASS | "Men's Tech Shell Full-Zip" — $50.20; selects for Size (XS–XL) and Qty (1–5) |
+| Add to Cart (via coordinates) | PASS | `getBoundingClientRect()` → `vibium mouse click 813 752`; cart showed 1 item |
+| Cart total | PASS | $50.20 correct in cart shadow DOM |
+| Checkout button (via coordinates) | PASS | Navigated to /checkout |
+| Checkout empty-submit validation | PASS | 9 `input:invalid` entries: email, phone, shipAddress, shipCity, shipState, shipZip, ccName, ccNumber, ccCVV |
+
+#### Bugs Found
+1. **vibium map completely non-functional** — Steps: `vibium map` on any page → "No interactive elements found"; all elements rendered inside `<shop-app>` custom element's shadow DOM — Severity: High (automation limitation, not a site bug)
+
+#### Notes
+- Entire UI is inside nested shadow DOMs: `shop-app > shop-list/shop-detail/shop-cart/shop-checkout`, each with its own `shadowRoot`. Normal vibium map, click, fill, find commands are all ineffective.
+- Workaround chain: `eval 'shadowRoot.querySelectorAll(...)` to find elements → `getBoundingClientRect()` for coords → `vibium mouse click x y` to interact.
+- Cart is server-side — direct URL navigation to `/cart` is safe.
+- Checkout form has 9 required fields. Month expiry select uses numeric values (1–12). No real payment processing.
+
+---
+
+### 13. Practice Software Testing
+**URL:** https://practicesoftwaretesting.com/
+**Type:** Angular e-commerce (Toolshop) — hand tools, power tools, rentals
+
+#### Reachability
+[PASS] Site loaded in ~2s
+
+#### Structure
+- Navigation: Home, Categories (dropdown), Contact, Sign in, Language selector
+- Forms: Login form, Search form, Checkout wizard (4 steps)
+- Interactive elements: 71 on homepage (nav, product cards, filters, pagination)
+
+#### Navigation
+[PASS] Contact → https://practicesoftwaretesting.com/contact
+[PASS] Sign in → https://practicesoftwaretesting.com/auth/login
+[PASS] Categories dropdown → Hand Tools / Power Tools / Other / Special Tools / Rentals
+
+#### Core Functionality
+| Action | Result | Notes |
+|--------|--------|-------|
+| Product listing | PASS | 9 products visible with names, prices, star ratings; pagination works (5 pages) |
+| Product detail | PASS | Name, price, qty +/-, Add to cart, favourites, compare, related products |
+| Add to cart (no login) | PASS | Cart badge shows "1" after click — no login required to add |
+| Search "pliers" | PASS | Returns 5 results: Combination Pliers, Long Nose Pliers, Pliers, Slip Joint Pliers, Leather toolbelt |
+| Brand filter checkbox | PASS | Products filtered to matching brand on check |
+| Login empty submit | PASS | "Email is required" error shown |
+| Login with test credentials | FAIL/BUG | `customer@practicesoftwaretesting.com` / `welcome01` → "Account locked, too many failed attempts" |
+| Login with admin credentials | FAIL | `admin@practicesoftwaretesting.com` / `AKZBr3!2` → "Invalid email or password" |
+| Checkout wizard navigation | PASS | Step 1 (Cart) → Step 2 (Sign in) → Steps 3–4 require login |
+| `vibium find role button --name "Login"` | FAIL | Login submit is `input[type=submit]`, not a button — element not found; use `eval.click()` |
+
+#### Bugs Found
+1. **Test account locked** — `customer@practicesoftwaretesting.com` locked due to too many failed attempts; shared demo accounts vulnerable to lock-out — Severity: Medium (environment state issue, not app bug)
+2. **Login `input[type=submit]` not findable by `vibium find role button`** — Steps: `vibium find role button --name "Login"` → timeout; workaround: `vibium eval 'document.querySelector("input[type=submit][value=Login]").click()'` — Severity: Low (vibium B5/selector limitation)
+
+#### Notes
+- Add to cart works without login — cart badge increments to "1" immediately. Login is only required to proceed past cart step in checkout wizard.
+- The 4-step checkout wizard: Cart → Sign in → Billing Address → Payment. Steps are labeled clearly with numbered indicators.
+- Search results include "Leather toolbelt" for "pliers" — possible relevance ranking issue or tag-based matching.
+- Login submit is `input[type=submit]` not `button` — `vibium find role button --name "Login"` fails with timeout; must use `eval.click()`.
+- Swagger API available at https://api.practicesoftwaretesting.com/api/documentation — not tested this session.
+
+---
+
+### 14. PrestaShop (partial)
+**URL:** https://demo.prestashop.com/ → inner store `barbarous-grass.demo.prestashop.com/en/`
+**Type:** PrestaShop e-commerce demo (wrapped in iframe)
+
+#### Reachability
+[PASS] Outer wrapper loaded; inner store URL obtained via `eval '#framelive'?.src` after 4s wait
+
+#### Structure (confirmed from inner store)
+- Navigation: Clothes, Accessories, Art; Sign in, Contact us
+- Products: Hummingbird t-shirt, sweater, framed posters; quantity controls; Add to cart on listing page
+- Interactive elements: 80 (all accessible via vibium map — shadow DOM not used)
+
+#### Notes
+- Testing interrupted before completing core flows. Inner store `vibium map` works correctly — all 80 elements detected.
+- This site is fully documented in `/cart-patrol` skill with complete flow scripts.
+- Subdomains expire in ~2–5 minutes. `barbarous-grass` was the active instance on 2026-04-22.
+---
+
+### 15. QA Practice
+**URL:** https://qa-practice.razvanvancea.ro/ (moved from qa-practice.netlify.app)
+**Type:** Multi-section QA playground — forms, bugs challenge, ecommerce e2e, web elements
+
+#### Reachability
+[PASS] Site loaded. Domain migrated from Netlify to razvanvancea.ro — old URL still resolves.
+
+#### Structure
+- Navigation: 18 collapsible sidebar sections (Forms, Buttons, Actions, Dropdowns, Iframes, Alerts, File Upload, Date Pickers, Loader, Pagination, Ecommerce, Bugs Challenge, GraphQL, API, Products, etc.)
+- Pages: separate `.html` files per section
+- Interactive elements: 58 mapped on home; ecommerce has 20-page pagination
+
+#### Navigation
+[PASS] All sidebar accordion items expand correctly  
+[PASS] Direct URL navigation to all `.html` pages works  
+[PASS] Sub-menu links (Forms → Login/Register/Recover Password) functional  
+
+#### Core Functionality
+
+**Register Form** (`/register.html`)
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Empty submit | HTML5 native validation stops at email (required) |
+| BUG | Optional fields | First name, phone, country have no `required` — form submits without them despite being labeled |
+| PASS | Valid fill + submit | "The account has been successfully created!" shown |
+| BUG | Country after submit | Country dropdown resets to blank after successful registration |
+| BUG | Success banner color | Pink/red — should be green |
+
+**Bugs Challenge Form** (`/bugs-form.html`) — 15 intentional bugs
+| # | Bug |
+|---|-----|
+| 1 | Email `type="text"` not `type="email"` — "notanemail" accepted without format check |
+| 2 | Password `type="text"` not `type="password"` — plaintext visible while typing |
+| 3 | Label typo: "Phone nunber" (missing 'm') |
+| 4 | Last Name marked `*` mandatory but form submits without it |
+| 5 | Phone data corruption: entered "12345678901", summary shows "12345678902" (last digit changes) |
+| 6 | Error and success banners share the same pink color |
+| 7 | Country placeholder "Select a country…" shown verbatim in success summary |
+
+**Ecommerce Flow** (`/auth_ecommerce.html`)
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Login | `admin@admin.com` / `admin123` → product listing with cart |
+| PASS | Add to Cart | Cart updates with item name, price, qty 1, correct total |
+| PASS | Proceed to Checkout | Hides product section, reveals Shipping Details form |
+| PASS | Submit Order | Confirmation: "Congrats! Your order of $9.99 has been registered..." |
+| NOTE | Session | localStorage-based; page refresh loses login state |
+
+**Dropdowns** (`/dropdowns.html`)
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Simple select | Country dropdown selects correctly |
+| PASS | Multi-level Bootstrap dropdown | Opens submenu with nested options |
+
+**Alerts** (`/alerts.html`)
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Alert button | Fires `window.alert` — pre-stub required before clicking |
+| PASS | Confirm button | Fires `window.confirm` — pre-stub required before clicking |
+
+#### Bugs Found (non-challenge pages)
+1. Register — First name/phone/country not required despite being labeled — Low
+2. Register — Country resets after submit — Medium (data loss)
+3. Register — Success banner is red/pink — Low (visual)
+
+#### Automation Notes
+- `ADD TO CART` uses CSS `text-transform: uppercase` — DOM text is lowercase; `vibium find text "ADD TO CART"` fails. Use `vibium map` refs instead.
+- Pre-stub `window.alert`/`window.confirm` before clicking any Alert/Confirm buttons.
+- Ecommerce login: `admin@admin.com` / `admin123`; after login, ADD TO CART buttons appear as `@e27`–`@e36` in map.
+- "PROCEED TO CHECKOUT" toggles parent `display:none → block`; product section hides simultaneously.
+
+---
+
 ## Session: 2026-04-22 — Batch 2 (5 sites)
 
 ---

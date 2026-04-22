@@ -32,11 +32,11 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 | Magento | https://magento.softwaretestingboard.com/ | DOWN — Cloudflare 526 SSL error as of 2026-04-22 |
 | Parabank | https://parabank.parasoft.com/parabank/admin.htm | Run DB Initialize first; login broken — use for form/validation testing only |
 | Parking Cost Calculator | https://www.shino.de/parkcalc/ | Use option values not text for lot dropdown; invalid dates cause blank page |
-| PHP Travels | http://phptravels.com/demo/ | Demo travel site |
-| Polymer Shop | https://shop.polymer-project.org/ | E-commerce for testing |
-| Practice Software Testing | https://practicesoftwaretesting.com/ | Angular app + REST API + Swagger |
-| Presta Shop | https://demo.prestashop.com/#/en/front | E-commerce demo |
-| QA Practice | https://qa-practice.netlify.app/ | Web elements, buggy forms, e-commerce e2e |
+| PHP Travels | http://phptravels.com/demo/ | Landing page only — submit form to get emailed credentials; no public demo URL; Submit button deadlocks daemon — pre-stub dialogs; Login nav link is broken (redirects to same page) |
+| Polymer Shop | https://shop.polymer-project.org/ | All UI in Web Components shadow DOM — `vibium map` returns nothing; use `eval + shadowRoot` traversal or coordinate clicks; cart is server-side |
+| Practice Software Testing | https://practicesoftwaretesting.com/ | Angular app; add to cart works without login; test login: `customer@practicesoftwaretesting.com` / `welcome01` (may be locked); Login is `input[type=submit]` — use `eval.click()` not `vibium find role button` |
+| Presta Shop | https://demo.prestashop.com/#/en/front | Store in iframe — get inner URL via `eval '#framelive'?.src`; subdomains expire in ~2–5 min; cart increase button permanently disabled |
+| QA Practice | https://qa-practice.razvanvancea.ro/ | Moved from netlify.app; ecommerce login: `admin@admin.com` / `admin123`; ADD TO CART uses CSS uppercase — use map refs not `find text`; pre-stub alert/confirm before clicking; checkout hides products and shows Shipping Details form |
 | QA Training Simulator | https://bugeater.web.app/ | Manual testing for beginners |
 | Random User Generator | https://randomuser.me/ | API for random user data |
 | Real World Example Apps | https://codebase.show/projects/realworld | Same app in different frameworks |
