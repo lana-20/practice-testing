@@ -1,6 +1,6 @@
 # Practice Testing — Test Reports
 
-## Session: 2026-04-22 — Batch 3 (3 sites completed, 1 partial)
+## Session: 2026-04-22/25 — Batch 3 (5 sites — 4 complete, #14 checkout blocked)
 
 ---
 
@@ -128,22 +128,42 @@
 
 ---
 
-### 14. PrestaShop (partial)
-**URL:** https://demo.prestashop.com/ → inner store `barbarous-grass.demo.prestashop.com/en/`
+### 14. PrestaShop
+**URL:** https://demo.prestashop.com/ → inner store `{subdomain}.demo.prestashop.com/en/`
 **Type:** PrestaShop e-commerce demo (wrapped in iframe)
 
 #### Reachability
-[PASS] Outer wrapper loaded; inner store URL obtained via `eval '#framelive'?.src` after 4s wait
+[PASS] Outer wrapper loaded; inner store URL obtained via `eval 'document.querySelector("#framelive")?.src'` after 5s wait
 
-#### Structure (confirmed from inner store)
-- Navigation: Clothes, Accessories, Art; Sign in, Contact us
-- Products: Hummingbird t-shirt, sweater, framed posters; quantity controls; Add to cart on listing page
-- Interactive elements: 80 (all accessible via vibium map — shadow DOM not used)
+#### Structure
+- Navigation: Clothes (→/3-clothes), Accessories (→/6-accessories), Art; Sign in, Contact us; Language selector (45 languages)
+- Products: Hummingbird t-shirt (€22.94/€28.68 regular), Brown bear sweater, 2x Framed posters; qty controls on homepage cards
+- Interactive elements: 80 on homepage, 50 on product detail page
+- Forms: 1 per product (`id="add-to-cart-or-refresh"`, `action="/cart"`)
+
+#### Core Functionality
+| Action | Result | Notes |
+|--------|--------|-------|
+| Product listing (homepage) | PASS | 4 featured products visible with names and prices |
+| Product detail — Hummingbird t-shirt | PASS | Name, price (€22.94 sale / €28.68 regular), Size select (S/M/L/XL), Color radios (White/Black) |
+| Add to cart — product detail | BUG | Button disabled after PS JS init; vibium click via ref succeeds but cart stays at 0 |
+| Add to cart — homepage cards | BUG | Same — button disabled; click registered but no cart update |
+| Cart page (empty) | PASS | "There are no more items in your cart" correct empty state shown |
+| Checkout (`/en/order` with empty cart) | BLOCKED | Redirects to `/cart?action=show` — cannot reach checkout form |
+| Direct AJAX POST to `/cart` | BUG | Returns HTML error page, not JSON — cart API blocked |
+
+#### Bugs Found
+1. **Add to cart permanently disabled** — `[data-button-action=add-to-cart]` shows `disabled=false` briefly on load, then becomes `disabled=true` after PS JS initializes. Affects all add-to-cart buttons site-wide (product detail + homepage cards). — Severity: **Critical**
+2. **Checkout form untestable** — add to cart is broken so cart is always empty; `/en/order` redirects to empty cart. — Severity: **High** (blocked by bug #1)
 
 #### Notes
-- Testing interrupted before completing core flows. Inner store `vibium map` works correctly — all 80 elements detected.
-- This site is fully documented in `/cart-patrol` skill with complete flow scripts.
-- Subdomains expire in ~2–5 minutes. `barbarous-grass` was the active instance on 2026-04-22.
+- Subdomains expire in ~2 min of active testing (shorter than the 2–5 min estimate)
+- `vibium go` to any subdomain page deadlocks the daemon (B3 pattern) — use `vibium eval 'location.href = "..."'` + `vibium wait load` for all in-store navigation
+- Product URLs: `/{subdomain}/1-1-hummingbird-printed-t-shirt.html`, `/2-9-brown-bear-printed-sweater.html`
+- Variant selectors: Size = `#input_1_1` (`name="group[1]"`, values 1–4 for S/M/L/XL); Color = `input[name="group[2]"]` (val=8 White, val=11 Black)
+- `document.querySelector('form#add-to-cart-or-refresh').submit()` navigates to cart but cart remains empty
+- This site is also documented in `/cart-patrol` skill with complete flow scripts
+
 ---
 
 ### 15. QA Practice
