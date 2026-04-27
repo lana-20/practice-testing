@@ -1,5 +1,221 @@
 # Practice Testing — Test Reports
 
+## Session: 2026-04-27 — Batch 4 (5 sites)
+
+---
+
+### 16. QA Training Simulator
+**URL:** https://bugeater.web.app/
+**Type:** Gamified QA/BA/PM training platform (BugEater) — challenges across 7 test types
+
+#### Reachability
+[PASS] Site loaded in ~2s. Cookie banner on homepage + separate cookie banner on `/app/list`.
+
+#### Structure
+- Navigation (homepage): Home, Trails, Pricing, Demo, QA Game, Login
+- Challenge list at `/app/list`: 23 challenges across 7 categories
+  - Learn Mode (4): Number Addition, Division, Password Restore, Update Profile
+  - Scripted Testing (5): Multiplication, Division, Password Validation, Create Profile, Currency Converter
+  - Test Case Generator (2): Number Multiplication (Learn), Number Summation
+  - Gherkin Scenarios (2): Number Subtraction (Learn), Number Summation
+  - Functional Testing (2): Book Hotel, Todo List
+  - API Testing (2, marked New): Testing Calculator API (Learn), Testing User API
+  - Exploratory Testing (6): Calculator, Restore Password, Book a Desk, Division, Email Validation, Triangle
+- Sidebar/drawer: hamburger @e1 opens Bootstrap offcanvas; react-joyride tutorial modal on first challenge visit
+
+#### Navigation
+[PASS] Demo nav → `/app/list` (challenge list loads correctly)
+[PASS] learn/* and exploratory/* and gherkin/* routes load on direct URL
+[FAIL] scripted/*, functional/*, api/*, testcase/* routes crash on direct URL — "Unexpected Application Error: Cannot read properties of undefined (reading 'pageTitle')"
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Navigate to challenge from `/app/list` | `vibium eval 'link.click()'` pattern works for all categories |
+| PASS | `vibium fill` on React inputs | Fill works correctly — `vibium type` workaround not needed |
+| PASS | Dismiss react-joyride tutorial (Skip) | `vibium click` on Skip button works; form usable after |
+| PASS | Challenge 1.1 — Number Addition | Enter 1+2, Calculate → result "3" shown; step counter advances |
+| BUG | Direct URL to scripted/functional/api/testcase routes | TypeError crash — "Cannot read properties of undefined (reading 'pageTitle')" |
+| BUG | Sidebar close button via `vibium click @ref` | Fails with "timeout after 0s"; must use `vibium eval 'document.querySelector("button.btn-close")?.click()'` |
+
+#### Bugs Found
+1. **Direct URL crash for most challenge types** — `scripted/*`, `functional/*`, `api/*`, `testcase/*` routes crash with TypeError on direct load. Only `learn/*`, `exploratory/*`, `gherkin/*` survive. Steps: `vibium go https://bugeater.web.app/app/challenge/scripted/multiplication` — Severity: **High**
+2. **Sidebar close button not clickable via ref** — `vibium click @eN` on the × button times out; `eval.click()` on `button.btn-close` works. — Severity: **Low** (vibium limitation)
+
+#### Notes
+- Site rebranded from "QA Training Simulator" to "BugEater" — challenge area unchanged
+- Two separate cookie banners: one on landing page, one on `/app/list`; accept independently
+- Test Case Generator is a new category (not present in earlier notes) — UI shows inline dropdowns to build test cases alongside the form under test
+- `vibium fill` works on React controlled inputs — old note advising `vibium type` was stale
+
+---
+
+### 17. Random User Generator
+**URL:** https://randomuser.me/
+**Type:** API testing — random user data generation REST API
+
+#### Reachability
+[PASS] Site loaded in ~1s. Ads present but non-blocking.
+
+#### Structure
+- Navigation: Home, User Photos, Documentation, Change Log, Stats & Graphs, Donate, Copyright Notice, Photoshop Extension
+- API endpoint: `/api/` returns JSON user object(s)
+- Supported params: `results`, `gender`, `nat`, `seed`, `inc`, `exc`, `format`, `page`, `noinfo`
+
+#### Navigation
+[PASS] All nav links work via `vibium click` from homepage (old "broken links" note stale)
+[PASS] User Photos → `/photos`, Documentation → `/documentation`, Change Log → `/changelog`, Stats → `/stats`
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | `/api/` base call | Returns 1 random user in JSON |
+| PASS | `?results=5&gender=male&nat=us` | Returns 5 male US users correctly |
+| PASS | `?seed=abc&results=3` | Returns same 3 users on repeated calls |
+| PASS | `?inc=name,email` | Response contains only `name` and `email` fields |
+| PASS | `?format=xml` | Returns valid XML user data |
+| PASS | `?format=pretty` | Returns indented JSON |
+| BUG | `?results=0` | Returns 1 result — silently ignores 0 |
+| BUG | `?results=abc` | Returns 1 result — silently ignores invalid value |
+| BUG | `?results=-1` | Returns 1 result — silently ignores negative |
+| BUG | `?results=5001` | Returns 1 result — silently ignores above-max value |
+| BUG | `?format=csv` | Triggers file download — crashes vibium BiDi session; daemon restart required |
+| BUG | `?results=5000` + `vibium text` | "bufio.Scanner: token too long" — response too large for vibium's text buffer |
+
+#### Bugs Found (API edge cases)
+1. **Invalid `results` values silently default to 1** — `0`, negative, `abc`, and above-max (5001) all return exactly 1 result with no error. Steps: `vibium go "https://randomuser.me/api/?results=0"` → `info.results=1`. — Severity: **Medium**
+2. **`?format=csv` crashes vibium daemon** — triggers browser file download dialog; vibium BiDi connection breaks. Steps: `vibium go "https://randomuser.me/api/?format=csv"` → BiDi error; run `vibium daemon stop && vibium daemon start` to recover. — Severity: **Medium** (vibium limitation)
+3. **`vibium text` buffer overflow on max results** — `?results=5000` response too large; `vibium text` throws "bufio.Scanner: token too long". Use `vibium eval 'JSON.parse(document.body.innerText)'` instead. — Severity: **Low** (vibium limitation)
+
+#### Notes
+- Nav links work via `vibium click` — previous note about broken links is no longer valid
+- `?inc` and `?exc` for field filtering work correctly
+- For large API responses, use `vibium eval 'JSON.parse(document.body.innerText).info.results'` — more reliable than `vibium text`
+
+---
+
+### 18. Real World Example Apps
+**URL:** https://codebase.show/projects/realworld
+**Type:** Directory of RealWorld Conduit implementations — same app in 100+ frameworks
+
+#### Reachability
+[PASS] Page shell loads immediately; content renders ~3s after `wait load` (SvelteKit hydration). Taking a screenshot immediately after `wait load` shows a blank/black page.
+
+#### Structure
+- Navigation: Create (→ docs), Submit (→ GitHub OAuth), Sign in (→ GitHub OAuth)
+- Filter tabs: Frontend, Backend, Fullstack
+- Language filters: TypeScript, JavaScript, Kotlin, ClojureScript, Elm, PureScript, Rust, C#, Dart, Mint, Swift, ReScript, Android Native
+- Implementation list: 100+ rows with framework name, repo link, and language tag
+
+#### Navigation
+[PASS] Frontend/Backend/Fullstack tabs filter list correctly via `vibium click`
+[PASS] Language filter links work via `vibium click`
+[PASS] Sign in → redirects to GitHub OAuth (`github.com/login?client_id=...`)
+[PASS] Submit → redirects to GitHub OAuth with redirect back to `/projects/realworld/implementations/submit`
+[NOTE] Old note about "Sign in/Submit reload page instead of redirecting" — no longer accurate; both correctly redirect to GitHub OAuth
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Page renders after 3s sleep | Full implementation list visible with language tags |
+| PASS | Backend tab | URL becomes `?category=backend`; list filters to backend implementations |
+| PASS | Language filter | URL gains `&language=java`; list filters correctly |
+| PASS | Sign in link | Navigates to GitHub OAuth flow |
+| BUG | Screenshot immediately after `wait load` | Blank/black page — content not yet rendered |
+
+#### Bugs Found
+1. **Page appears blank immediately after `wait load`** — SvelteKit hydration takes ~3s after DOM ready. Screenshotting without a sleep shows a black page. Steps: `vibium go url && vibium wait load && vibium screenshot` → black image. Workaround: `vibium sleep 3000`. — Severity: **Low** (SPA hydration timing)
+
+#### Notes
+- Always add `vibium sleep 3000` after `wait load` before mapping or interacting
+- After `vibium back` from GitHub OAuth, sleep 3s again before interacting — SPA re-hydrates
+- `vibium back` navigation works; `wait load` + `sleep 3000` is sufficient to restore the page
+- Requires GitHub account for Sign in and Submit — no public demo credentials exist
+
+---
+
+### 19. The Boozang Test Lab
+**URL:** https://thelab.boozang.com/
+**Type:** React SPA — 16 automation practice challenges across 8 categories
+
+#### Reachability
+[PASS] Site loaded in ~1s.
+
+#### Structure
+- Menu (hamburger): Getting Started (Home, Introduction, Overview), Timing (Speed Game, Wait Game), Conditional Logic (Yellow or Blue, Cat or Dog), Lists/Forms/Tables (Sorted List, Form Fill, Cat Shelter, Tables), Bug Reporting (Visual Bugs), DOM Changes (Scramble Items), Using Data (Concat Strings), Games (Collecting Kittens, Canvas Game)
+- Total: 16 challenges
+- All routes accessible via direct URL (e.g. `/formFill`, `/sortedList`, `/yellowOrBlue`)
+
+#### Navigation
+[PASS] Hamburger menu (@e1) opens correctly via `vibium click`
+[PASS] All 16 challenge links in sidebar navigate correctly
+[PASS] Direct URL navigation works for all routes
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | Form Fill — valid submit | All 4 fields filled → "Data saved to DB" confirmation shown |
+| PASS | Form Fill — empty submit | Browser HTML5 validation tooltip on first empty required field |
+| PASS | Sorted List — delete item | `vibium click @eN` on Delete todo works correctly |
+| PASS | Sorted List — add item | `vibium fill` + `vibium click` on Add todo works correctly |
+| PASS | Yellow or Blue — Generate Color | `vibium click @e3` works; shows color buttons |
+| PASS | Yellow or Blue — color choice | `vibium click @e4/5` works; shows "Try again!" or success |
+| NOTE | `#engines` select | Does not exist on any challenge page — old note is stale |
+
+#### Bugs Found
+None — all previously documented automation limitations are resolved.
+
+#### Notes
+- `vibium click` works on all buttons — old note about needing `eval.click()` is no longer accurate
+- Form Fill now has `required=true` on all 4 fields (firstname, lastname, email, password) — old note about "no required field validation" is stale
+- `#engines` select no longer exists anywhere in the site — the old `vibium select` note for it is stale
+- Form Fill saves to shared DB at `api.boozang.com/users` — data from test runs persists; avoid PII
+- `vibium fill` works correctly on all input fields
+
+---
+
+### 20. The iframe Search Engine
+**URL:** https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html
+**Type:** Vanilla JS search tool — practice site for iframe, select, and search button testing
+
+#### Reachability
+[PASS] Site loaded. Note: old URL `http://compendiumdev.co.uk/apps/iframe-search/iframe-search.html` now redirects here.
+
+#### Structure
+- Controls: engine select dropdown (16 options), search text input, Search button, Go search link
+- Engines: bing.com (default), dogpile, baidu.com, duckduckgo.com, wolframalpha, info.com, hotbot.com, Gigablast.com, WebCrawler.com, uk.ask.com, ask.com, aol.co.uk, aol.com, yahoo.com, google.com, google.co.uk
+- Iframe: full-page below controls; displays search results
+
+#### Navigation
+[PASS] Index, Apps, Games nav links in header navigate correctly
+
+#### Core Functionality
+| Result | Action | Observation |
+|--------|--------|-------------|
+| PASS | `vibium fill` on search input | Works correctly; `vibium type` not needed |
+| PASS | `vibium click @e6` (Search button) | Works directly — iframe loads Bing results |
+| PASS | `vibium select` with full URL value | `vibium select @e4 "https://www.google.com/search?q="` correctly selects Google |
+| PASS | Bing search in iframe | Loads and renders correctly |
+| FAIL | Google in iframe | Blocked — iframe shows broken page icon (X-Frame-Options) |
+| FAIL | DuckDuckGo in iframe | Blocked — same broken page icon |
+| BUG | `vibium select` with non-existent value | Reports "Selected value" success but sets `selectedIndex=-1`, value=`""` — silently broken (B5) |
+| BUG | "Go search" href stale until Search clicked | `Go search` link href reflects last triggered search, not current input state |
+| NOTE | "Go search" link | Opens search in a **new browser tab**, not in the iframe |
+
+#### Bugs Found
+1. **`vibium select` silently fails on non-existent option value** — Reports "Selected value" success but `selectedIndex` becomes -1 and actual value is empty string. Steps: `vibium select @e4 "nonexistent"` → `vibium eval 'document.querySelector("#engines").selectedIndex'` → `-1`. — Severity: **Medium** (B5 confirmed)
+2. **Google/DuckDuckGo block iframe embedding** — Both return `X-Frame-Options: SAMEORIGIN` or equivalent; iframe renders as broken page. Steps: select google.com, search, wait 2s → blank grey iframe with broken-page icon. — Severity: **Low** (by design, not a site bug)
+3. **"Go search" href only updates after clicking Search** — Changing the select or typing in the input does not update the `Go search` link. Steps: change select to Bing, type "abc", check `Go search` href — still shows previous search URL. Must click Search first. — Severity: **Low**
+
+#### Notes
+- **URL has moved** — `http://compendiumdev.co.uk/apps/iframe-search/iframe-search.html` redirects to `https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html`; update any bookmarks
+- `vibium click @e6` now fires the Search button correctly — old note about needing `vibium eval 'searchTool.changeUrlFromForm()'` is stale
+- `vibium select` requires the full URL as the option value — use `"https://www.google.com/search?q="` not `"google.com"`
+- `searchTool.changeUrlFromForm()` is still useful for updating the `Go search` href without triggering iframe navigation
+- "Go search" opens a new tab (`window.open`) — use `vibium page close 1` to dismiss it
+
+---
+
 ## Session: 2026-04-22/25 — Batch 3 (5 sites — 4 complete, #14 checkout blocked)
 
 ---
