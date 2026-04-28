@@ -1,5 +1,216 @@
 # Practice Testing — Test Reports
 
+## Session: 2026-04-27 — Batch 5 (sites 21–25)
+
+---
+
+## Practice Test Report: The Internet
+URL: http://the-internet.herokuapp.com/
+Date: 2026-04-27
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: 44 example links on homepage
+- Forms: varies per example page
+- Interactive elements: 1 link (Elemental Selenium) on homepage + 44 example links
+
+### Navigation
+[PASS] Checkboxes → /checkboxes (checkbox 1 unchecked by default, checkbox 2 checked)
+[PASS] JavaScript Alerts → /javascript_alerts (alert/confirm/prompt all work with pre-stubbing)
+[PASS] Form Authentication → /login (tomsmith / SuperSecretPassword! → /secure with flash message)
+[PASS] Dropdown → /dropdown (option values "1"/"2"; `vibium select` works)
+[PASS] Frames → /iframe (TinyMCE editor; see Bugs)
+[PASS] Hovers → /hovers (CSS hover via `vibium mouse move x y`)
+[PASS] Drag and Drop → /drag_and_drop (`vibium drag` swaps columns A/B correctly)
+[PASS] Dynamic Controls → /dynamic_controls (Add/Remove and Enable/Disable work; `vibium wait text` catches async messages)
+[PASS] Nested Frames → /nested_frames (`vibium frames` lists all 5 frames flatly)
+[FAIL] Shadow DOM → /shadow_dom (404 Not Found)
+[PASS] Horizontal Slider → /horizontal_slider (range input; see Bugs)
+[PASS] Key Presses → /key_presses (letters, Enter, Tab detected correctly)
+[PASS] Redirect Link → /redirector (redirects to /status_codes)
+[PASS] Status Codes → /status_codes (200/301/404/500 pages all load with correct messages)
+[PASS] File Upload → /upload (`vibium upload` + submit works)
+[PASS] Sortable Tables → /tables (click header sorts asc; click again sorts desc)
+
+### Core Functionality
+| Action | Result |
+|--------|--------|
+| Checkbox check/uncheck | PASS — `vibium check`/`vibium uncheck` work |
+| JS alert stub + click | PASS — stub via eval BEFORE click |
+| Login with valid creds | PASS — redirects to /secure |
+| Drag column A → B | PASS — columns swap to B, A |
+| Remove/Add checkbox dynamically | PASS — `vibium wait text "It's gone!"` works |
+| Enable/disable input dynamically | PASS — `vibium is enabled` returns correct state |
+| Hover reveals figcaption | PASS — `vibium mouse move x y` triggers CSS :hover |
+| TinyMCE iframe edit | PASS (eval only) — `eval + contentDocument.body.innerHTML` |
+| Nested frame content access | PARTIAL — `vibium frame` context doesn't persist across invocations |
+| Range slider | PASS (eval only) — `eval` + dispatch change/input events |
+| Key press detection | PASS — `vibium press` captures all keys |
+| File upload | PASS — `vibium upload` works |
+| Table column sort | PASS — click `th` toggles asc/desc |
+
+### Bugs Found
+1. `vibium hover` fails on non-interactive elements (CSS-styled divs/images) — use `vibium mouse move x y` instead — Severity: Low (workaround exists)
+2. `vibium frame` context doesn't persist between separate CLI invocations — each new vibium command resets to main frame — Severity: Medium (no workaround for interactive frame control; must use `eval + contentDocument`)
+3. TinyMCE iframe has empty `src` (id=`mce_0_ifr`) — `vibium frames` shows `about:blank`, `vibium frame` can't match by name — Severity: Low (use `eval + contentDocument.body`)
+4. `vibium fill` fails on `input[type=range]` with "not editable" error — Severity: Low (use eval + dispatchEvent)
+5. `vibium check "#toggle-all"` fails with "obscured" — Severity: Low (click label by coordinates instead)
+6. Shadow DOM page (/shadow_dom) returns 404 — site bug — Severity: Low
+
+### Notes
+- `vibium drag` works reliably for HTML5 drag-and-drop
+- `vibium upload` + `vibium click submit` is the correct file upload pattern
+- `vibium wait text "..."` reliably catches async DOM updates after button clicks
+
+---
+
+## Practice Test Report: The Random Number Service
+URL: https://www.random.org/
+Date: 2026-04-27
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: 8 top-level nav links (Home, Games, Numbers, Lists & More, Drawings, Web Tools, Statistics, Testimonials/Learn More/Login)
+- Forms: search form on homepage; generator forms on sub-pages (Integer, String, etc.)
+- Interactive elements: 81 total (nav links, cookie banner, generator links)
+
+### Navigation
+[PASS] Integers → /integers/ (loaded with generator form)
+[PASS] Strings → /strings/ (loaded with string generator form)
+[PASS] Nav links (Games, Numbers, etc.) work via `vibium click @eN` after `vibium map`
+
+### Core Functionality
+| Action | Result |
+|--------|--------|
+| Cookie banner | PASS — `vibium click "Allow All"` button (@e19) works |
+| Integer generator (defaults) | PASS — 100 integers generated via URL params |
+| Integer generator (negative range) | PASS — min=-100, max=100 works |
+| Integer generator (min > max) | PASS — validation error shown |
+| Integer generator (num > 10000) | PASS — validation error: must be in [1,10000] |
+| Plain text format | PASS — `?format=plain` returns raw numbers |
+| String generator | PASS — `?format=plain` returns 5 random strings |
+
+### Bugs Found
+None.
+
+### Notes
+- Generator forms are NOT found by `vibium map` — use URL parameters to submit (e.g. `?num=5&min=1&max=10&col=1&base=10&format=plain&rnd=new`)
+- Inline `vibium eval` with semicolons fails due to shell quoting; use heredoc or URL-based params
+- `vibium find text` + `vibium click` works for nav; `vibium map` only finds search input + cookie buttons on homepage
+
+---
+
+## Practice Test Report: Testing Challenges
+URL: http://testingchallenges.thetestingmap.org/
+Date: 2026-04-27
+
+### Reachability
+[FAIL] Site unreachable via Chrome/vibium — HTTP-only, no HTTPS
+
+### Structure
+N/A — site blocked by Chrome
+
+### Navigation
+N/A
+
+### Core Functionality
+N/A
+
+### Bugs Found
+N/A
+
+### Notes
+- `vibium go` fails with BiDi "unknown error" on http:// URL
+- `eval + location.href` navigates but Chrome shows `chrome-error://chromewebdata/` (blank page)
+- Site responds HTTP 200 via curl (PHP/Apache server) — accessible via CLI tools, blocked by Chrome's security policy for HTTP-only origins
+- Cookie `TestingChallenge=You_have_checked_the_cookie_content._Add_oi32jnxd42390slk345_in_the_First_Name_field_to_mark_this_case.` is set — a hint challenge embedded in the response headers
+
+---
+
+## Practice Test Report: ToDo List
+URL: https://todolist.james.am/#/
+Date: 2026-04-27
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: filter links (All, active, Completed)
+- Forms: 1 input for adding todos
+- Interactive elements: 1 text input, checkboxes per todo, Clear button, filter links
+
+### Navigation
+[PASS] All / active / Completed filters work via `vibium click`
+
+### Core Functionality
+| Action | Result |
+|--------|--------|
+| Add todo | PASS — `vibium fill` + Enter adds item |
+| Add whitespace todo | PASS — silently rejected (no item created) |
+| Mark todo complete | PASS — `vibium mouse click x y` on checkbox coords |
+| Edit todo (dblclick) | PASS — `vibium dblclick label` opens edit; `vibium fill` + Enter saves |
+| Delete todo | PASS — delete button clickable via `vibium click @eN` |
+| Mark all complete | PASS — `vibium mouse click` on label coords (checkbox obscured) |
+| Clear completed | PASS — `vibium click @eN` on Clear button |
+| Filter: active | PASS — shows only unchecked items |
+| Filter: completed | PASS — shows only checked items |
+| Persistence | FAIL — no localStorage; todos lost on page reload |
+
+### Bugs Found
+1. Item counter off by 1 — shows `N-1` active items instead of `N` (e.g. "0 items left" with 1 active item) — Steps: add 1 todo, observe counter — Severity: Medium
+2. Delete button title exposed as developer note `"TODO:REMOVE THIS EVENTUALLY"` — Severity: Low
+3. Typo in placeholder: `"What need's to be done?"` (stray apostrophe) — Severity: Low
+4. Typo in footer: `"Double-click to edit a toodo"` (double 'o') — Severity: Low
+
+### Notes
+- `vibium check`/`vibium uncheck` fail on todo checkboxes ("obscured by label") — use `vibium mouse click x y` with coords from `eval getBoundingClientRect()`
+- AngularJS app; all state is in-memory only
+
+---
+
+## Practice Test Report: UI5 Demo Kit
+URL: https://ui5.sap.com/#/demoapps
+Date: 2026-04-27
+
+### Reachability
+[PASS] Site loaded in ~3s (needs 3s sleep after `wait load` before interacting)
+
+### Structure
+- Navigation: Home, Documentation, API Reference, Samples, Demo Apps, Resources
+- Demo apps: 18+ demo apps listed (Shopping Cart, Browse Orders, Team Calendar, TypeScript Hello World, etc.)
+- Interactive elements: 72 links + 45 buttons in DOM; `vibium map` returns "No interactive elements found" on main page
+
+### Navigation
+[PASS] `vibium find text "Samples"` + `vibium click` → navigates to /controls
+[PASS] Direct URL navigation to demo app sub-pages works
+
+### Core Functionality
+| Action | Result |
+|--------|--------|
+| Main page `vibium map` | FAIL — returns "No interactive elements found" despite 72 links in DOM |
+| Nav via `vibium find text` + click | PASS — works for top nav items |
+| Open demo app (direct URL) | PASS — Shopping Cart, Team Calendar load correctly |
+| Shopping Cart: `vibium map` | PASS — 37+ interactive elements found in sub-app |
+| Shopping Cart: add to cart | PASS — `vibium click "Add to Shopping Cart"` works |
+| Shopping Cart: open cart panel | PASS — cart shows item, price, Proceed button |
+| Shopping Cart: search input | PASS — `vibium click` first, then `vibium fill` |
+| Shopping Cart: search results | PASS (no match for "laptop" — expected) |
+
+### Bugs Found
+None in vibium behavior; site-level:
+1. `vibium map` returns empty on main SAP UI5 SPA page — vibium doesn't detect UI5-rendered elements as interactive. Use `vibium find text` + click or direct URL navigation — Severity: Low (workaround: `vibium find text`)
+
+### Notes
+- `vibium map` works normally inside individual SAP UI5 demo apps (regular DOM rendering)
+- Main Demo Kit page links accessible via `vibium eval 'document.querySelector("a[href*=...]")?.click()'` or by navigating directly to `test-resources/...` URLs
+- `vibium find text "NavLabel"` is the recommended approach for top-nav interaction
+
+---
+
 ## Session: 2026-04-27 — Batch 4 (5 sites)
 
 ---
