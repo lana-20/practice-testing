@@ -1,5 +1,380 @@
 # Practice Testing — Test Reports
 
+## Session: 2026-05-10 — Batch 7 (sites 31–35)
+
+---
+
+## Practice Test Report: Automation Testing Practice
+URL: https://testautomationpractice.blogspot.com/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~3s
+
+### Structure
+- Navigation: Home, Udemy Courses, Online Trainings, Blog, PlaywrightPractice, GUI Elements; footer links to Hidden Elements & AJAX, Download Files, YouTube
+- Forms: 1 main form (Name, Email, Phone, Address, Gender radios, Days checkboxes, Country dropdown, Colors multi-select, Sorted list, date pickers, file upload, copy text, drag & drop, Wikipedia search, alerts, section submit inputs)
+- Interactive elements: 82 (full-page single-scroll with many sections)
+
+### Navigation
+[PASS] Footer "Hidden Elements & AJAX" → `/p/gui-elements-ajax-hidden.html` — toggle show/hide + AJAX load
+[PASS] Other footer links (Home, Download Files, YouTube) work via `vibium click`
+
+### Core Functionality
+[PASS] Text/email/phone inputs — `vibium fill` works  
+[PASS] Gender radios — `vibium check` works  
+[PASS] Days checkboxes — `vibium check` works; multiple selections possible  
+[PASS] Country dropdown — option values lowercase (e.g. `canada`); `vibium select` works  
+[PASS] File upload — `vibium upload` works on `#singleFileInput`  
+[PASS] Autocomplete (`#comboBox`) — `vibium fill` triggers suggestions  
+[PASS] Hidden Elements & AJAX sub-page — Toggle Input Box 2 shows/hides correctly; Load AJAX Content updates status  
+[BUG] Date picker (`#datepicker`) — `readonly` attribute; `vibium fill` fails — calendar widget only  
+[BUG] `input[type=date]` Start/End Date — `vibium fill` fails with "not editable"; use `eval .value =`  
+[BUG] Alert buttons — deadlock daemon; pre-stub `window.alert/confirm/prompt` via eval first  
+[BUG] Broken links — point to `http://www.deadlinkcity.com` (HTTP-only); Chrome blocks, loads `chrome-error://`
+
+### Bugs Found
+1. **Duplicate option values in Colors dropdown** — `red` appears twice (values `red`, `red`) and `green` appears twice; second occurrence is indistinguishable via `vibium select`. Severity: Low
+2. **Date picker is read-only** — `#datepicker` (jQuery UI) has `readonly` attribute; `vibium fill` fails with "readonly attribute". Only openable via calendar click. Severity: Low (workaround: eval or calendar interaction)
+3. **`input[type=date]` not fillable via vibium** — Start Date / End Date fields error with "not editable"; use `eval 'document.querySelector("input[type=date]").value = "YYYY-MM-DD"'`. Severity: Low
+4. **Broken links navigate to HTTP-only third-party domain** — `deadlinkcity.com` is HTTP; Chrome blocks with error page. Steps: click any "Errorcode NNN" link. Severity: Low (intentional — these are broken link practice targets)
+
+### Notes
+- Blogger-hosted; single long scrolling page with many independent sections
+- `vibium select` requires lowercase option values for Country (`usa`, `canada`, etc.)
+- Hidden Elements & AJAX sub-page is a separate URL — navigate via footer link or directly
+
+---
+
+## Practice Test Report: Automation Test Store
+URL: https://automationteststore.com/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: Home, Apparel & Accessories, Makeup, Skincare, Fragrance, Men, Hair Care, Books; Account, Login, Cart, Checkout in top bar
+- Forms: Login form, Guest checkout form (multi-step)
+- Interactive elements: 40+ on homepage (nav, product cards, search, cart)
+
+### Navigation
+[PASS] Category links (Makeup, Skincare, etc.) → filtered product listing pages  
+[PASS] Product search → `/index.php?rt=product/search&keyword=...`  
+[PASS] Product detail → `/index.php?rt=product/product&product_id=N`
+
+### Core Functionality
+[PASS] Search ("lip") — returns 3 results: 2 shoe results + 1 lip product (cross-category matching)  
+[PASS] Product detail — name, price, variant select (Color), qty, Add to Cart  
+[PASS] Add to Cart — cart header updates immediately (1 ITEMS - $5.00)  
+[PASS] Cart page (`/index.php?rt=checkout/cart`) — shows item table with name, model, unit price, qty, total  
+[PASS] Checkout → login/register page; guest checkout radio (`#accountFrm_accountguest`) available  
+[PASS] Guest checkout step 1 → `/index.php?rt=checkout/guest_step_1` — personal details form (First Name, Last Name, Email, Telephone)
+
+### Bugs Found
+None.
+
+### Notes
+- No login required to browse or add to cart
+- Guest checkout avoids registration; select `#accountFrm_accountguest` radio then click Continue
+- Product variant selects use option text values (e.g. "Viva Glam IV") — check with `vibium eval` first
+- Search returns results across categories (shoes matched "lip" keyword) — possibly tag/description based
+
+---
+
+## Practice Test Report: Automate Now Sandbox
+URL: https://automatenow.io/sandbox-automation-testing-practice-website/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: 19 section links (JavaScript Delays, Sliders, Tables, Ads, Click Events, Iframes, Accordions, Form Fields, Calendars, Window Operations, Gestures, Spinners, Broken Images, Popups, Modals, Hover, File Download, File Upload, Broken Links)
+- Each section link navigates to a sub-page at `practice-automation.com/*`
+- Interactive elements: 28 on landing page
+
+### Navigation
+[PASS] Sliders → `https://practice-automation.com/slider/`  
+[PASS] Click Events → `https://practice-automation.com/click-events/`  
+[PASS] Modals → `https://practice-automation.com/modals/`  
+[PASS] Form Fields → `https://practice-automation.com/form-fields/`  
+[BUG] Section links on landing page often report "element is obscured" — ad overlay blocks them; use `eval 'document.querySelectorAll("a")[N]?.click()'` to navigate
+
+### Core Functionality
+[PASS] Slider (`/slider/`) — `eval + dispatchEvent("input")` sets value; display updates live ("Current value: 75")  
+[PASS] Click Events (`/click-events/`) — Cat/Dog/Pig/Cow buttons each show animal sound (Meow!/Woof!/Oink!/Moo!)  
+[PASS] Simple Modal (`/modals/`) — `vibium click` on "Simple Modal" button opens modal; "Close" button dismisses it  
+[PASS] Form Fields (`/form-fields/`) — checkboxes, radios, dropdown, email field work; name input requires `vibium click` first then `vibium fill`  
+[BUG] Form Fields — textarea not fillable via `vibium fill` (throws "fill:" error)  
+[BUG] Form Fields Submit — fires `window.alert("Message received!")` — pre-stub required; with stub, alert captured and form submits cleanly
+
+### Bugs Found
+1. **Section links blocked by ad overlay** — ad iframe positioned over the link grid; `vibium click @eN` reports "element is obscured". Use `eval 'document.querySelectorAll("a")[N]?.click()'`. Severity: Low (workaround exists)
+2. **Textarea not fillable via `vibium fill`** — `fill:` error with no detail; workaround: `eval .value = "..." + dispatchEvent("input")`. Severity: Low (vibium limitation)
+3. **Name input requires click before fill** — `vibium fill @e12` without a prior `vibium click @e12` fails with "not a text input element"; clicking first resolves it. Severity: Low (vibium quirk)
+
+### Notes
+- All sub-pages live at `practice-automation.com`, not `automatenow.io` — direct URL navigation works for all
+- `input[type=range]` on slider page: `vibium fill` fails ("not editable"); use `eval + dispatchEvent(new Event("input", {bubbles:true}))`
+- Modal close button (`#popmake-1318 > button`) accessible via `vibium map` and `vibium click` after modal opens
+
+---
+
+## Practice Test Report: Expand Testing
+URL: https://practice.expandtesting.com/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: Practice, Demos, Tools, Tips, Test Cases, API Testing, About
+- Apps listed: Web inputs, Login, Register, Forgot Password, OTP, Dynamic Table, Dynamic Pagination, Drag & Drop, Shadow DOM, Alerts, Iframes, Checkboxes, Dropdowns, Date Picker, File Upload, and more
+- Interactive elements: 30+ on homepage; ad iframes present throughout
+
+### Navigation
+[PASS] Login page → `/login`  
+[PASS] Inputs page → `/inputs`  
+[PASS] Secure area → `/secure` (post-login)  
+[BUG] Many homepage section links report "element is obscured" — ad iframes block clicks; navigate via direct URL
+
+### Core Functionality
+[PASS] Login with valid creds (`practice` / `SuperSecretPassword!`) — redirects to `/secure`; "You logged into a secure area!" shown  
+[PASS] Login button obscured by ad — `eval 'document.querySelector("button[type=submit]").click()'` workaround works  
+[PASS] Invalid login (`wrong`/`wrong`) — "Your password is invalid!" flash message  
+[PASS] Inputs page (`/inputs`) — number, text, password, date fields; Display Inputs button shows all values in `#output-*` elements; Clear Inputs resets  
+[PASS] Logout → redirects back to `/login` with flash message  
+
+### Bugs Found
+1. **Ad iframes obscure interactive elements throughout** — many `vibium click` calls fail with "element is obscured"; consistently reproducible on homepage and login page. Workaround: navigate by direct URL and use `eval click()` for buttons. Severity: Medium (requires workaround for most interactions)
+
+### Notes
+- Login credentials shown on the login page itself: `Username: practice` / `Password: SuperSecretPassword!`
+- `eval 'document.querySelector("button[type=submit]").click()'` is the reliable pattern for submit buttons on this site
+- Site has Swagger API docs; `/inputs` page is clean and fully testable without ad interference
+- `input[type=date]` on inputs page: `vibium fill` fails — use `eval .value = "YYYY-MM-DD"`
+
+---
+
+## Practice Test Report: Coffee Cart
+URL: https://coffee-cart.app/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~1s
+
+### Structure
+- Navigation: Menu, Cart, GitHub (top nav)
+- Products: 9 drinks — Espresso ($10), Espresso Macchiato ($12), Cappuccino ($19), Mocha ($8), Flat White ($18), Americano ($7), Cafe Latte ($16), Espresso Con Panna ($14), Cafe Breve ($15)
+- Interactive elements: 4 via `vibium map` on menu page (nav + checkout button); product cards not in map
+
+### Navigation
+[PASS] Menu → `/` (product listing)  
+[PASS] Cart → `/cart` (cart table with quantity controls)
+
+### Core Functionality
+[PASS] Add to cart — product cards are `div[data-test=ProductName]`; click via `eval getBoundingClientRect()` + `vibium mouse click x y`  
+[PASS] Cart page — items shown with unit price × qty; `+`/`-`/`×` buttons all in `vibium map` and clickable  
+[PASS] Quantity increment/decrement — total updates correctly  
+[PASS] Remove all (×) — item removed, total recalculates  
+[PASS] Proceed to checkout — opens payment modal (Name, Email, promo checkbox)  
+[PASS] Empty checkout submit — HTML5 validation fires ("Please fill out this field.")  
+[PASS] Valid checkout submit — "Thanks for your purchase. Please check your email for payment." shown; cart resets to 0  
+[PASS] Promo checkbox — `vibium check` works correctly  
+
+### Bugs Found
+None.
+
+### Notes
+- Product cards are Vue components rendered as `div[data-test="ProductName"]` — not exposed in `vibium map`
+- Pattern: `vibium eval 'JSON.stringify(document.querySelector("[data-test=ProductName]").getBoundingClientRect())'` → `vibium mouse click x y`
+- Cart page is the best-mapped page — all controls appear in `vibium map` with descriptive `aria-label` values ("Add one Espresso", "Remove one Mocha", etc.)
+- Full purchase flow confirmed end-to-end with cart reset after order
+
+---
+
+## Session: 2026-05-10 — Batch 6 (sites 26–30)
+
+---
+
+## Practice Test Report: Automation Bookstore
+URL: https://automationbookstore.dev/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: None (single page, no nav)
+- Forms: 1 (search/filter input)
+- Interactive elements: 10 (search input + 8 book links)
+
+### Navigation
+[N/A] Single-page app with no navigation
+
+### Core Functionality
+[PASS] Filter by keyword ("selenium") — shows matching books in real time, case-insensitive  
+[PASS] Clear filter (via "Clear text" link) — restores full list  
+[PASS] Filter with no match ("!!!") — displays empty list (no "no results" message shown)  
+[PASS] Book links exist and are clickable — but all hrefs are `#`, no detail page navigation
+
+### Bugs Found
+1. **Book links are dead** — All 8 book `<a>` elements have `href="#"`, clicking them does nothing. No product detail page or external link. Severity: Medium
+2. **No "no results" message** — Filtering to zero results shows a blank list with no feedback to the user. Severity: Low
+
+### Notes
+- Intentionally minimal site — filter is the only real interactive feature
+- Case-insensitive search works correctly
+
+---
+
+## Practice Test Report: Automation Camp
+URL: https://play2.automationcamp.ir/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: Contact, Home
+- Forms: 2 (login form, main form)
+- Interactive elements: 25 (alert button, double-click button, login, full form)
+
+### Navigation
+[PASS] Contact → `/contact.html`  
+[PASS] Home → returns to index
+
+### Core Functionality
+[PASS] Double-click button — shows "Your Sample Double Click worked!" confirmation  
+[PASS] Valid login (`test`/`test`) → navigates to `/login.html?uname=test&pwd=test` with "Login Successful :)"  
+[PASS] Select dropdown — `vibium select` works with option value  
+[PASS] Radio buttons — Male/Female/Other mutually exclusive  
+[PASS] Drag and drop — pizza image drags into pizza box via CSS selectors (`[draggable=true]` → `[ondrop]`)  
+[PASS] Form submission — submits GET request with all form field values in URL params  
+[BUG] Alert button deadlocks daemon — `eval` override of `window.alert` does not prevent BiDi deadlock  
+[BUG] Invalid login also triggers alert — same deadlock; daemon restart required  
+[BUG] `input[type=date]` not fillable via `vibium fill` — use `eval .value =`
+
+### Bugs Found
+1. **Alert button deadlocks vibium daemon** — Native `window.alert()` blocks BiDi even after `eval` override. Daemon must be killed and restarted. Severity: High
+2. **Invalid login triggers alert dialog** — Wrong credentials fire `alert()` which also deadlocks daemon. Severity: High
+3. **Date input not fillable via vibium fill** — `input[type=date]` reports "not editable". Severity: Low (workaround via eval)
+
+### Notes
+- Alert handling is the main obstacle; pre-stubbing `window.alert` via eval does not work on this site
+- Form submits as GET with all values visible in URL — useful for verifying field state
+
+---
+
+## Practice Test Report: Applitools Demo
+URL: https://demo.applitools.com/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: Login page → dashboard
+- Forms: 1 (login form)
+- Interactive elements: 8 on login; ~17 on dashboard
+
+### Navigation
+[PASS] Login → `/app.html` (dashboard)  
+[PASS] Sidebar links present but no navigation — all resolve to `app.html#`
+
+### Core Functionality
+[PASS] Login with empty credentials → bypasses auth, lands on dashboard (intentional demo behavior)  
+[PASS] Login with any credentials → same dashboard, no validation  
+[PASS] Search bar — accepts input but does not filter transaction list  
+[PASS] Recent Transactions table — 6 rows with status, date, description, category, amount
+
+### Bugs Found
+1. **Total Balance displays `$350%7`** — corrupted value; intentional visual regression bug. Severity: High (intentional)
+2. **No authentication validation** — login accepts any input including empty. Severity: Medium (intentional)
+3. **Search bar non-functional** — typing has no effect on transactions shown. Severity: Medium
+4. **All action links are dead** — Make Payment, View Statement, Add Account, Request Increase, Pay Now all go to `app.html#`. Severity: Low (intentional demo limitation)
+5. **Transaction timestamps malformed** — "Today1:52am", "Jan 23rd2:7pm" — missing space separator. Severity: Low (intentional visual bug)
+
+### Notes
+- Site is designed for visual testing with Applitools; bugs are intentionally planted for visual diff detection
+- `$350%7` is a classic intentional visual bug (bad format string)
+
+---
+
+## Practice Test Report: Automation Exercise
+URL: https://www.automationexercise.com/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~3s (ad overlay present on load)
+
+### Structure
+- Navigation: Home, Products, Cart, Signup/Login, Test Cases, API Testing, Video Tutorials, Contact us
+- Forms: 1 (newsletter email)
+- Interactive elements: 70+ (products, category filters, newsletter)
+
+### Navigation
+[PASS] Products → `/products` — full product catalog  
+[PASS] Product search ("jeans") — 3 results: Soft Stretch Jeans, Regular Fit Straight Jeans, Grunt Blue Slim Fit Jeans  
+[PASS] View Product → `/product_details/N` — detail page with name, category, price, availability, brand, quantity selector  
+[BUG] Products nav on homepage → ad redirect to `/#google_vignette`; use direct URL navigation
+
+### Core Functionality
+[PASS] Add to cart (qty=2) — "Added! Your product has been added to cart." modal  
+[PASS] View Cart → `/view_cart` — product shown with correct qty, price  
+[PASS] Category filters (Women/Men/Kids) and brand filters (Polo, H&M, etc.) present and clickable
+
+### Bugs Found
+1. **Ad overlay intercepts nav clicks** — clicking Products nav on homepage triggers Google ad redirect. Workaround: direct URL navigation. Severity: High
+2. **Ad iframe on every page load** — must dismiss "Close" SVG button before interacting. Severity: Medium
+
+### Notes
+- Full e-commerce flow (browse → detail → add to cart → view cart) works correctly
+- Test cases at `/test_cases`, API list at `/api_list`
+- Login required for checkout at `/login`
+
+---
+
+## Practice Test Report: Automation in Testing (Shady Meadows B&B)
+URL: https://automationintesting.online/#/
+Date: 2026-05-10
+
+### Reachability
+[PASS] Site loaded in ~3s
+
+### Structure
+- Navigation: Rooms, Booking, Amenities, Location, Contact, Admin
+- Forms: 2 (availability checker, contact form)
+- Interactive elements: 33
+
+### Navigation
+[PASS] Rooms → `#rooms` (scroll)  
+[PASS] Booking → `#booking` (scroll)  
+[PASS] Admin → `/admin` (separate panel)
+
+### Core Functionality
+[PASS] Check Availability — dates accepted (DD/MM/YYYY via fill); button requires `eval click()` after date entry (obscured by calendar)  
+[PASS] Book now (Single room) → `/reservation/1?checkin=...&checkout=...`  
+[PASS] Calendar date picker — click start/end dates; shows "£100 x 4 nights", total £440  
+[PASS] Reserve Now form — fills Firstname, Lastname, Email, Phone; submits successfully  
+[PASS] Booking Confirmed — "2026-05-31 - 2026-06-04" shown  
+[PASS] Admin login (`admin`/`password`) → `/admin/rooms` — room list (101 Single, 102 Double, 103 Suite)  
+[PASS] Admin Messages — shows 3 messages; test booking created "Jane Doe — You have a new booking!"  
+[BUG] Contact form `#description` textarea — `vibium fill` fails; use `eval .value = "..." + dispatchEvent`  
+[BUG] Check Availability button — "obscured" by calendar overlay after date entry; use `eval 'document.querySelector("#booking button").click()'`
+
+### Bugs Found
+1. **Textarea not fillable via `vibium fill`** — `#description` throws `fill:` error; React-aware eval + dispatchEvent workaround required. Severity: Low (vibium limitation)
+2. **Check Availability button obscured** — calendar picker overlay blocks click; eval workaround works. Severity: Low
+
+### Notes
+- Full booking flow confirmed end-to-end with confirmation page
+- Admin panel accessible with default credentials (`admin`/`password`)
+- "Messages N" badge updates live after test bookings — good state verification anchor
+
+---
+
 ## Session: 2026-04-27 — Batch 5 (sites 21–25)
 
 ---
