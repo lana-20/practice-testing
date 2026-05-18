@@ -1380,3 +1380,210 @@ Apparent principle: the lower 2×2 grid drives the upper row via some adjacency 
 - Category labels in the challenge (BOOKS, SPORTS, etc.) are CSS `text-transform: uppercase` on lowercase DOM text — `vibium find text "BOOKS"` fails; search for "Books" or use coordinate clicks
 - The challenges section is well-built and functional — good for automation practice
 - `/concepts` listing shows all 22 cards correctly, so the routing issue is specific to child routes, not the listing itself
+
+---
+
+## Batch 8 — 2026-05-18
+
+Sites 36–40: Commit Quality, Contact List App, Demo SaaS, GreenKart, Global SQA Demo
+
+---
+
+### Site 36 — Commit Quality
+URL: https://commitquality.com/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s
+
+#### Structure
+- Navigation: Products, Login nav links + Practice Card section links (Add Product, Practice Testing, etc.)
+- Forms: Product filter form (search, category dropdown, date range, stock toggle), Login form, Add Product form
+- Interactive elements: 20+
+
+#### Navigation
+[PASS] Products → `/products` — product listing with filters
+[PASS] Login → `/login` — login form renders
+[PASS] Practice cards → each links to a dedicated practice section
+
+#### Core Functionality
+[PASS] Product filter — keyword search filters list in real time
+[PASS] Category dropdown filter — filters by category
+[PASS] In-stock toggle — filters to in-stock products
+[PASS] Reset filters — clears all filter state
+[PASS] Show More / pagination — loads additional products
+[PASS] Login form — shows error on invalid credentials
+[PASS] Add Product form — validates required fields; submits successfully with valid data
+[BUG] Date filter (`input[type=date]`) — not fillable via `vibium fill` ("not editable"); requires `vibium type` workaround on fresh field; React state does not update from DOM setter alone
+[BUG] Date "must not be in the future" validation — using today's date (2026-05-18) rejected; past dates (e.g. 2024-01-15) required
+
+#### Bugs Found
+1. **Date input not fillable via `vibium fill`** — React-controlled `input[type=date]` rejects fill. `vibium type` works on a fresh field only (accumulates on repeat). — Steps: navigate to Products, click date field, `vibium fill @eN "01/15/2024"` → "not editable" error. Severity: **Low** (automation-only issue)
+2. **Today's date rejected in date filter** — Entering current date returns "must not be in the future" validation error. — Severity: **Low** (possibly intentional)
+
+#### Notes
+- Login credentials not publicly documented; login form shows validation errors correctly
+- `vibium type` is the workaround for React date inputs — use a past date value
+- Product listing and filter functionality is well-built; good for practicing filter automation
+
+---
+
+### Site 37 — Contact List App
+URL: https://thinking-tester-contact-list.herokuapp.com/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s (Heroku, may be slow after idle)
+
+#### Structure
+- Navigation: Login, Sign Up links; Contact table with Add/Edit/Delete actions
+- Forms: Login, Register, Add Contact, Edit Contact
+- Interactive elements: Table rows, action buttons, form inputs
+
+#### Navigation
+[PASS] Sign Up → `/addUser` — registration form with firstName, lastName, email, password
+[PASS] Login → redirects to `/contactList` on success
+[PASS] Add Contact → `/addContact` — contact form with all fields
+
+#### Core Functionality
+[PASS] Register new user — form submits and creates account
+[PASS] Login with valid credentials — redirects to contact list
+[PASS] Login with invalid credentials — "Incorrect username or password" message
+[PASS] Add contact — all fields (name, DOB, email, phone, address, city, state/province, postal code, country) accepted
+[PASS] View contact detail — click contact row opens detail view
+[PASS] Edit contact — Edit button opens form; fields updatable via eval (form renders without placeholders after edit click)
+[PASS] Delete contact — deletes successfully; requires `vibium eval 'window.confirm = () => true'` pre-stub to avoid dialog block
+[PASS] Logout — returns to login page
+
+#### Bugs Found
+None found — all CRUD operations functional.
+
+#### Notes
+- Edit form inputs have no placeholder text — `vibium fill "input[placeholder='...']"` fails; use index-based eval: `document.querySelectorAll("input")[N].value = "..."` + dispatchEvent
+- Delete triggers `window.confirm` dialog — pre-stub with `vibium eval 'window.confirm = () => true'` before clicking Delete
+- Registration creates a persistent account (Heroku app, not reset between sessions)
+- Test credentials from registration persist; good site for full CRUD practice
+
+---
+
+### Site 38 — Demo SaaS
+URL: https://demo-saas.bugbug.io/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s
+
+#### Structure
+- Navigation: Login, Sign Up links; marketing landing page
+- Forms: Sign Up (name, email, password), Login (email, password), Forgot Password
+- Interactive elements: 10 (nav links, form inputs, submit buttons)
+
+#### Navigation
+[PASS] Sign Up → signup form renders
+[PASS] Login → login form renders
+[PASS] Forgot Password → password reset form renders
+
+#### Core Functionality
+[PASS] Sign Up empty submit — shows "This field is required" validation on all fields
+[PASS] Sign Up invalid email — shows email format validation error
+[PASS] Login empty submit — shows validation errors
+[PASS] Forgot Password empty submit — shows validation error
+[FAIL] Dashboard — requires email verification after signup; dashboard not accessible without completing email verification flow
+[SKIP] Authenticated features — not testable without real email access
+
+#### Bugs Found
+None found in accessible flows.
+
+#### Notes
+- Email verification is required to access the dashboard — blocks testing of all authenticated features
+- Validation messages are clear and properly triggered
+- Site is React/SPA; all forms found by `vibium map`; no dialog interception issues
+
+---
+
+### Site 39 — GreenKart
+URL: https://rahulshettyacademy.com/seleniumPractise/#/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s
+
+#### Structure
+- Navigation: Top Deals (`#/offers`), Flight Booking (external link)
+- Product grid: 12+ vegetables/fruits with qty controls and ADD TO CART
+- Cart: `#/cart` — table with qty controls, promo code input, summary, Place Order
+- Scrolling ticker banner at top (impacts nearby button clicks)
+
+#### Navigation
+[PASS] Home (`#/`) — product grid loads
+[PASS] Top Deals (`#/offers`) — sortable/paginated/searchable table
+[NOTE] Top Deals nav click intercepted by ticker banner — must navigate via `vibium eval 'location.href="...#/offers"'`; `vibium click @eN` clicks ticker instead
+
+#### Core Functionality
+[PASS] Search — `vibium press Enter "input[type=search]"` filters products (NOT button click — ticker banner blocks)
+[PASS] Add to cart — requires `vibium scroll "into-view"` before click (zero-size issue)
+[PASS] Proceed to Checkout — use `vibium eval '[...document.querySelectorAll("button")].find(b=>b.textContent.includes("PROCEED"))?.click()'` (ticker intercepts `vibium find text`)
+[PASS] Cart table — shows product, qty, price, total correctly
+[PASS] Qty controls in cart (+ / –) — adjust quantity and update total
+[PASS] Place Order → country selection page (`#/country`)
+[PASS] Country dropdown — 200+ countries, select works
+[PASS] T&C checkbox → Proceed — completes order; "Thank you, your order has been placed successfully"
+[PASS] Top Deals table — search filter, page size selector, pagination, column sorting all work
+[BUG] Promo code — no visual feedback on invalid code; discount stays 0%, no error message shown
+[BUG] "Quantiry" typo in cart table header (column header reads "Quantiry" instead of "Quantity")
+[BUG] Rice discount price (46) higher than regular price (37) on Top Deals page — discount column value is incorrect
+
+#### Bugs Found
+1. **"Quantiry" typo in cart table header** — Column header `<th>` reads "Quantiry" instead of "Quantity". — Severity: **Low**
+2. **Promo code silent failure** — Entering any invalid promo code and clicking Apply shows no error message; discount stays at 0% with no feedback. — Severity: **Medium**
+3. **Rice discount price > regular price on Top Deals** — Wheat: 67→28, Tomato: 37→26, Rice: 37→**46** (discount is higher than original). — Severity: **Medium**
+
+#### Notes
+- Ticker banner (`scrolling` element) intercepts clicks on nearby buttons — use eval-based navigation and button clicks throughout
+- ADD TO CART requires scroll-into-view before click due to zero-size detection
+- Cart item count = unique products, not total units
+- `vibium drag` with `@ref` targets fails ("timeout after 0s") — use coordinate-based drag: `vibium mouse move X Y && vibium mouse down && vibium mouse move X2 Y2 && vibium mouse up`
+
+---
+
+### Site 40 — Global SQA Demo
+URL: http://www.globalsqa.com/demo-site/ (redirects to HTTPS)
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s — HTTP URL auto-redirects to HTTPS (no Chrome block unlike Testing Challenges)
+
+#### Structure
+- Navigation: Main nav (About, CheatSheets, etc.) + component grid links (Tabs, Slider, AlertBox, DialogBox, etc.)
+- Components: 16+ demo widgets across 4 tiers (First Step through Last Step)
+- Projects: AngularJS Site, E-Commerce Site, Photography Site
+- Interactive elements: 47+ (mostly nav links, no complex controls on landing page)
+
+#### Navigation
+[PASS] Accordion and Tabs → `/demo-site/accordion-and-tabs/`
+[PASS] DropDown → `/demo-site/select-dropdown-menu/`
+[PASS] AlertBox → `/demo-site/alertbox/`
+[PASS] Drag and Drop → `/demo-site/draganddrop/`
+[PASS] AngularJS Protractor Practice Site → `/angularjs-protractor-practice-site/`
+[BUG] All component nav links on main page intercept to `#google_vignette` (ad redirect) — must navigate to sub-page URLs directly
+
+#### Core Functionality
+[PASS] Accordion (Simple) — jQuery accordion: click section header expands content, collapses previous — tested at `/demoSite/practice/accordion/collapsible.html`
+[PASS] DropDown — HTML `<select>` with 249 countries; `vibium select` works
+[PASS] AlertBox (Simple) — `myFunctionTab1()` fires `alert("Welcome to GlobalSQA...")` — captured via `window.alert` override
+[PASS] Drag and Drop — photo-manager demo: coordinate-based drag moves image to trash; delete icon click also removes from gallery
+[BUG] Confirmation Box (`myFunctionTab2()`) — calling directly via `vibium eval` throws "script exception"; native `confirm()` dialog cannot be called from eval context even after `window.confirm` override
+[NOTE] All demo widgets are embedded in iframes — navigate to iframe URL directly (e.g. `/demoSite/practice/accordion/collapsible.html`) rather than trying to use `vibium frame` (frame context doesn't persist in CLI)
+[NOTE] E-CommerceSite link on demo landing page points back to the same page (`/demo-site/`) — appears to be a dead/placeholder link
+
+#### Bugs Found
+1. **Ad redirect on all nav link clicks from main page** — clicking any component link (Tabs, Slider, etc.) navigates to `#google_vignette` instead of the target page. Workaround: navigate directly to sub-page URL. — Severity: **Medium**
+2. **E-CommerceSite link is broken** — points to the same demo landing page, not an e-commerce site. — Severity: **Low**
+3. **`myFunctionTab2()` (Confirmation Box) blocked in eval** — native `confirm()` dialog throws "script exception" when called via `vibium eval`, even after `window.confirm` override. `window.alert` override works correctly for simple alerts. — Severity: **Low** (automation-only limitation)
+
+#### Notes
+- HTTP-only URL redirects to HTTPS automatically — Chrome does NOT block this site (unlike testingchallenges.thetestingmap.org)
+- All demo widgets are in iframes — use `vibium frames` to find iframe URL, then navigate there directly
+- `vibium frame <url>` doesn't actually switch eval/click context in CLI — navigate to iframe URL instead
+- Drag using `vibium drag @src @target` fails with "timeout" when target is non-interactive — use `vibium mouse move/down/up` with coordinates
+- AngularJS Protractor Practice Site at `/angularjs-protractor-practice-site/` is a separate companion site with ng elements for Protractor/Selenium practice
