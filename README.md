@@ -1587,3 +1587,198 @@ Date: 2026-05-18
 - `vibium frame <url>` doesn't actually switch eval/click context in CLI — navigate to iframe URL instead
 - Drag using `vibium drag @src @target` fails with "timeout" when target is non-interactive — use `vibium mouse move/down/up` with coordinates
 - AngularJS Protractor Practice Site at `/angularjs-protractor-practice-site/` is a separate companion site with ng elements for Protractor/Selenium practice
+
+---
+
+## Batch 9 — 2026-05-18
+
+Sites 41–45: Hands-On Selenium WebDriver, Lambdatest Playground, Let Code, Locator Game, Practice Test Automation
+
+---
+
+### Site 41 — Hands-On Selenium WebDriver with Java
+URL: https://bonigarcia.dev/selenium-webdriver-java/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s
+
+#### Structure
+- Navigation: Home page with 30 section links across 7 chapters (WebDriver Fundamentals, Browser-Agnostic, Browser-Specific, POM, Testing Framework, Third-Party)
+- Forms: Web form, Login form, Slow calculator, Dialog boxes, and more
+- Interactive elements: 31 links on homepage; each sub-page has its own elements
+
+#### Navigation
+[PASS] Web form → `/web-form.html` — full form with text, password, textarea, select, file, checkbox, radio, color, date, range
+[PASS] Login form → `/login-form.html` — username/password + Submit
+[PASS] Dialog boxes → `/dialog-boxes.html` — alert, confirm, prompt, modal
+[PASS] Drag and drop → `/drag-and-drop.html` — jQuery UI draggable panel
+[PASS] Slow calculator → `/slow-calculator.html` — configurable delay calculator
+
+#### Core Functionality
+[PASS] Web form submit — fills all fields and POSTs to `/submitted-form.html`; params visible in URL; "Form submitted / Received!" shown
+[PASS] `vibium fill` works on text/password inputs; `vibium fill` fails on `textarea` — use `vibium type` instead
+[PASS] Login with `user`/`user` → `/login-sucess.html` "Login successful"; empty submit → "Invalid credentials" (no page reload)
+[PASS] Dialog boxes — alert/confirm/prompt fire correctly; modal opens and closes via Close button; pre-stub dialogs with eval before clicking
+[PASS] Drag and drop — coordinate-based drag works: element moved from x:42 to x:370
+[PASS] Slow calculator — buttons are `span.btn` (not `button`) — use eval find; 7+3=10 computed correctly after 1s delay
+
+#### Bugs Found
+None found.
+
+#### Notes
+- `vibium fill @ref` fails on `<textarea>` ("fill:") — use `vibium type @ref "text"` instead
+- Calculator buttons are `span.btn`, not `button` — `vibium map` returns only 2 interactive elements; find buttons via `vibium eval '[...document.querySelectorAll("span.btn")].find(b=>b.textContent.trim()==="7")?.click()'`
+- Login page slow to declare readyState 'complete' — `vibium wait load` may timeout but page is functional; add `sleep 3` before `vibium url`
+- All 30 practice sub-pages at clean URLs (e.g. `/web-form.html`, `/drag-and-drop.html`) — no ad overlays, no login required
+
+---
+
+### Site 42 — Lambdatest Playground (ecommerce)
+URL: https://ecommerce-playground.lambdatest.io/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~3s (OpenCart-based store)
+
+#### Structure
+- Navigation: Categories sidebar (Cameras, Phones, Software, Laptops, etc.), Quick Links (Special, Wishlist, Compare, My Account, Blog), Cart panel
+- Products: Large catalog (75+ cameras alone); product detail pages with name, brand, price, availability, qty, Add to Cart
+- Cart: Server-side session via AJAX (`window.cart.add()`)
+- Forms: Login, Register, Review
+
+#### Navigation
+[PASS] Category pages via direct URL (e.g. `/index.php?route=product/category&path=33`) — render correctly
+[PASS] Product detail at `/index.php?route=product/product&product_id=N`
+[PASS] Cart page at `/index.php?route=checkout/cart`
+[BUG] Category nav links on homepage intercepted by sticky header — `vibium click @eN` fails ("element is obscured"); use direct URL navigation
+
+#### Core Functionality
+[PASS] Product listing — category pages show products with name, price
+[PASS] Product detail — name, brand, availability, price, qty, Add to Cart visible
+[PASS] Registration — creates account; redirects to `/account/success` with "Your Account Has Been Created!"
+[PASS] Login — shows "Warning: No match for E-Mail Address and/or Password." on invalid credentials
+[PASS] Add to Cart (logged in, in-stock, no required options) — success toast: "You have added HP LP3065 to your shopping cart!"; cart counter updates
+[FAIL] Add to Cart (not logged in) — silently fails; `window.cart.add()` and eval `.click()` both return without error but cart remains empty; requires login
+[FAIL] Add to Cart on products with "Size" select (Canon EOS 5D, Nikon D300) — "Size required!" validation; size select only has "--- Please Select ---" (no actual options) — data issue, impossible to satisfy
+[PASS] Out-of-stock products — show "OUT OF STOCK" button; can still be added to cart (appear in cart with `***` marker and warning banner)
+
+#### Bugs Found
+1. **Add to Cart silently fails for guests** — no error message shown; cart stays empty. No "please login" prompt. — Severity: **Medium**
+2. **Size option select has no values** — Canon EOS 5D and similar products have "Size required!" validation but size select only contains "--- Please Select ---" with no values. Impossible to add these products to cart. — Severity: **High** (blocks core flow)
+3. **Out-of-stock items addable to cart** — products marked "Out Of Stock" appear in cart with `***` and warning "Products marked with *** are not available in the desired quantity or not in stock!" — Severity: **Low** (intentional for practice)
+
+#### Notes
+- All nav links obscured by sticky header overlay — navigate all pages via direct URL
+- Account registration creates a real account; use a throwaway email
+- `vibium mouse click x y` at button coordinates works for in-stock Add to Cart; eval `.click()` also works
+- `window.cart.add(productId, qty)` is the AJAX call; returns null but doesn't actually add if not logged in
+
+---
+
+### Site 43 — Let Code
+URL: https://letcode.in/test
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s (Angular app)
+
+#### Structure
+- Navigation: Work-Space hub at `/test` with 22 section links (Input, Button, Dropdown, Alert, Frame, Radio, Window, Elements, Drag/Drop/Sort/Select/Slider, Waits, Table, Calendar, Forms, File, Shadow DOM, POM)
+- Each section is a separate page at a clean URL (e.g. `/edit`, `/button`, `/dropdowns`)
+- Interactive elements: 25+ on hub page; each sub-page has exercise-specific elements
+
+#### Navigation
+[PASS] Hub → direct URL navigation works for all sections
+[PASS] `/edit` (Input) — text inputs, append-and-tab, pre-filled, disabled, readonly
+[PASS] `/button` — Goto Home, Find Location, color/size query, disabled button
+[PASS] `/dropdowns` — 4 selects (fruit, superheroes multi, language, country)
+[PASS] `/table` — simple 5-row price table
+[PASS] `/forms` (All in One) — full form with text, email, phone, address, DOB, gender radio, T&C checkbox, submit
+[PASS] `/window` — Open Home Page, Multiple Windows buttons
+[BUG] `/alert` page deadlocks vibium daemon on navigation — fires a native dialog on page load; daemon restart required
+
+#### Core Functionality
+[PASS] Input page — fill name, append text + press Tab, `getAttribute` returns pre-filled value, disabled=true, readOnly=true all confirmed
+[PASS] Dropdown page — `vibium select @eN "value"` works for all 4 dropdowns
+[PASS] Table page — `vibium text table` returns clean table data
+[PASS] Forms submit — form submits (reloads page); no success message shown
+[BUG] Alert page — navigating to `/alert` fires a native browser `confirm()` on page load, deadlocking the daemon (same pattern as sites that call `alert()` immediately); pre-stubbing via eval is not possible before load
+
+#### Bugs Found
+1. **`/alert` page deadlocks daemon on navigation** — native confirm dialog fires on load, cannot be pre-stubbed. — Steps: `vibium go "https://letcode.in/alert"` → daemon deadlocks; restart required. Severity: **Medium** (workaround: avoid this page or use MCP dialog_accept before navigating)
+
+#### Notes
+- All section links on the hub page redirect to `#google_vignette` (ad overlay) — navigate all sections via direct URL (e.g. `vibium go "https://letcode.in/edit"`)
+- Ad iframes present on all pages but don't block main content
+- Forms page submit reloads same page — no dedicated success page; `vibium wait load` timeout on POST redirect is normal (page reloads faster than listener catches)
+
+---
+
+### Site 44 — Locator Game
+URL: https://testsmith-io.github.io/locator-game/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~1s (GitHub Pages, static)
+
+#### Structure
+- Navigation: None — single-page game with 13 levels (0–12)
+- Controls: CSS/XPath selector toggle, locator input, Try! link, Submit button, Prev/Next navigation
+- Tutorial overlay on first load (End tour button to dismiss)
+
+#### Navigation
+N/A — single page
+
+#### Core Functionality
+[PASS] Tutorial overlay dismisses via "End tour" button
+[PASS] Level 0 (Select all titles) — CSS `h3` → Submit → advances to Level 1
+[PASS] Level 1 (Select description text) — CSS `#description` → Submit → advances to Level 2
+[PASS] Level 2 (Select active list item) — CSS `.active` → Submit → advances to Level 3
+[PASS] Try! button — evaluates locator and highlights matched elements in Rendered HTML preview
+[PASS] Prev/Next navigation — moves between levels
+
+#### Bugs Found
+None found.
+
+#### Notes
+- Submit with correct locator immediately advances to next level — no "correct!" confirmation message
+- No penalty for wrong answers — incorrect locator just stays on same level
+- 13 levels total (0–12); levels increase in complexity (element type → ID → class → nested → attribute selectors)
+- CSS and XPath modes switchable via `vibium select @e2 "XPath"`
+- Clean static site — no ads, no login, no network issues
+
+---
+
+### Site 45 — Practice Test Automation
+URL: https://practicetestautomation.com/practice/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded in ~2s
+
+#### Structure
+- Navigation: Home, Practice, Courses, Blog, Contact + 3 practice cards (Test Login Page, Test Exceptions, Test Table)
+- Forms: Login form; Exceptions page (add row); Table page (filter controls)
+- Interactive elements: 12 on practice hub
+
+#### Navigation
+[PASS] Test Login Page → `/practice-test-login/` — username/password form with credentials shown on page
+[PASS] Test Exceptions → `/practice-test-exceptions/` — food list with Add/Edit/Remove
+[PASS] Test Table → `/practice-test-table/` — sortable/filterable course table
+
+#### Core Functionality
+[PASS] Login — invalid username → "Your username is invalid!"; valid username + wrong password → "Your password is invalid!"; valid `student`/`Password123` → `/logged-in-successfully/` "Congratulations student. You successfully logged in!"
+[PASS] Exceptions — Row 1 pre-populated with "Pizza"; clicking Add dynamically adds Row 2 with Save/Remove buttons; `vibium map` updates to reflect new row
+[PASS] Table filter — language radio (Java/Python) filters table rows correctly; Python shows 2 courses, Java shows 6
+[PASS] Table sorting — `select` for sort column present; table is pre-sorted by ID
+
+#### Bugs Found
+None found.
+
+#### Notes
+- Login page declares readyState 'complete' slowly after successful submit — `vibium url` after click returns "BiDi unknown error"; add `sleep 5` before reading URL post-submit
+- Valid login credentials displayed on the login page itself: `student`/`Password123`
+- Exceptions page row 2 appears via delayed JS — Row 2 input has zero getBoundingClientRect height initially but `vibium map` detects it after the animation; use `sleep 2` after clicking Add
+- Table language filter uses radio buttons (`name="lang"`); level filter uses checkboxes (`name="level"`)
+- All 3 sub-pages at clean direct URLs — no ad overlays
