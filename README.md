@@ -1782,3 +1782,180 @@ None found.
 - Exceptions page row 2 appears via delayed JS — Row 2 input has zero getBoundingClientRect height initially but `vibium map` detects it after the animation; use `sleep 2` after clicking Add
 - Table language filter uses radio buttons (`name="lang"`); level filter uses checkboxes (`name="level"`)
 - All 3 sub-pages at clean direct URLs — no ad overlays
+
+---
+
+## Batch 10 — 2026-05-18 (sites 46–50)
+
+### Site 46 — QA Playground
+URL: https://qaplayground.dev/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loaded instantly; static HTML with 24 mini-apps listed
+
+#### Structure
+- Navigation: Home, Apps (anchor), GitHub test suite links per mini-app
+- Forms: per-app (no global form)
+- Interactive elements: 24 mini-app cards linking to `/apps/<name>/`
+
+#### Navigation
+[PASS] All mini-app URLs reachable via direct navigation (pattern: `/apps/<slug>/`)
+
+#### Core Functionality (11 mini-apps sampled)
+[PASS] Dynamic Table — `vibium text` finds table; Spider-Man row located by text match
+[PASS] Verify Account — OTP input requires `vibium type`, not `vibium fill`; "Success" shown after correct code
+[PASS] Tags Input Box — add/remove tags work via `vibium fill` + Enter
+[PASS] Multi Level Dropdown — nested Animals submenu accessible; `vibium click` on items
+[PASS] Budget Tracker — entry added, Total updates to $1,000.00
+[PASS] Shadow DOM — `document.querySelector("progress-bar")?.shadowRoot?.querySelector("button")?.click()`; progress → 95%
+[PASS] Covered Elements — hidden `#fugitive` link found by `vibium map`; click shows "Mission accomplished"
+[PASS] Range Slider — use `eval s.value=50; dispatchEvent(input/change)`; "Send Feedback" shows after slider move (pre-stub alert); "Thank you for your feedback!" shown
+[PASS] Onboarding Modal — CSS checkbox toggle (`#active`); set checked=true to open, false to close; title changes to "Application successfully launched! 🚀"
+[PASS] Sortable List — direct DOM manipulation via eval: collect `.draggable` refs by name, reappend to `li[data-index]` in correct order; Check Order shows all 10 green
+[PASS] New Tab — `vibium pages` lists new tab at `/apps/new-tab/new-page`; navigate directly for assertion
+
+#### Bugs Found
+None found.
+
+#### Notes
+- `vibium type` required for OTP inputs (Verify Account) — `vibium fill` doesn't trigger keyup events needed for code validation
+- Sortable list drag-and-drop: `vibium drag` not needed; rearrange `.draggable` children in `#draggable-list li` elements via eval; correct order from source: Jeff Bezos, Bill Gates, Warren Buffett, Bernard Arnault, Carlos Slim Helu, Amancio Ortega, Larry Ellison, Mark Zuckerberg, Michael Bloomberg, Larry Page
+- Range slider: `vibium fill` fails on `input[type=range]`; use `eval .value= + dispatchEvent(new Event("input"/{change}))` 
+- New tab: `vibium switch N` doesn't exist in CLI; use `vibium go` to the new page URL directly
+- `vibium find "text"` returns nil on most mini-apps — use `vibium map` for refs
+
+---
+
+### Site 47 — React Shopping Cart
+URL: https://react-shopping-cart-67954.firebaseapp.com/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Firebase-hosted React SPA loads instantly; 16 products displayed
+
+#### Structure
+- Navigation: none (single-page app)
+- Filters: 7 size checkboxes (XS/S/M/ML/L/XL/XXL) in left sidebar
+- Interactive elements: 16 "Add to cart" buttons, cart count button, size filter checkboxes
+
+#### Navigation
+[PASS] Single-page app; no route navigation
+
+#### Core Functionality
+[PASS] Size filter — `vibium check @eN` fails ("obscured"); use `eval document.querySelectorAll("input[type=checkbox]")[0].click()`; XS filter reduces 16 → 1 product
+[PASS] Add to cart — `vibium click @eN` on "Add to cart" button; cart count increments (0 → 1)
+[PASS] Cart drawer — clicking cart count button (@e42) opens right-side drawer; shows item name, price, quantity, subtotal
+[PASS] Cart content — "Cropped Stay Groovy off white" $10.90; SUBTOTAL: $10.90; CHECKOUT button visible
+
+#### Bugs Found
+None found (frontend demo, no real checkout).
+
+#### Notes
+- Cart button ref is the last element in `vibium map` (shows count as text, e.g. "1")
+- Size filter checkboxes are obscured — `vibium check` fails; use `eval .click()`
+- No checkout flow beyond the button (frontend-only demo)
+- Promo banner at top (recruiter ad) — not interactive
+
+---
+
+### Site 48 — Selectors Hub
+URL: https://selectorshub.com/xpath-practice-page/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] WordPress site loads with sticky promo banner and countdown timer
+
+#### Structure
+- Navigation: Products, Pro Plans, Courses, Practice Page, Resources
+- Forms: 1 Dummy Form (email, password, company, mobile, country, submit)
+- Interactive elements: form fields, shadow DOM elements, iframe links, table, download/upload, alert buttons
+
+#### Navigation
+[PASS] Nav links work; sub-pages open in new tabs or scroll to sections
+
+#### Core Functionality
+[PASS] Dummy Form fill — email input has `readonly` attribute; remove via `eval document.querySelector("input[type=email]").removeAttribute("readonly")` first; then `vibium fill` works
+[PASS] Form submit — `vibium click` on Submit button; `document.body.textContent.includes("success")` → true
+[PASS] Shadow DOM — `#userName` element has open shadow root with username input, nested shadow DOM (`#app2`, `#concepts`); `#userPass` has closed shadow root (password input)
+[PASS] Select dropdown — `#cars` select with 4 car options; `vibium select @e46 "saab"` works
+
+#### Bugs Found
+None found (practice site with intentional challenges).
+
+#### Notes
+- Email input is readonly by default (intentional XPath challenge) — remove attribute before filling
+- Shadow DOM has both open and closed modes; closed mode requires storing shadowRoot reference before page initializes (cannot access via `querySelector().shadowRoot` after closed)
+- Page includes: iframe inside shadow DOM, shadow DOM inside iframe, nested iframe scenarios
+- All section links in the practice list work as direct URL anchors
+- Countdown timer and promo overlay may interfere with clicks near top of page
+
+---
+
+### Site 49 — Selenium Playground
+URL: https://www.lambdatest.com/selenium-playground/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Main index page loads; lists 40+ demo categories
+[FAIL] All demo sub-page links redirect to `testmuai.com` which blocks headless browsers with Cloudflare protection
+
+#### Structure
+- Navigation: 40+ demo links on index page
+- Forms: none on index; all forms on inaccessible sub-pages
+- Interactive elements: index links only
+
+#### Navigation
+[FAIL] All sub-page links (Ajax Form, Bootstrap Alerts, etc.) redirect to `www.testmuai.com` domain; Cloudflare bot protection returns "Performing security verification" indefinitely — not accessible to automation
+
+#### Core Functionality
+[FAIL] Cannot test any demo — sub-pages blocked by Cloudflare on testmuai.com
+
+#### Bugs Found
+None applicable (site inaccessible).
+
+#### Notes
+- Index page at lambdatest.com/selenium-playground/ loads fine
+- All 40+ demo hrefs now point to `testmuai.com` (rebrand/migration); testmuai.com has Cloudflare bot protection that blocks headless Chrome permanently
+- `eval location.href = "..."` navigation also blocked; Ray IDs increment confirming new requests blocked
+- Site was previously testable on lambdatest.com — migration to testmuai.com broke automation access
+
+---
+
+### Site 50 — Swag Labs
+URL: https://www.saucedemo.com/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loads instantly; React SPA login page
+
+#### Structure
+- Navigation: login → inventory → product detail → cart → checkout → confirmation
+- Forms: login (username/password), checkout step 1 (first name, last name, zip), checkout step 2 (overview)
+- Interactive elements: login form, 6 product "Add to cart" buttons, sort dropdown, cart icon, checkout form
+
+#### Navigation
+[PASS] Login → /inventory.html
+[PASS] Cart → /cart.html (via eval click on `.shopping_cart_container a`, not direct `vibium go`)
+[PASS] Checkout → /checkout-step-one.html → /checkout-step-two.html → /checkout-complete.html
+
+#### Core Functionality
+[PASS] Standard user login — `standard_user` / `secret_sauce` → inventory page
+[PASS] Locked out user — "Epic sadface: Sorry, this user has been locked out."
+[PASS] Add to cart — `vibium click @eN` on "Add to cart"; button changes to "Remove"
+[PASS] Sort by price — `vibium select @e2 "lohi"` → prices $7.99, $9.99, $15.99, $15.99, $29.99, $49.99 (ascending)
+[PASS] Full checkout flow — name/last/zip → overview (SauceCard #31337, Free Pony Express Delivery) → Finish → "Thank you for your order!"
+[BUG] Problem user — all 6 product images show same broken image (`sl-404.168b1cce10384b857a6f.jpg`) — intentional
+[BUG] Problem user — Sort Z-A returns items in A-Z order (sort non-functional) — intentional
+
+#### Bugs Found
+1. `problem_user`: All product images replaced with same broken 404 image — Severity: High (intentional planted bug)
+2. `problem_user`: Sort dropdown non-functional — selecting Z-A keeps items in A-Z order — Severity: Medium (intentional planted bug)
+
+#### Notes
+- Cart icon link has no `href` attribute and doesn't appear in `vibium map`; navigate via `eval document.querySelector(".shopping_cart_container a")?.click()`
+- `vibium go "https://www.saucedemo.com/cart.html"` fails with BiDi unknown error after logout — use eval cart click from inventory page instead
+- `vibium find "Finish"` returns nil — use `vibium map` to get button ref
+- Side menu opened by "Open Menu" button; close via Logout/About/Reset App State links
+- 6 user types: standard (fully functional), locked_out (blocked), problem (broken images + sort), performance_glitch (slow), error, visual (visual diffs)
+- After daemon restart, refs expire — always `vibium map` before interacting
