@@ -1959,3 +1959,170 @@ Date: 2026-05-18
 - Side menu opened by "Open Menu" button; close via Logout/About/Reset App State links
 - 6 user types: standard (fully functional), locked_out (blocked), problem (broken images + sort), performance_glitch (slow), error, visual (visual diffs)
 - After daemon restart, refs expire — always `vibium map` before interacting
+
+---
+
+## Batch 11 — 2026-05-18 (sites 51–55)
+
+### Site 51 — Sweet Shop
+URL: https://sweetshop.netlify.app/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Netlify static site loads instantly
+
+#### Structure
+- Navigation: Sweet Shop, Sweets, About, Login, Basket
+- Forms: basket checkout form (billing address + payment), login form
+- Interactive elements: "Add to Basket" links (homepage + /sweets), checkout form, login form
+
+#### Navigation
+[PASS] /sweets — 16 products listed
+[PASS] /basket — basket with items, delivery options, billing form, payment form
+[PASS] /login — email + password login form
+[PASS] /about — "An intentionally broken web application to help demonstrate Chrome DevTools"
+
+#### Core Functionality
+[PASS] Add to Basket — basket count increments (0 → 1 → 2); `vibium map` does NOT show Add to Basket links (no `href`); use `vibium eval 'document.querySelector(".addItem").click()'` or `document.querySelector(".addItem[data-id=\"2\"]").click()`
+[PASS] Basket page — shows item name, unit price, total (GBP); delivery radio (Collect FREE / Standard Shipping £1.99)
+[PASS] Promo code field — shows "Please input a valid promo code." on submit with empty code (client-side validation)
+[PASS] Checkout form — 0 validation errors when all fields filled correctly; form submits as GET to `/basket?` (no backend, page reloads)
+[FAIL] Login form — submits with no visible success/error feedback (static demo, no backend)
+
+#### Bugs Found
+1. Two form inputs both have `id="name"` (First Name and Last Name fields) — `vibium map` shows only one of them; Last Name field never receives focus via `vibium fill @ref` — fill via `document.querySelectorAll("input#name")[1].value = "..."` — Severity: Medium (intentional practice challenge or page bug)
+2. Delivery radio buttons obscured (`vibium check` fails) — use `eval document.querySelector("input[name=exampleRadios]").click()` — Severity: Low
+
+#### Notes
+- "Add to Basket" links use `data-id`, `data-name`, `data-price` attributes + JS click handler; no `href` — `vibium map` skips them
+- Cart state persists across same-session navigation (localStorage)
+- Checkout is a GET form — form data submitted as URL params, page reloads at `/basket?`; no confirmation page exists
+- Login has no test credentials and no feedback — static frontend only
+- About page explicitly states the app is intentionally broken for DevTools practice
+
+---
+
+### Site 52 — Tricentis Obstacle Course
+URL: https://obstaclecourse.tricentis.com/Obstacles
+Date: 2026-05-18
+
+#### Reachability
+[PASS] Site loads instantly; each visit shows a random obstacle
+
+#### Structure
+- Navigation: Home, Obstacle Course, Search
+- Forms: answer input, date input, various obstacle-specific inputs
+- Interactive elements: answer input, "try again" link, "next one" link, obstacle-specific controls
+
+#### Navigation
+[PASS] Home / Obstacle Course navigation works
+[PASS] "next one" link available after each attempt; use `vibium eval 'document.querySelector("a[href*=next]").click()'` (vibium click @eN fails when page is scrolled)
+
+#### Core Functionality
+[PASS] Meeting Scheduler obstacle — `vibium fill @eN "Open"` + `vibium press "Enter"` answers and advances to next obstacle
+[PASS] Confusing Dates obstacle — click calendar button to generate date; calculate first of second following month in ISO; `vibium fill` + click Done; "Good job!" modal confirms success
+[PASS] Fun with Tables obstacle — `vibium map` finds Remove/Edit buttons; target correct row via `eval Array.from(document.querySelectorAll("table tr")).find(r=>...)?.querySelectorAll("button")[1]?.click()`; "Good job!" modal
+[SKIP] Drag-and-drop obstacle (ToscaBot Can Fly) — mouse drag and HTML5 drag events both fail to trigger success; obstacle requires proprietary Tosca event handling
+
+#### Bugs Found
+None found (obstacle failures are expected automation challenges).
+
+#### Notes
+- Answer input `@e7` (resulttext) works with `vibium fill` + `vibium press "Enter"` for text-answer obstacles
+- Success modal buttons ("Hit me with the next riddle!") obscured — use `vibium eval 'document.querySelector("button.btn-success").click()'`; if that fails too, reload and click "next one" link
+- Drag obstacles: HTML5 DragEvent API and mouse events both fail — the site likely uses Tosca-specific drag handling that doesn't respond to standard browser events
+- Obstacles are randomized on each page load — same URL always gives a different challenge
+- Date calculation: `var d = new Date("M/D/YYYY"); d.setMonth(d.getMonth() + 2); d.setDate(1); d.toISOString().split("T")[0]`
+
+---
+
+### Site 53 — UI Test Automation Playground
+URL: http://uitestingplayground.com/
+Date: 2026-05-18
+
+#### Reachability
+[FAIL] HTTP-only site — Chrome blocks navigation via BiDi; `vibium go` returns "BiDi error: unknown error"; `eval location.href` navigates to `chrome-error://chromewebdata/`; accessible via curl (HTTP 200) but Chrome refuses completely
+
+#### Structure
+N/A — could not load in browser
+
+#### Core Functionality
+[FAIL] Cannot test — Chrome blocks HTTP-only origin
+
+#### Bugs Found
+None applicable (site inaccessible).
+
+#### Notes
+- Same pattern as Testing Challenges (testingchallenges.thetestingmap.org) — HTTP-only domains are blocked by Chrome's BiDi security model
+- Site responds on port 80 (Microsoft-IIS/10.0 / Express) but has no HTTPS equivalent
+
+---
+
+### Site 54 — Weather Shopper
+URL: https://weathershopper.pythonanywhere.com/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] PythonAnywhere-hosted site loads instantly
+
+#### Structure
+- Navigation: temperature display → moisturizers or sunscreens page → cart → Stripe checkout
+- Forms: no login; product "Add" buttons; Stripe payment iframe
+- Interactive elements: "Buy moisturizers" / "Buy sunscreens" buttons, "Add" buttons per product, cart button (navbar), "Pay with Card" (Stripe button)
+
+#### Navigation
+[PASS] /moisturizer — 6 moisturizer products with Add buttons
+[PASS] /sunscreen — 6 sunscreen products with Add buttons
+[PASS] /cart — shows items, total in Rupees, Stripe "Pay with Card" button
+
+#### Core Functionality
+[PASS] Temperature display (49°C shown) — determines which products to buy (>34°C = sunscreens)
+[PASS] Add to cart — cart button updates count: "Cart - Empty" → "Cart - 2 item(s)"
+[PASS] Cart page — correct items listed with prices; total calculated (Rupees 300)
+[PASS] Pay with Card — opens Stripe TEST MODE modal (email + card number + MM/YY + CVC); shows "Pay INR ₹300.00"; `vibium frames` lists stripe_checkout_app iframe
+[SKIP] Stripe payment submission — Stripe modal is cross-origin iframe (checkout.stripe.com); fields not fillable via CLI eval
+
+#### Bugs Found
+None found.
+
+#### Notes
+- Cart count button is `@e1` in vibium map; click it to navigate to /cart (not via direct URL)
+- Stripe modal opens as a cross-origin iframe in the current page (not a new tab)
+- Use Stripe test card 4242 4242 4242 4242, MM/YY 12/26, CVC 123 for manual testing
+- Temperature is live from an external API — value changes each visit; both product pages accessible directly at /moisturizer and /sunscreen regardless of temperature
+
+---
+
+### Site 55 — XYZ Bank
+URL: https://www.globalsqa.com/angularJs-protractor/BankingProject/
+Date: 2026-05-18
+
+#### Reachability
+[PASS] AngularJS SPA loads at the login page (#/login)
+
+#### Structure
+- Navigation: Home, Customer Login, Bank Manager Login
+- Customer flow: select customer → account dashboard → Deposit / Withdrawal / Transactions
+- Manager flow: Add Customer / Open Account / Customers list
+
+#### Navigation
+[PASS] Customer Login → dropdown of 5 customers → Login → account page
+[PASS] Bank Manager → Add Customer / Open Account / Customers tabs
+
+#### Core Functionality
+[PASS] Customer select — `vibium select @e2 "Harry Potter"` doesn't trigger AngularJS change binding; use `eval document.querySelector("#userSelect").value="2"; + dispatchEvent(new Event("change",{bubbles:true}))` to show Login button
+[PASS] Deposit — fill amount + click Deposit; balance updates immediately; "Deposit Successful" message shown
+[PASS] Withdrawal — balance decreases correctly (1000 → 750 after 250 withdrawal)
+[PASS] Transactions — Credit/Debit entries visible with date-time, amount, type
+[PASS] Add Customer (Manager) — pre-stub alert before clicking "Add Customer" submit; alert message: "Customer added successfully with customer id :N"
+[PASS] Delete Customer — `eval Array.from(querySelectorAll("button")).find(b=>b.textContent.includes("Delete") && b.closest("tr")?.textContent.includes("Jane"))?.click()`; customer removed from list
+
+#### Bugs Found
+None found.
+
+#### Notes
+- `vibium select` on AngularJS `ng-model` select doesn't trigger change binding — Login button won't appear; must use eval to set value AND dispatch `change` event
+- Add Customer submit triggers `window.alert()` — pre-stub `window.alert = function(msg){window.__lastAlert=msg}` before clicking
+- Account switch (tabs 1004/1005/1006) works via `vibium select @e3 "1005"` but same AngularJS issue applies — use eval if button doesn't appear
+- Search box in Customers list works for filtering by name (`vibium fill` works)
+- SPA routes: `#/login`, `#/account`, `#/manager`
