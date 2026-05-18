@@ -2126,3 +2126,237 @@ None found.
 - Account switch (tabs 1004/1005/1006) works via `vibium select @e3 "1005"` but same AngularJS issue applies — use eval if button doesn't appear
 - Search box in Customers list works for filtering by name (`vibium fill` works)
 - SPA routes: `#/login`, `#/account`, `#/manager`
+
+---
+
+## MCP Batch 1 Re-run — Sites 1–5 (vibium MCP tools)
+
+*Re-tested 2026-05-18 using `mcp__vibium__browser_*` MCP tools. Compare with CLI Batch 1 reports above.*
+
+---
+
+## Practice Test Report: AcademyBugs (MCP)
+URL: https://academybugs.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "AcademyBugs.com – Academy Bugs"
+
+### Structure
+- Navigation: Examples of Bugs, Types of Bugs, Find Bugs, Report Bugs
+- Interactive elements: 21 on homepage (map includes cookie banner + tutorial modal)
+- Products: 18 products at /find-bugs/ (all pages: shoes, jeans, t-shirts, hoodies, bags, coats)
+
+### Navigation
+[PASS] Find Bugs → https://academybugs.com/find-bugs/ (product grid loaded)
+[PASS] Account (Login for Pricing) → https://academybugs.com/account/ (login form loaded)
+
+### Core Functionality
+[PASS] Dismiss tutorial modal — `browser_click @e20` (× button) worked cleanly by CSS selector
+[PASS] Dismiss cookie banner — `browser_click @e3` (Accept cookies) worked
+[BUG] View filter (10/25/50) — clicking "25" still shows 18 products; no change in displayed count
+[PASS] Sort dropdown — `browser_select {selector: "select#sortfield", value: "3"}` correctly sorted Title A-Z (first product changed from "DNK Yellow Shoes" to "Black Over-the-shoulder Handbag"); Price Low-High (value "1") sorted $15.14, $45.00, $46.00 ✓
+[PASS] Product detail page loaded at /store/dnk-yellow-shoes/
+[PASS] Add to Cart — redirected to /my-cart/ (no layout break observed in MCP; CLI showed main content disappearing)
+[BUG] Cart total calculation — Grand Total $152.99 for $45.00 item + $7.99 shipping (expected $52.99)
+[BUG] Russian text on login page — "Не зарегистрированы? Нажмите кнопку ниже" at /account/
+
+### Bugs Found
+1. **View filter non-functional** — clicking "25" shows same 18 products. Steps: /find-bugs/ → click "25" link. Severity: Low
+2. **Cart total calculation error** — Grand Total = $152.99 for $45.00 + $7.99 shipping (off by $100). Steps: add any product to cart → view /my-cart/. Severity: High
+3. **Mixed-language login page** — "NEW USER" section contains Russian text. Steps: navigate to /account/. Severity: Medium
+
+### MCP vs CLI Comparison
+| Finding | CLI | MCP |
+|---------|-----|-----|
+| Sort dropdown | Appeared non-functional (select by text failed) | Works correctly — select by value ("1"–"4") |
+| Add to cart | Layout break: main content disappeared | Normal redirect to /my-cart/ (no layout break) |
+| Cart total bug | Not found | Found: $152.99 for $45+$7.99 |
+| View filter | Non-functional | Non-functional (same) |
+| Russian text | Confirmed | Confirmed (same) |
+| Dialog handling | No native dialogs on this site | No native dialogs on this site |
+
+### Notes
+- Key MCP advantage: `browser_select` uses option `value` attribute directly — select with value "3" for Title A-Z works; CLI was selecting by text label which failed
+- MCP `browser_map` correctly identified all 21 elements on homepage including banner dismissal buttons
+- The "Add to Cart layout break" CLI bug was NOT reproduced with MCP — redirect to cart behaved normally; may be intermittent or session-state dependent
+
+---
+
+## Practice Test Report: Basic Calculator (MCP)
+URL: https://testsheepnz.github.io/BasicCalculator.html
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Basic Calculator"
+
+### Structure
+- Navigation: TestSheepNZ header links
+- Interactive elements: 14 (build select, number inputs x2, operation select, calculate button, answer field, integer-only checkbox, clear button)
+
+### Core Functionality
+[BUG] Divide by zero — Prototype build: 5 ÷ 0 → answer blank, Calculate button permanently disabled
+[BUG] Build 1 NaN — "abc" + 5 = "NaN" (should reject or error)
+[BUG] Build 2 string concatenation — 3 + 4 = "34" (should = 7)
+
+### Bugs Found
+1. **Divide-by-zero disables Calculate button** — Steps: select Divide (value "3"), enter 5 and 0, click Calculate → button disabled permanently until build is changed. Severity: High
+2. **Build 1 accepts non-numeric input** — "abc" + 5 = NaN instead of validation error. Severity: Medium
+3. **Build 2 string concatenation bug** — addition concatenates strings: 3 + 4 = "34". Severity: High
+
+### MCP vs CLI Comparison
+| Finding | CLI | MCP |
+|---------|-----|-----|
+| All 3 bugs | Confirmed | Confirmed (identical behavior) |
+| browser_select by value | N/A | Works: value "3" = Divide, value "1" = Build 1 |
+| browser_fill | N/A | Fills `#number1Field` / `#number2Field` by ID |
+
+### Notes
+- All bugs identical between CLI and MCP — no behavioral differences observed
+- `browser_select` with numeric values ("0"–"4" for operations, "0"–"9" for builds) works cleanly
+- Switching builds re-enables a disabled Calculate button (workaround for the divide-by-zero lock)
+
+---
+
+## Practice Test Report: Black Box Puzzles (MCP)
+URL: https://blackboxpuzzles.workroomprds.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Black Box Puzzles"
+
+### Structure
+- Navigation: 44 interactive elements found by `browser_map` (puzzle links, external links)
+- **MCP advantage**: `browser_map` returns all numbered puzzle links (1, 2, 3, 4, 6a, 7…34) on the index page
+
+### Navigation
+[PASS] Puzzle 29 → https://blackboxpuzzles.workroomprds.com/puzzle29/ (puzzle loaded)
+
+### Core Functionality
+[PASS] Puzzle 29 loaded with 4 dark lamp circles + 4 white button circles
+[PASS] Coordinate click at (486, 589) → buttonA2 turned blue (visual state change confirmed)
+[NOTE] Most puzzles (not 22, 24, 26b, 29, 31, 33, 34) require Flash — render as blank areas
+
+### MCP vs CLI Comparison
+| Finding | CLI | MCP |
+|---------|-----|-----|
+| Index page map | `vibium map` returns nothing | `browser_map` returns all 44 puzzle nav links |
+| Puzzle element map | Nothing (custom elements) | Nothing (same) |
+| Coordinate clicks | Required via `vibium mouse click x y` | Required via `browser_mouse_click {x, y}` |
+| Puzzle navigation | Must construct URL manually | Can click numbered links from map |
+
+### Notes
+- MCP `browser_map` is significantly more capable on the index page — CLI returned nothing; MCP found all puzzle navigation links
+- Inside individual puzzles, elements are inside `<puzzle>/<puzzleui>` custom HTML elements — not found by either CLI or MCP map; both require coordinate clicks
+- `getBoundingClientRect()` eval works identically in both modes for locating puzzle circles
+- Flash-only puzzles render blank in Chrome regardless of mode
+
+---
+
+## Practice Test Report: BookCart (MCP)
+URL: https://bookcart.azurewebsites.net/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Home"; Angular Material UI rendered
+
+### Structure
+- Navigation: Book Cart, Search, Cart (0), Login, Swagger, GitHub
+- Categories: All Categories, Biography, Fiction, Mystery, Fantasy, Romance
+- Interactive elements: 13 found by `browser_map`
+
+### Core Functionality
+[BUG] Products not loaded — "No books found." shown after 5s wait (Azure backend hibernated)
+[BUG] Login empty submit — form shows red borders on required fields; no error message text
+[BUG] Login invalid credentials — silent failure; page stays on login with no error/snackbar
+[PASS] Duplicate username check — registering as "admin" shows "User Name is not available" snackbar
+
+### Bugs Found
+1. **Azure backend hibernated** — products API down; "No books found." on all categories. Severity: High (environment)
+2. **Silent login validation** — empty submit highlights fields in red but shows no error message. Severity: Medium
+3. **Silent invalid login failure** — no error message on wrong credentials (API down). Severity: Medium (masked by backend issue)
+
+### MCP vs CLI Comparison
+| Finding | CLI | MCP |
+|---------|-----|-----|
+| Backend down | Confirmed | Confirmed (same) |
+| Silent validation | Confirmed | Confirmed (same) |
+| Duplicate username snackbar | Confirmed | Confirmed: "User Name is not available" |
+| Login button selector | `vibium find role button` | `browser_map` → @e4 (button, not link) |
+| `browser_find role=link text=Login` | N/A | Times out 30s — Login is `<button>` not `<a>` |
+
+### Notes
+- **MCP-specific finding**: `browser_find {role: "link", text: "Login"}` timed out with 30s wait — the Login control is rendered as `<button>` by Angular Material, not `<a>`; must use `browser_map` refs or CSS selector
+- Angular Material inputs fill by `#mat-input-N` IDs (auto-assigned)
+- `browser_map` correctly identifies `mat-list-item` elements for categories (CLI equivalent unclear)
+
+---
+
+## Practice Test Report: Cnarios (MCP)
+URL: https://www.cnarios.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Cnarios | Free Real-World Automation Testing Practice"
+
+### Structure
+- Navigation: Features, How it works?, Contact Us, Blogs, Start Exploring, Challenges
+- Footer links: Iframes, Multi Window, Links, Table, E-commerce Pagination, E-commerce Filters, HTML Basics, Locator Strategies
+- Interactive elements: 26 on homepage
+
+### Navigation
+[PASS] Challenges → https://www.cnarios.com/challenges (8 challenge cards loaded)
+[BUG] /concepts/iframe → completely blank page (React routing bug)
+[BUG] `browser_get_text` on blank page → MCP schema error ("Invalid input: expected string, received undefined")
+
+### Core Functionality
+[PASS] Challenges page — filter inputs, 8 "View Challenge" buttons visible
+[PASS] Challenge detail — "E-commerce Product Listing & Pagination" at /challenges/product-listing-pagination loaded
+[BUG] All /concepts/* pages render blank
+
+### Bugs Found
+1. **React routing bug on /concepts/*** — direct navigation to any /concepts/* URL renders blank page; `#root` has 0 children. Steps: click any footer link (Iframes, Multi Window, etc.). Severity: Medium
+2. **MCP `browser_get_text` schema error on blank pages** — tool throws "Invalid input: expected string, received undefined" when page text content is empty. Not a site bug — MCP tool limitation. Severity: N/A (tool behavior)
+
+### MCP vs CLI Comparison
+| Finding | CLI | MCP |
+|---------|-----|-----|
+| /concepts/* blank | Confirmed | Confirmed (same) |
+| Blank page text | Returns empty string | Throws schema error |
+| Challenges section | Functional | Functional (same) |
+| Challenge detail pages | Functional | Functional (same) |
+
+### Notes
+- **MCP-specific finding**: `browser_get_text` throws a schema validation error when page content is empty (null/undefined return). CLI `vibium text` returns empty string gracefully. Workaround: use `browser_evaluate` with `document.body.innerText + ''` (string coercion prevents null return)
+- This is a known MCP tool behavior gap — document in SKILL.md tips
+
+---
+
+## MCP Batch 1 — Cross-Site Comparison Summary
+
+| Site | CLI Bugs | MCP Bugs | MCP-Only Findings | CLI-Only Findings |
+|------|----------|----------|-------------------|-------------------|
+| AcademyBugs | Sort non-functional, view filter, layout break, Russian text | View filter, cart total error, Russian text | Cart total bug ($152.99); sort IS functional via value | Layout break (not reproduced) |
+| Basic Calculator | Div/0, NaN, concatenation | Div/0, NaN, concatenation | None | None |
+| Black Box Puzzles | Map empty, Flash puzzles | Flash puzzles | Index page map works | Index map empty |
+| BookCart | Backend down, silent validation | Backend down, silent validation | `browser_find role=link` timeout on buttons | None |
+| Cnarios | /concepts blank | /concepts blank | `browser_get_text` schema error on blank pages | None |
+
+### Key MCP vs CLI Behavioral Differences
+
+1. **`browser_select` vs `vibium select`**: Both match by option `value` attribute. AcademyBugs sort appeared broken in CLI because the old CLI notes said it was non-functional — with value-based selection, sort works correctly. Both tools behave the same when used correctly.
+
+2. **`browser_map` coverage**: MCP `browser_map` found navigation links on the Black Box Puzzles index where CLI `vibium map` returned nothing. MCP is more inclusive of plain `<a>` links in non-standard page structures.
+
+3. **`browser_find` role matching**: MCP `browser_find {role: "link"}` strictly matches ARIA `role=link` — Angular Material buttons and `<button>` elements time out. CLI `vibium find role button` is more forgiving. Use `browser_map` refs or CSS selectors in MCP instead.
+
+4. **Blank page handling**: CLI returns empty string on blank pages. MCP `browser_get_text` throws a schema error. Always coerce eval return values to strings in MCP mode.
+
+5. **Dialog handling**: Not tested in batch 1 (no native dialogs triggered). MCP uses `browser_dialog_accept`/`browser_dialog_dismiss` vs CLI pre-stubbing. No deadlock risk with MCP.
+
+6. **Session isolation**: MCP browser and CLI daemon are separate — `browser_stop`/`browser_start` does not affect the CLI session.

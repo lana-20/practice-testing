@@ -9,12 +9,27 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 ## How to run
 
-`/practice-testing [site-name-or-url]`
+`/practice-testing [site-name-or-url] [--cli|--mcp]`
 
-- `/practice-testing AcademyBugs` — test by name from the list below
-- `/practice-testing Parabank` — test Parabank by name
+- `/practice-testing AcademyBugs` — test by name (default: CLI mode)
+- `/practice-testing Parabank --mcp` — test using vibium MCP tools
 - `/practice-testing https://example.com` — test any URL directly
 - `/practice-testing` — list all available practice sites
+
+### Mode selection
+
+**CLI mode** (default): Uses vibium CLI commands via Bash tool.
+- Invoked as shell commands: `vibium go`, `vibium map`, `vibium click @eN`, etc.
+- Requires `export PATH="/usr/local/bin:$PATH"` prefix to avoid Python vibium binary
+- Daemon can deadlock on native dialogs — pre-stub with `eval 'window.alert=function(){}'`
+- `vibium select` matches by option value attribute, not display text
+
+**MCP mode**: Uses `mcp__vibium__browser_*` tool calls directly.
+- Dialog handling via `browser_dialog_accept` / `browser_dialog_dismiss` — no deadlock risk
+- `browser_select` matches by option value (same as CLI)
+- `browser_find` with `role=link` times out on `<button>` elements — use `browser_map` refs or CSS selectors
+- `browser_get_text` and `browser_evaluate` throw schema errors when page content is empty/null — wrap return values as strings (e.g. `expr + ''`)
+- MCP runs a separate browser session from the CLI daemon; stop/start MCP browser via `browser_stop` + `browser_start`
 
 ## Site Directory
 
@@ -22,11 +37,11 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 | Name | URL | Notes |
 |------|-----|-------|
-| AcademyBugs | https://academybugs.com/ | 25 real bugs planted; dismiss tutorial modal + cookie banner before interacting |
-| Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | Prototype + builds 1–9; select operation by value ("0"–"4"), not text |
-| Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | Most puzzles need Flash — only 22, 24, 26b, 29, 31, 33, 34 work; use `mouse click x y` not map refs |
-| BookCart | https://bookcart.azurewebsites.net/ | Azure-hosted; backend frequently hibernated — products may not load |
-| Cnarios | https://www.cnarios.com/ | Challenges work; /concepts/* pages render blank (React routing bug) |
+| AcademyBugs | https://academybugs.com/ | 25 real bugs planted; dismiss tutorial modal + cookie banner before interacting; **CLI**: sort dropdown appears non-functional (vibium select by text fails — select uses numeric values); **MCP**: browser_select by value works correctly (sort IS functional); cart total calculation bug: Grand Total $152.99 for $45 item + $7.99 shipping (expected $52.99); view filter (10/25/50) broken in both modes; Russian text bug at /account/ |
+| Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | Prototype + builds 1–9; select operation by value ("0"–"4"), not text; all bugs identical in CLI and MCP |
+| Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | Most puzzles need Flash — only 22, 24, 26b, 29, 31, 33, 34 work; **CLI**: `vibium map` returns nothing on index; **MCP**: `browser_map` finds all puzzle nav links; both modes require coordinate clicks inside puzzle custom elements |
+| BookCart | https://bookcart.azurewebsites.net/ | Azure-hosted; backend frequently hibernated — products may not load; **MCP**: `browser_find role=link text=Login` times out (Login is a button) — use map ref; Angular Material inputs fill by `#mat-input-N` |
+| Cnarios | https://www.cnarios.com/ | Challenges work; /concepts/* pages render blank (React routing bug); **MCP**: `browser_get_text` throws schema error on blank concepts pages — use `browser_evaluate` with string return |
 | Evil Tester | https://testpages.eviltester.com/styled/index.html | Stub alert/confirm/prompt via eval BEFORE clicking alert buttons |
 | Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | Intentionally inaccessible; contact form fields need `input[name=x]` selectors |
 | Magento | https://magento.softwaretestingboard.com/ | DOWN — Cloudflare 526 SSL error as of 2026-04-22 |
@@ -113,27 +128,55 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 When given a site to test, run this structured protocol. Skip steps that are not applicable (e.g. login for sites without auth).
 
 ### Step 1 — Reachability
+
+**CLI:**
 ```sh
 vibium go <url>
 vibium wait load --timeout 10000
 vibium title
 vibium screenshot -o step1-load.png
 ```
+
+**MCP:**
+```
+browser_navigate {url}
+browser_wait_for_load {timeout: 10000}
+browser_get_title
+browser_screenshot {filename: "step1-load.png"}
+```
 Record: loaded / timed out / error page.
 
 ### Step 2 — Page structure
+
+**CLI:**
 ```sh
 vibium text
 vibium map
 ```
+
+**MCP:**
+```
+browser_get_text
+browser_map
+```
 Note: main navigation links, prominent headings, form count, interactive element count.
+MCP `browser_get_text` throws a schema error on blank pages — if the page has no content, use `browser_evaluate` with `document.body.innerText + ''` instead.
 
 ### Step 3 — Navigation smoke test
 Click 2–3 main nav links. After each:
+
+**CLI:**
 ```sh
 vibium click @eN
 vibium diff map
 vibium url
+```
+
+**MCP:**
+```
+browser_click {selector: "@eN"}
+browser_map
+browser_get_url
 ```
 Record: destination URL, any errors, broken links.
 
@@ -168,8 +211,15 @@ Adapt based on site type:
 - Test invalid input types
 
 ### Step 5 — Screenshot and report
+
+**CLI:**
 ```sh
 vibium screenshot -o final.png --full-page
+```
+
+**MCP:**
+```
+browser_screenshot {filename: "final.png", fullPage: true}
 ```
 
 ---
@@ -209,14 +259,27 @@ Date: <date>
 
 ## Tips
 
+### General (both modes)
 - Always re-map after clicking navigation or submitting forms — refs expire on page change
-- Use `vibium find text` / `find role` instead of hardcoded refs for reliability
 - Sites marked "with bugs" are intentionally broken — report bugs as findings, not failures
 - For sites requiring login, check the site's About/Demo page for credentials first
-- iframes require `vibium frames` then `vibium frame "<name>"` before interacting inside them
 - Dismiss cookie banners and modals early — they obscure elements and block clicks
-- `vibium select` matches by option `value` attribute, not display text; use `vibium eval` to inspect option values first if unsure
-- Elements styled with CSS `text-transform: uppercase` cannot be found by `vibium find text "UPPERCASE"` — search for the actual DOM text (e.g. "Books" not "BOOKS")
-- Canvas-rendered and custom-painted UIs won't appear in `vibium map` — use `vibium eval getBoundingClientRect()` to locate elements, then `vibium mouse click x y`
+- Both `vibium select` (CLI) and `browser_select` (MCP) match by option `value` attribute, not display text; inspect option values first if unsure
+- Elements styled with CSS `text-transform: uppercase` cannot be found by text — search for the actual DOM text (e.g. "Books" not "BOOKS")
+- Canvas-rendered and custom-painted UIs won't appear in map — use `getBoundingClientRect()` eval to locate elements, then coordinate click
 - Azure/Heroku-hosted demo sites may hibernate — if products or data don't load, wait 5s and reload once before reporting a bug
 - For React SPAs, always test routes via in-app navigation first; direct URL navigation may fail if the server doesn't handle client-side routes
+
+### CLI-specific
+- Use `vibium find text` / `find role` instead of hardcoded refs for reliability
+- iframes require `vibium frames` then `vibium frame "<name>"` before interacting inside them
+- Pre-stub native dialogs before clicking: `vibium eval 'window.alert=function(){}'` — clicking first deadlocks the daemon
+- Daemon broken pipe after idle or BiDi error: `vibium stop && sleep 2 && vibium start && sleep 2`
+- Multi-statement evals with semicolons fail in shell quoting — split into separate `vibium eval` calls
+
+### MCP-specific
+- Use `browser_dialog_accept` / `browser_dialog_dismiss` for native dialogs — no deadlock risk
+- `browser_find` with `role="link"` times out on `<button>` elements — use `browser_map` refs or CSS selectors instead
+- `browser_get_text` and `browser_evaluate` throw MCP schema errors when the page returns empty/null content — ensure eval expressions return a string (append `+ ''`)
+- MCP `browser_map` finds more elements on some pages than CLI `vibium map` (e.g. puzzle index links, Angular Material list items)
+- Stop/restart MCP browser session with `browser_stop` + `browser_start` when BiDi errors occur — this does NOT affect the CLI daemon
