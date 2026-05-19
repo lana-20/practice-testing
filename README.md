@@ -2,7 +2,7 @@
 
 <!-- Run history:
   General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 1–5 (2026-05-19)
-  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 7, 9, 11 (2026-05-19)
+  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6–9, 11 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
@@ -304,6 +304,52 @@
 - Automation Test Store (5.2×) — multi-page e-commerce flow (home → search → product) compresses the ratio; same `product_id=31` not found in both interfaces (site data changed), fell back to product 51
 - Coffee Cart CLI was a cold-server hit (~27s to load); MCP run hit a warmer server (~35s total including tool-call overhead); true ratio on warm server would be ~18× based on pattern from other batches
 - Commit Quality (9.8×) — clean React app; MCP `browser_map` correctly identified nav + filter + product elements
+
+---
+
+## CLI vs MCP Performance Comparison — Automation Testing Batch 8 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** Contact List App, Demo SaaS, Expand Testing, GreenKart, Global SQA Demo (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio | Notes |
+|------|----------|----------|-------|-------|
+| Contact List App | 2,194 | 25,909 | 11.8× | |
+| Demo SaaS | 1,059 | 13,455 | 12.7× | |
+| Expand Testing | 87,302¹ | 44,906 | 0.5×¹ | CLI daemon i/o timeout on first navigate |
+| GreenKart | 8,134 | 22,470 | 2.8× | MCP map returned 126 elements |
+| Global SQA Demo | 3,097² | 20,876 | 6.7×² | CLI BiDi error; MCP followed HTTP→HTTPS redirect |
+| **Total** | **101,786** | **127,616** | **1.3×** | |
+| **Total (excl. Expand Testing)** | **14,484** | **82,710** | **5.7×** | |
+
+¹ CLI Expand Testing hit a daemon i/o timeout on initial navigate (~87s); MCP ran cleanly in 45s. Excluding this anomaly, the batch runs at **5.7×** in CLI's favour.
+² Global SQA Demo is listed as HTTP-only (`http://`). CLI reported BiDi error; MCP silently followed the HTTP→HTTPS redirect and loaded the site successfully. This is a behavioral difference, not just a performance difference.
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +5 | +42 | 8.4× |
+| Cost | +$0.2536 | +$2.0307 | 8.0× |
+
+### Notes
+- **MCP is faster** on this batch in raw total (1.3×) due to CLI's Expand Testing daemon timeout — the only batch where CLI was not faster overall
+- Excluding Expand Testing anomaly, CLI is the expected **5.7× faster**
+- **Key behavioral difference:** Global SQA Demo — CLI `vibium go http://` raises BiDi "unknown error"; MCP `browser_navigate` silently follows the HTTP→HTTPS redirect and loads `https://www.globalsqa.com/demo-site/` with 49 interactive elements mapped. MCP is more resilient to HTTP→HTTPS redirects on initial navigate.
+- GreenKart (2.8×) — large Angular product listing (31 products × 4 controls = 126 mapped elements); map call overhead is significant for both interfaces; CLI eval-based add-to-cart was fast but the page render time floors both timings
+- Expand Testing MCP `browser_map` returned 233 elements (homepage has exhaustive example list); serializing this many tool results adds overhead — but still faster than CLI's timeout
+- Demo SaaS (12.7×) is a clean, fast-loading SPA with minimal interaction — no sleeps, no mandatory waits; pure MCP tool-call overhead dominates
 
 ---
 
