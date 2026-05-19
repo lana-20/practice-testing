@@ -1,11 +1,53 @@
 # Practice Testing — Test Reports
 
 <!-- Run history:
-  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 2–5 (2026-05-19)
+  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 1–5 (2026-05-19)
   Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 9, 11 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
+
+---
+
+## CLI vs MCP Performance Comparison — General Practice Batch 1 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** AcademyBugs, Basic Calculator, Black Box Puzzles, BookCart, Cnarios (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| AcademyBugs | 8,130 | 31,787 | 3.9× |
+| Basic Calculator | 1,793 | 33,255 | 18.5× |
+| Black Box Puzzles | 1,565 | 19,275 | 12.3× |
+| BookCart (hibernated) | 5,863 | 35,356 | 6.0× |
+| Cnarios | 2,471 | 15,238 | 6.2× |
+| **Total** | **19,822** | **134,911** | **6.8×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +7 | +47 | 6.7× |
+| Cost | +$0.3077 | +$1.7959 | 5.8× |
+
+### Notes
+- CLI is **6.8× faster** and **5.8× cheaper** for this batch
+- AcademyBugs has the narrowest gap (3.9×) — both interfaces had to handle cookie banner dismissal + tutorial modal; CLI used CSS suppression via eval, MCP clicked the actual Start button; comparable interaction overhead compressed the ratio
+- Basic Calculator shows the widest gap (18.5×) — it's a minimal GitHub Pages form with no mandatory waits; MCP's per-tool-call overhead dominates a ~5-step workflow
+- Black Box Puzzles (12.3×) — static site, Flash-free puzzles only; both CLI and MCP navigate to puzzle29 and query DOM; no sleep required so overhead fully exposed
+- BookCart (6.0×) both interfaces show backend hibernated (only 1 `mat-card` visible after 3s wait); the 3s mandatory sleep floor absorbs some MCP overhead
+- Cnarios (6.2×) — React SPA; MCP `browser_map` returned 26 elements including challenge section links; CLI `vibium map` comparable; neither returned actual challenge cards at `/challenges/` (React routing renders heading only)
 
 ---
 
