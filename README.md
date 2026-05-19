@@ -1,11 +1,55 @@
 # Practice Testing — Test Reports
 
 <!-- Run history:
-  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 3–5 (2026-05-19)
+  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 2–5 (2026-05-19)
   Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batch 6 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
+
+---
+
+## CLI vs MCP Performance Comparison — General Practice Batch 2 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** Evil Tester, Gefälscht CompuTech, Magento (DOWN), Parabank, Parking Cost Calculator (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| Evil Tester | 7,429 | 19,491 | 2.6× |
+| Gefälscht CompuTech | 1,288 | 18,556 | 14.4× |
+| Magento (DOWN) | 426 | 6,086 | 14.3× |
+| Parabank | 4,825 | 84,782¹ | 17.6×¹ |
+| Parking Cost Calculator | 4,171 | 29,675 | 7.1× |
+| **Total** | **18,139** | **158,590** | **8.7×** |
+
+¹ Includes a 30-second `browser_find` timeout waiting for a "Register" button that doesn't exist by that role. Without the timeout, Parabank MCP ≈ 54,782ms (11.4×).
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +14 | +62 | 4.4× |
+| Cost | +$0.8076 | +$1.0886 | 1.3× |
+
+### Notes
+- CLI is **8.7× faster** overall; cost ratio is a modest **1.3×** — smallest cost gap seen across any batch
+- Evil Tester shows the smallest timing gap (2.6×) — alert pre-stubbing via `eval` is cheap in both interfaces; CLI overhead vs MCP nearly equal on simple navigation+map+click flows
+- Gefälscht CompuTech and Magento (DOWN) show ~14× gap — these are simple/trivial interactions where MCP tool-call round-trip dominates
+- Parabank is anomalous: MCP inflated by a 30s find timeout for a non-existent "Register" button role; MCP did successfully fill all 9 form fields via `input[id="..."]` selectors (no dot-escaping issues unlike CLI)
+- CLI Parabank had the opposite problem: `input[name=customer.firstName]` dot-in-name selector failed; IDs worked in MCP
+- Parking Cost Calculator returns `$0.00` in both CLI and MCP — likely an AM/PM radio default or date parse issue on the site itself (consistent cross-interface)
 
 ---
 
