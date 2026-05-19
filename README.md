@@ -2,7 +2,7 @@
 
 <!-- Run history:
   General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 1–5 (2026-05-19)
-  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6–9, 11 (2026-05-19)
+  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6–11 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
@@ -396,6 +396,49 @@
 - Locator Game (7.2×) is a clean GitHub Pages static site — no sleep floors, so MCP overhead is fully exposed
 - CLI Let Code shows slow `wait load` on Angular pages (~3s per navigate) which narrows the gap; MCP's BiDi failures more than offset this
 - MCP `browser_map` found ads (iframe elements) on Let Code pages; CLI `vibium map` silently filtered these
+
+---
+
+## CLI vs MCP Performance Comparison — Automation Testing Batch 10 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** QA Playground, React Shopping Cart, Selectors Hub, Selenium Playground, Swag Labs (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. CLI run live in this session. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| QA Playground | 1,688 | 9,660 | 5.7× |
+| React Shopping Cart | 1,744 | 15,338 | 8.8× |
+| Selectors Hub | 3,993 | 15,509 | 3.9× |
+| Selenium Playground | 5,130 | 20,952 | 4.1× |
+| Swag Labs | 1,667 | 18,498 | 11.1× |
+| **Total** | **14,222** | **79,957** | **5.6×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +7 | +41 | 5.9× |
+| Cost | +$0.4019 | +$0.7392 | 1.8× |
+
+### Notes
+- CLI is **5.6× faster** and **1.8× cheaper** — lowest cost ratio of all automation batches; MCP returned richer map data per interaction
+- Swag Labs (11.1×) — clean login→inventory→add-to-cart flow with no mandatory sleeps; CLI single-invocation efficiency most visible here
+- React Shopping Cart (8.8×) — MCP `browser_map` successfully enumerated all 16 product cards; CLI `vibium map` returned no product card refs (styled-components hash classes), but CLI was still faster overall due to lower tool overhead
+- Selectors Hub (3.9×) — 125-element page with shadow DOM and disabled fields; MCP map returned comprehensive element list; largest page map of the batch, which narrows the ratio by consuming proportionally more MCP time on map vs. actual interaction
+- Selenium Playground (4.1×) — Cloudflare blocks sub-page navigation for both interfaces; both timed out attempting `/simple-form-demo`; MCP main-page map returned 156 elements including full nav and footer links
+- QA Playground (5.7×) — clean static site, 28+ challenge links; no anomalies
+- Low cost ratio (1.8×) reflects MCP's higher cache-read efficiency on large map responses — turns count is 5.9× higher but token cost per turn is lower than other batches
 
 ---
 
