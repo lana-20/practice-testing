@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 5 (General Practice sites 21–25)
+## Latest Session: 2026-05-18 — MCP Batch 6 (Automation Testing sites 1–5)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–5 (General Practice sites 1–25), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6 (Automation Testing sites 1–5), last run 2026-05-18 -->
 
 ---
 
@@ -3097,3 +3097,157 @@ None.
 5. **ToDo List — checkbox workaround same**: `browser_check` fails with "obscured" in MCP as in CLI. `browser_mouse_click` at computed coords is required in both modes.
 
 4. **B5 confirmed in MCP**: `browser_select` with non-existent option value returns success in both CLI and MCP, but silently sets `selectedIndex=-1`. Always verify select state after setting a value.
+
+---
+
+## Practice Test Report: Automation Bookstore (MCP)
+URL: https://automationbookstore.dev/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~1s
+
+### Structure
+- Navigation: none (single-page filter app)
+- Forms: filter input, clear button
+- Interactive elements: 10 refs (filter input, 8 book links, clear button)
+
+### Core Functionality
+[PASS] Filter — `browser_fill` on `#searchBar` filters books in real time; "selenium" → 1 result (Advanced Selenium in Java)
+[PASS] Clear — `browser_click` on clear button restores all 8 books
+[PASS] Empty filter — no "no results" message; books hidden via CSS class (not `style.display`)
+[NOTE] Book links have `href="#"` — click stays on same page, no detail page
+
+### Bugs Found
+None.
+
+### Notes
+- Filter hides books via CSS class toggle, not inline `style.display` — `querySelectorAll('li:not([style*="display: none"])').length` returns 8 even when filtered; use visibility check or count visible elements via screenshot
+- Same as CLI behavior
+
+---
+
+## Practice Test Report: Automation Camp (MCP)
+URL: https://play2.automationcamp.ir/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: Home, Contact links
+- Forms: login (username/password), form fields (text, radio, select, checkbox, color, date, range, file, number, textarea), double-click button, alert button
+- Interactive elements: 25 refs
+
+### Core Functionality
+[PASS] Login — `browser_fill` + submit → "Login Successful :)" with `test`/`test`
+[PASS] Radio button — `browser_check` works on `#male`
+[PASS] Select — `browser_select` by value (`option1`) works
+[PASS] Range slider — `browser_fill` fails ("not editable"); `eval + dispatchEvent` sets value correctly
+[PASS] Date input — `browser_fill` fails; `eval .value= + dispatchEvent` works
+[PASS] Double-click — `browser_dblclick` works (no visible feedback on this button)
+[FAIL] Textarea — `browser_fill` returns "fill:" error (MB7); `eval .value= + dispatchEvent(input)` workaround works
+[SKIP] Alert button — not tested; direct click deadlocks (MB3); setTimeout workaround would work
+
+### Bugs Found
+1. MB7 — `browser_fill` fails on `<textarea>` — Severity: High (workaround: eval + dispatchEvent)
+
+### Notes
+- Same as CLI: `input[type=date]` and `input[type=range]` require eval; login credentials `test`/`test`
+- Alert button deadlock (MB3) confirmed by CLI; not re-triggered in MCP to avoid session loss
+
+---
+
+## Practice Test Report: Applitools Demo (MCP)
+URL: https://demo.applitools.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~1s
+
+### Structure
+- Navigation: Credit cards, Debit cards, Loans, Mortgages, Add Account, Make Payment
+- Forms: username, password, remember me checkbox
+- Interactive elements: 8 refs on login page
+
+### Core Functionality
+[PASS] Login — empty credentials accepted (intentional); redirects to `/app.html`
+[PASS] Dashboard — loads with intentional visual bugs: `$350%7` (corrupted total balance), `Today1:52am` (malformed timestamp)
+[PASS] Action links (Add Account, Make Payment, View Statement, etc.) — all `href="#"`, stay on same page (intentional dead links)
+[PASS] Search input present on dashboard
+
+### Bugs Found (Intentional)
+1. `$350%7` — corrupted total balance display — intentional visual bug for testing tools
+2. `Today1:52am` — malformed transaction timestamp — intentional
+3. All action links dead (`href="#"`) — intentional
+
+### Notes
+- Site purpose: visual regression testing demo — bugs are intentional and by design
+- Same as CLI behavior
+
+---
+
+## Practice Test Report: Automation Exercise (MCP)
+URL: https://www.automationexercise.com/products
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded via `/products` direct URL; ad overlay present but small (bottom banner — not blocking)
+
+### Structure
+- Navigation: Home, Products, Cart, Signup/Login, Test Cases, API Testing, Video Tutorials, Contact us
+- Products: full catalog with search, category filter, brand filter
+- Interactive elements: search box, Add to cart buttons, View Product links
+
+### Core Functionality
+[PASS] Search — `browser_fill` on search input + click submit → filters to matching products
+[PASS] Product detail — navigate to `/product_details/1` directly; product info, quantity, Add to cart button all accessible
+[PASS] Add to cart — `browser_click` on "Add to cart" → "Added!" modal with "View Cart" link
+[PASS] View cart — cart page shows Blue Top item correctly
+[NOTE] Ad overlay: present on homepage nav clicks — navigate via direct URLs; small Fiverr banner at bottom on product pages
+
+### Bugs Found
+None.
+
+### Notes
+- Navigating to `/product_details/N` directly is more reliable than clicking "View Product" in search results (click lands on div wrapper, not the link)
+- Ad close button exists in DOM but clicking it may not fully dismiss ad — direct URL navigation is the safe approach
+
+---
+
+## Practice Test Report: Automation in Testing (MCP)
+URL: https://automationintesting.online/#/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s (Shady Meadows B&B — Restful-booker-platform demo)
+
+### Structure
+- Navigation: Rooms, Booking, Amenities, Location, Contact, Admin
+- Forms: contact form (name, email, phone, subject, message/textarea), booking form (calendar + guest details)
+- Interactive elements: 33 refs on homepage
+
+### Core Functionality
+[PASS] Contact form — `browser_fill` works for all text inputs; `browser_fill` fails on `#description` textarea (MB7) — `browser_type` correctly triggers framework validation; Submit button obscured — `eval '#contact form button'.click()` required; success: "Thanks for getting in touch Test User!"
+[PASS] Room booking — `browser_click` on "Book now" → room detail page with calendar (date pre-selected to today); `browser_click "Reserve Now"` → guest detail form; fill name/email/phone → click "Reserve Now" again → "Booking Confirmed" for 2026-05-18 → 2026-05-19
+[NOTE] `browser_type` (not `browser_fill` + eval) is required to trigger Angular/React framework validation on textarea — raw `eval .value=` sets DOM value but validator reads component state
+
+### Bugs Found
+1. MB7 — `browser_fill` fails on `#description` textarea — Severity: High (workaround: `browser_type`)
+
+### Notes
+- Key MCP insight: `browser_type` fires keyboard events that update framework component state; `eval .value=` only updates DOM value. Use `browser_type` for textareas in framework-driven sites.
+- Submit button obscured in MCP (same as CLI) — `eval .click()` required
+- Full booking confirmation flow works end-to-end without needing the old calendar workaround
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 6)
+
+1. **Automation in Testing — `browser_type` for textareas in framework apps**: `eval .value= + dispatchEvent(input)` sets DOM value but Angular/React validator reads component state — shows "Message must be between 20 and 2000 characters" even with valid content. `browser_type` fires real key events that update component state correctly.
+
+2. **Automation Camp — MB7 same as CLI**: `browser_fill` fails on `<textarea>`; eval workaround works for non-framework textareas (vanilla JS). For framework textareas (Angular/React), prefer `browser_type`.
+
+3. **Automation Exercise — direct URL navigation preferred**: Clicking "View Product" in search results lands on a div wrapper, not the product link. Navigate to `/product_details/N` directly for reliability.
+
+4. **Automation Bookstore — filter uses CSS class, not style.display**: DOM inspection via `querySelectorAll` style checks will mislead — use screenshot or check computed visibility instead.
