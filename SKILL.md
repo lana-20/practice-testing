@@ -25,10 +25,12 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 - `vibium select` matches by option value attribute, not display text
 
 **MCP mode**: Uses `mcp__vibium__browser_*` tool calls directly.
-- Dialog handling via `browser_dialog_accept` / `browser_dialog_dismiss` — no deadlock risk
+- Dialog handling via `browser_dialog_accept` / `browser_dialog_dismiss`
+- **MB3 applies to MCP too**: direct `browser_click` on a native `alert()` trigger deadlocks — use `browser_evaluate { setTimeout(..., 300) }` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` pattern
 - `browser_select` matches by option value (same as CLI)
 - `browser_find` with `role=link` times out on `<button>` elements — use `browser_map` refs or CSS selectors
-- `browser_get_text` and `browser_evaluate` throw schema errors when page content is empty/null — wrap return values as strings (e.g. `expr + ''`)
+- `browser_get_text` throws `invalid_union` on empty/blank page content (MB9) — use `browser_evaluate { expression: "document.body.innerText || null" }` instead
+- `browser_evaluate` returning `""` throws `invalid_union` (MB6) — use `|| null`, never `|| ''`
 - MCP runs a separate browser session from the CLI daemon; stop/start MCP browser via `browser_stop` + `browser_start`
 
 ## Site Directory
@@ -42,11 +44,11 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 | Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | Most puzzles need Flash — only 22, 24, 26b, 29, 31, 33, 34 work; **CLI**: `vibium map` returns nothing on index; **MCP**: `browser_map` finds all puzzle nav links; both modes require coordinate clicks inside puzzle custom elements |
 | BookCart | https://bookcart.azurewebsites.net/ | Azure-hosted; backend frequently hibernated — products may not load; **MCP**: `browser_find role=link text=Login` times out (Login is a button) — use map ref; Angular Material inputs fill by `#mat-input-N` |
 | Cnarios | https://www.cnarios.com/ | Challenges work; /concepts/* pages render blank (React routing bug); **MCP**: `browser_get_text` throws `invalid_union` on blank pages (vibium bug MB9) — use `browser_evaluate { expression: "document.body.innerText || null" }` |
-| Evil Tester | https://testpages.eviltester.com/styled/index.html | Stub alert/confirm/prompt via eval BEFORE clicking alert buttons |
-| Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | Intentionally inaccessible; contact form fields need `input[name=x]` selectors |
+| Evil Tester | https://testpages.eviltester.com/styled/index.html | **CLI**: stub alert/confirm/prompt via eval BEFORE clicking alert buttons; **MCP**: `browser_click` on native alert button deadlocks (MB3 — same as CLI); use `browser_evaluate { setTimeout(..., 300) }` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` instead |
+| Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | Intentionally inaccessible; **CLI**: contact form fields need `input[name=x]` selectors; **MCP**: `browser_map` refs work without name selectors; contact URL is `/contact.php` (not `/contact/` — 404) |
 | Magento | https://magento.softwaretestingboard.com/ | DOWN — Cloudflare 526 SSL error as of 2026-04-22 |
-| Parabank | https://parabank.parasoft.com/parabank/admin.htm | Run DB Initialize first; login broken — use for form/validation testing only |
-| Parking Cost Calculator | https://www.shino.de/parkcalc/ | Use option values not text for lot dropdown; invalid dates cause blank page |
+| Parabank | https://parabank.parasoft.com/parabank/admin.htm | Run DB Initialize first; after init, any username/password logs in (auth is not validated — intentional demo behavior); use for form/validation testing only |
+| Parking Cost Calculator | https://www.shino.de/parkcalc/ | Use option values not text for lot dropdown; invalid dates show inline error message (not blank page); input names are PascalCase (`StartingDate`, `LeavingTime`); Valet: $12 flat ≤5h, $18/day >5h; boundary is inclusive (exactly 5h = $12) |
 | PHP Travels | http://phptravels.com/demo/ | Landing page only — submit form to get emailed credentials; no public demo URL; Submit button deadlocks daemon — pre-stub dialogs; Login nav link is broken (redirects to same page) |
 | Polymer Shop | https://shop.polymer-project.org/ | All UI in Web Components shadow DOM — `vibium map` returns nothing; use `eval + shadowRoot` traversal or coordinate clicks; cart is server-side |
 | Practice Software Testing | https://practicesoftwaretesting.com/ | Angular app; add to cart works without login; test login: `customer@practicesoftwaretesting.com` / `welcome01` (may be locked); Login is `input[type=submit]` — use `eval.click()` not `vibium find role button` |

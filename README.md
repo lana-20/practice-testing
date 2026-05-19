@@ -2360,3 +2360,177 @@ Mode: vibium MCP
 5. **Dialog handling**: Not tested in batch 1 (no native dialogs triggered). MCP uses `browser_dialog_accept`/`browser_dialog_dismiss` vs CLI pre-stubbing. No deadlock risk with MCP.
 
 6. **Session isolation**: MCP browser and CLI daemon are separate — `browser_stop`/`browser_start` does not affect the CLI session.
+
+---
+
+## MCP Batch 2 Re-run — Sites 6–10 (vibium MCP tools)
+
+*Tested 2026-05-18 using `mcp__vibium__browser_*` MCP tools.*
+
+---
+
+## Practice Test Report: Evil Tester (MCP)
+URL: https://testpages.eviltester.com/styled/index.html
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Evil Tester Test and Practice Web Pages"
+
+### Structure
+- Navigation: 79 interactive elements (links + buttons via `browser_map`)
+- Main sections: HTML forms, JavaScript, HTTP, General, Frames, iFrames, File Upload, Proxy Intercept, Experimental
+
+### Navigation
+[PASS] Direct URL loaded index page with all section links accessible via map refs
+[PASS] `browser_map` found all nav links — more reliable than `browser_find {role: "link"}` for plain anchors
+
+### Core Functionality
+[PASS] Alert handling (setTimeout workaround) — `browser_evaluate { expression: "setTimeout(() => alert('test'), 300)" }` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` → "Dialog accepted"
+[PASS] Confirm dismiss — `browser_evaluate { expression: "setTimeout(() => confirm('test'), 300)" }` + `browser_sleep {ms: 350}` + `browser_dialog_dismiss {}` → "Dialog dismissed"
+[BUG/MB3] Direct click on "Click for JS Alert" button → `browser_click` deadlocked indefinitely; required `browser_stop` + `browser_start` to recover. MB3 confirmed on MCP same as CLI.
+
+### Bugs Found
+1. MB3 — `browser_click` deadlock on native alert trigger — Steps: navigate to Alerts page, click alert button directly — Severity: High (requires session restart)
+
+### Notes
+- setTimeout+sleep workaround (300ms eval + 350ms sleep + accept) is reliable across all three dialog types (alert/confirm/prompt)
+- `browser_find {role: "button", text: "..."}` times out on plain `<button>` elements; use `browser_map` refs or CSS selector directly
+- Pre-stub pattern (`eval window.alert = () => {}`) works as alternative to setTimeout but requires executing before the click
+
+---
+
+## Practice Test Report: Gefälscht CompuTech (MCP)
+URL: https://webtestingcourse.dequecloud.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; intentionally inaccessible e-commerce demo
+
+### Structure
+- Navigation: Home, Products, Support, Contact links
+- Interactive elements: header nav + product cards + form fields
+- Purpose: accessibility testing target (intentionally broken a11y)
+
+### Navigation
+[PASS] Home → `/` (product grid)
+[PASS] Contact nav link → `/contact.php` (correct URL)
+[FAIL] Direct URL `/contact/` → 404 (trailing slash path does not exist; must use `/contact.php`)
+
+### Core Functionality
+[PASS] Contact form fields accessible via `browser_map` refs — no CSS name selectors needed (MCP advantage over CLI which required `input[name=x]` selectors)
+[PASS] Form fields: Full Name, Email Address, Subject, Message all fillable via map refs
+[PASS] Form submit button found and clickable via map ref
+
+### Bugs Found
+None beyond intentional inaccessibility. Note: site is designed to have a11y issues, not functional bugs.
+
+### Notes
+- MCP `browser_map` finds form fields without needing `input[name=...]` CSS selectors — simpler than CLI approach
+- `/contact/` (trailing slash) returns 404; always navigate via the Contact nav link or use `/contact.php` directly
+- Intentional a11y issues: missing labels, low contrast, keyboard traps — outside scope of MCP functional testing
+
+---
+
+## Practice Test Report: Magento (MCP)
+URL: https://magento.softwaretestingboard.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[FAIL] Site DOWN — Cloudflare 526 SSL error (invalid SSL certificate on origin server)
+
+### Notes
+- Confirmed DOWN as of 2026-04-22 (CLI batch) and 2026-05-18 (MCP batch)
+- No testing possible; skip this site until restored
+
+---
+
+## Practice Test Report: Parabank (MCP)
+URL: https://parabank.parasoft.com/parabank/admin.htm
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Admin page loaded; title "ParaBank | Administration"
+
+### Structure
+- Admin page: Database Initialization button, JMS/SOAP service controls
+- Main site: Login form, Register link, navigation (About, Services, Products, Locations, Admin)
+
+### Navigation
+[PASS] DB Initialize → POST to `/parabank/admin.htm` → "Database Initialized" confirmation
+[PASS] Register link → `/parabank/register.htm` (registration form loaded)
+[PASS] Login page → `/parabank/login.htm`
+
+### Core Functionality
+[BUG] Any-credentials login — after DB initialize, any username/password combination logs in successfully; login is not validated (e.g. `user: "test123", password: "test123"` → logged in as "test123")
+[PASS] Registration validation — empty form submit shows validation errors on required fields
+[PASS] Registration with mismatched passwords → "Passwords did not match" error displayed
+[PASS] Registration with valid data (unique username) → account created successfully
+[PASS] Form fields accessible via `browser_map` refs — clean MCP experience
+
+### Bugs Found
+1. Any-credentials login — after DB initialize, login accepts any username/password without validation — Steps: initialize DB, enter any credentials, click Login — Severity: High (authentication completely bypassed)
+
+### Notes
+- DB must be initialized before login works at all (otherwise may show stale data errors)
+- The any-creds login bug is likely intentional for demo purposes — parabank is a demo banking app
+- Use Parabank for form validation and UI testing, not auth flow testing
+- Registration form: First Name, Last Name, Address, City, State, Zip, Phone, SSN, Username, Password, Confirm — all required
+
+---
+
+## Practice Test Report: Parking Cost Calculator (MCP)
+URL: https://www.shino.de/parkcalc/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Parking Cost Calculator"
+
+### Structure
+- Form: ParkingLot (select), StartingDate, StartingTime, AM/PM radio, LeavingDate, LeavingTime, AM/PM radio, Submit button
+- Parking lots: Valet, Short-Term, Economy, Long-Term Garage, Long-Term Surface
+
+### Core Functionality
+[PASS] Economy 2-day calculation — 05/18 08:00 AM → 05/20 08:00 AM → $18.00 (2 × $9 daily max) ✓
+[PASS] Valet 2-day calculation — same dates, Valet lot → $36.00 (2 × $18/day) ✓
+[PASS] Valet ≤5h flat rate — 08:00 → 11:00 (3h) → $12.00 flat ✓
+[PASS] Valet 5h boundary — 08:00 → 13:00 (exactly 5h) → $12.00 (boundary inclusive) ✓
+[PASS] Valet >5h → daily rate — 08:00 → 13:30 (5h 30min) → $18.00 (daily rate kicks in) ✓
+[PASS] Invalid date (leaving before starting) → inline error message "ERROR! YOUR LEAVING DATE OR TIME IS BEFORE YOUR STARTING DATE OR TIME" displayed on same page
+[PASS] `browser_select {value: "Economy"}` and `{value: "Valet"}` work correctly by option value
+[PASS] `browser_fill` works on all text inputs (name-cased: `StartingDate`, not `startingDate`)
+
+### Bugs Found
+None. All rates and validations match documented rate card.
+
+### Notes
+- Input name attributes are PascalCase (`StartingDate`, `LeavingTime`) — CSS selectors must match exactly
+- SKILL.md note "invalid dates cause blank page" is **incorrect** — invalid date shows inline error message, page remains intact
+- Valet boundary: ≤5h = $12 flat; >5h = $18/day (strict boundary at exactly 5h00m)
+- `browser_select` with option value works for all 5 lot types
+
+---
+
+## MCP Batch 2 — Cross-site Comparison
+
+| Site | Reachability | Core Flow | MCP vs CLI Difference |
+|------|-------------|-----------|----------------------|
+| Evil Tester | PASS | PASS (with workaround) | setTimeout+sleep workaround required for dialogs; MB3 deadlock same as CLI on direct click |
+| Gefälscht CompuTech | PASS | PASS | `browser_map` refs work for form fields; CLI needed `input[name=x]` selectors |
+| Magento | FAIL (DOWN) | N/A | Same as CLI — site still down |
+| Parabank | PASS | PASS (with noted bug) | Any-creds login bug present; DB init required first |
+| Parking Cost Calculator | PASS | PASS | Input names are PascalCase; `browser_fill` works cleanly |
+
+### Key MCP vs CLI Behavioral Differences (Batch 2)
+
+1. **Form field access**: MCP `browser_map` refs work on Gefälscht CompuTech without knowing CSS name selectors. CLI required `input[name=fieldname]` approach.
+
+2. **Dialog deadlock (MB3)**: Confirmed in MCP mode same as CLI — `browser_click` on a native `alert()` trigger hangs indefinitely. The setTimeout+sleep workaround (300ms delay + 350ms sleep + `browser_dialog_accept`) is the correct MCP pattern.
+
+3. **Invalid date error**: Parking Cost Calculator shows inline error message for invalid date ranges — not a blank page as noted in SKILL.md. SKILL.md note needs correction.
+
+4. **Parabank any-creds bug**: Reproduced in MCP mode. Likely intentional demo behavior but worth noting as a testing target.
