@@ -102,17 +102,17 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 ### API Testing
 
-| Name | URL |
-|------|-----|
-| JSON Placeholder | https://jsonplaceholder.typicode.com/ |
-| Restful Booker | https://restful-booker.herokuapp.com/ |
-| ReqRes | https://reqres.in/ |
-| httpbin | https://httpbin.org/ |
-| Swagger Petstore | https://petstore.swagger.io/ |
-| Poké API | https://pokeapi.co/ |
-| Rick and Morty API | https://rickandmortyapi.com/graphql |
-| Airport Gap | https://airportgap.com/ |
-| Automation Exercise API | https://www.automationexercise.com/api_list |
+| Name | URL | CLI Notes | MCP Notes |
+|------|-----|-----------|-----------|
+| JSON Placeholder | https://jsonplaceholder.typicode.com/ | Full CRUD via `$V eval 'fetch(...)'`; GET/POST/DELETE all work; writes return realistic responses but don't persist | Identical via `browser_evaluate`; `Promise.all()` allows parallel requests |
+| Restful Booker | https://restful-booker.herokuapp.com/ | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku may cold-start | Identical via `browser_evaluate`; auth token pattern works |
+| ReqRes | https://reqres.in/ | **BROKEN** — all `/api/*` endpoints now return 401; `x-api-key` header required; free tier removed as of 2026-05 | Identical 401 on all endpoints; no longer usable without account at app.reqres.in |
+| httpbin | https://httpbin.org/ | Full request inspection API; GET/POST/status codes/delay/IP all work; no auth | Identical via `browser_evaluate`; CORS-friendly |
+| Swagger Petstore | https://petstore.swagger.io/ | GET findByStatus, POST pet, GET inventory all work; shared mutable state — counts vary | Identical results; slight count variance vs CLI due to concurrent external writes |
+| Poké API | https://pokeapi.co/ | Read-only; GET pokemon by name/ID, list with pagination, type endpoint all work; no auth; aggressive caching | Identical; 1350 Pokémon in DB |
+| Rick and Morty API | https://rickandmortyapi.com/graphql | Both GraphQL POST `/graphql` and REST `/api/character/N` work; 826 characters; no auth | Identical; browser navigates to GraphQL Playground UI but fetch still works against same endpoint |
+| Airport Gap | https://airportgap.com/ | GET list (paginated), GET by IATA code, POST distance calculation all work; JSON:API format (`data.attributes.*`) | Identical; distance endpoint (KIX→SFO: 8692 km) confirmed |
+| Automation Exercise API | https://www.automationexercise.com/api_list | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin — all work; uses custom `responseCode` in body not HTTP status | Identical; POST endpoints use `application/x-www-form-urlencoded` not JSON |
 
 ### Performance Testing
 

@@ -1,9 +1,10 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 11 (Automation Testing sites 26–30)
+## Latest Session: 2026-05-18 — API Batch 1 (API Testing sites 1–9, CLI + MCP)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
 <!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–11 (Automation Testing sites 1–30), last run 2026-05-18 -->
+<!-- API Testing: Batch 1 (all 9 sites, CLI + MCP), last run 2026-05-18 -->
 
 ---
 
@@ -4078,3 +4079,246 @@ None.
 4. **Sweet Shop — duplicate `id="name"` handled by `browser_fill` predictably**: `browser_fill "#name"` always fills the first matching element. Second duplicate requires explicit `eval querySelectorAll('#name')[1].value = ...`.
 
 5. **Tricentis Red Stripe — `browser_scroll_into_view` + re-read rect is the correct pattern**: Element may render off-screen. Scroll it into view first, then re-read `getBoundingClientRect()` before clicking — the x/y values change after scroll.
+
+---
+
+## API Batch 1 — CLI + MCP (2026-05-18)
+
+Sites: JSON Placeholder, Restful Booker, ReqRes, httpbin, Swagger Petstore, Poké API, Rick and Morty API, Airport Gap, Automation Exercise API
+
+---
+
+## Practice Test Report: JSON Placeholder
+URL: https://jsonplaceholder.typicode.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "JSONPlaceholder - Free Fake REST API"
+
+### Core Functionality (CLI)
+[PASS] GET /todos/1 → `{"userId":1,"id":1,"title":"delectus aut autem","completed":false}`
+[PASS] GET /posts → 100 items
+[PASS] POST /posts → `{"title":"test","body":"b","userId":1,"id":101}`
+[PASS] DELETE /posts/1 → status 200
+[PASS] GET /users/1 → `{"id":1,"name":"Leanne Graham","email":"Sincere@april.biz"}`
+
+### Core Functionality (MCP)
+[PASS] All 5 endpoints identical results — GET, POST, DELETE all work via browser fetch
+
+### Notes
+- All standard CRUD operations work with both CLI and MCP
+- Simulated REST API — writes don't persist server-side but return realistic responses
+- No auth required, no rate limiting encountered
+
+---
+
+## Practice Test Report: Restful Booker
+URL: https://restful-booker.herokuapp.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "Welcome to Restful-Booker"
+
+### Core Functionality (CLI)
+[PASS] GET /booking → list of booking IDs (e.g. `[{"bookingid":1},{"bookingid":2},{"bookingid":3}]`)
+[PASS] POST /auth → token returned (`{"token":"407549d380f17a7"}`)
+[PASS] GET /booking/1 → full booking object with firstname, lastname, totalprice, bookingdates
+[PASS] POST /booking → new booking created with ID (e.g. bookingid 1122)
+
+### Core Functionality (MCP)
+[PASS] All 4 endpoints work — identical results via browser fetch
+
+### Notes
+- Auth token endpoint works: credentials `admin` / `password123`
+- Full REST API: GET list, GET by ID, POST, PUT (requires auth token), DELETE (requires auth token)
+- Heroku free tier — may have cold-start delay on first request
+
+---
+
+## Practice Test Report: ReqRes
+URL: https://reqres.in/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "ReqRes | Free REST API for developers | ReqRes"
+
+### Core Functionality (CLI)
+[FAIL] GET /api/users?page=2 → script exception (fetch failed)
+[FAIL] GET /api/users/2 → null
+[FAIL] POST /api/login → `{"error":"missing_api_key"}` — x-api-key header now required
+[FAIL] GET /api/users/23 → 401 instead of expected 404
+
+### Core Functionality (MCP)
+[FAIL] GET /api/users?page=2 → HTTP 401
+[FAIL] GET /api/users/2 → HTTP 401
+All endpoints return 401
+
+### Bugs Found
+1. **API now requires authentication** — ReqRes has introduced mandatory `x-api-key` header for all `/api/*` endpoints. Previously a fully public free API. Requires account registration at app.reqres.in/api-keys. — Severity: High (site no longer usable as a free public API)
+
+### Notes
+- Site previously offered unauthenticated access for practice; now gated behind API keys
+- Free keys available at app.reqres.in/api-keys but require account creation
+- Documentation still advertises "Free REST API" but API itself is now auth-gated
+- Both CLI and MCP confirm the same behavior
+
+---
+
+## Practice Test Report: httpbin
+URL: https://httpbin.org/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "httpbin.org"
+
+### Core Functionality (CLI)
+[PASS] GET /get → returns request metadata (URL, 14 headers)
+[PASS] POST /post with JSON body → echoes `{url, json: {foo:"bar"}}`
+[PASS] GET /status/404 → returns HTTP 404
+[PASS] GET /delay/1 → returns 200 after 1s delay
+[PASS] GET /ip → returns `{"origin":"24.18.9.73"}`
+
+### Core Functionality (MCP)
+[PASS] All 5 endpoints — identical results via browser fetch
+
+### Notes
+- Full HTTP inspection/echo API — ideal for testing request/response behavior
+- Status code testing (/status/N), delay simulation (/delay/N), IP echo all work
+- No auth required; browser-native CORS headers present
+
+---
+
+## Practice Test Report: Swagger Petstore
+URL: https://petstore.swagger.io/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "Swagger UI"
+
+### Core Functionality (CLI)
+[PASS] GET /v2/pet/findByStatus?status=available → 435 pets
+[PASS] POST /v2/pet → creates pet `{"id":99999,"name":"vibium-test","status":"available"}`
+[PASS] GET /v2/store/inventory → inventory map with status keys
+
+### Core Functionality (MCP)
+[PASS] GET /v2/pet/findByStatus?status=available → 433 pets (slight count difference — shared mutable state)
+[PASS] POST /v2/pet → creates same pet successfully
+[PASS] GET /v2/store/inventory → identical inventory structure
+
+### Notes
+- Shared mutable state — pet counts vary slightly between CLI and MCP runs (other users writing to same API)
+- Swagger UI loads interactive docs in browser; raw JSON API at `/v2/*`
+- No auth needed for read/write; API key endpoints exist but are optional
+- `petstore.swagger.io` serves the Swagger UI; the actual API base is the same origin `/v2/`
+
+---
+
+## Practice Test Report: Poké API
+URL: https://pokeapi.co/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "PokéAPI"
+
+### Core Functionality (CLI)
+[PASS] GET /api/v2/pokemon/pikachu → `{"name":"pikachu","id":25,"base_exp":112,"types":["electric"]}`
+[PASS] GET /api/v2/pokemon?limit=5 → 1350 total, first 5: bulbasaur, ivysaur, venusaur, charmander, charmeleon
+[PASS] GET /api/v2/type/fire → fire type has 109 Pokémon
+
+### Core Functionality (MCP)
+[PASS] All 3 endpoints — identical results via browser fetch
+
+### Notes
+- Read-only API — no write endpoints
+- Comprehensive data: moves, abilities, types, species, evolution chains
+- No auth required; aggressive caching (responses served from cache instantly)
+- 1350 Pokémon in database as of test date
+
+---
+
+## Practice Test Report: Rick and Morty API
+URL: https://rickandmortyapi.com/graphql
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "rickandmortyapi"
+
+### Core Functionality (CLI)
+[PASS] GraphQL POST /graphql → characters query: 826 total, Rick/Morty/Summer all Alive
+[PASS] REST GET /api/character/1 → `{"name":"Rick Sanchez","status":"Alive","species":"Human"}`
+
+### Core Functionality (MCP)
+[PASS] GraphQL query — identical results
+[PASS] REST endpoint — identical results
+
+### Notes
+- Both GraphQL and REST interfaces available and working
+- GraphQL endpoint at `/graphql`; REST at `/api/`
+- 826 characters in database; also has locations and episodes endpoints
+- No auth required; read-only
+- Browser navigates to GraphQL Playground UI at `/graphql`; fetch still works against same endpoint
+
+---
+
+## Practice Test Report: Airport Gap
+URL: https://airportgap.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "Airport Gap - An API to fetch and save information about your favorite airports"
+
+### Core Functionality (CLI)
+[PASS] GET /api/airports?page=1 → 30 airports per page, first: GKA (Goroka Airport)
+[PASS] GET /api/airports/KIX → `{"id":"KIX","name":"Kansai International Airport","country":"Japan"}`
+[PASS] POST /api/airports/distance → KIX→SFO: 8692.07 km / 5397.24 miles
+
+### Core Functionality (MCP)
+[PASS] All 3 endpoints — identical results via browser fetch
+
+### Notes
+- JSON:API spec response format (`data.attributes.*` nesting)
+- Distance calculation endpoint is a nice practice target for POST with body
+- Auth endpoints exist (favorites) but require token — not tested
+- Paginated airport list with IATA codes as IDs
+
+---
+
+## Practice Test Report: Automation Exercise API
+URL: https://www.automationexercise.com/api_list
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded — title "Automation Practice for API Testing"
+
+### Core Functionality (CLI)
+[PASS] GET /api/productsList → responseCode 200, 34 products, first: `{id:1, name:"Blue Top", category:"Tops"}`
+[PASS] GET /api/brandsList → responseCode 200, 34 brands, first: `{id:1, brand:"Polo"}`
+[PASS] POST /api/verifyLogin → responseCode 404 (test credentials `test@test.com/test123` not registered — expected)
+[PASS] POST /api/searchProduct (search_product=top) → responseCode 200, 14 matching products
+
+### Core Functionality (MCP)
+[PASS] GET /api/productsList → identical (34 products)
+[PASS] GET /api/brandsList → identical (34 brands)
+[PASS] POST /api/searchProduct → identical (14 results)
+
+### Notes
+- Uses custom `responseCode` field (200, 404 etc.) in JSON body, not HTTP status codes
+- POST endpoints use `application/x-www-form-urlencoded` form encoding, not JSON
+- API list page at `/api_list` documents all available endpoints
+- verifyLogin works with registered accounts; test credentials not pre-seeded
+- Full account CRUD API available (createAccount, deleteAccount, updateAccount)
+
+---
+
+## Key CLI vs MCP Behavioral Differences (API Batch 1)
+
+| Behavior | CLI | MCP |
+|----------|-----|-----|
+| fetch() from page context | Works via `$V eval` | Works via `browser_evaluate` |
+| Relative URLs | Resolved against current page origin | Resolved against current page origin |
+| Parallel requests | Sequential only | Can batch with `Promise.all()` |
+| CORS behavior | Browser CORS rules apply | Browser CORS rules apply |
+| Result serialization | Raw stdout string | MCP content block (MB6 applies for empty string returns) |
+| ReqRes API | 401 — API key required | 401 — API key required |
+| GraphQL | Works via fetch POST | Works via fetch POST |
+
