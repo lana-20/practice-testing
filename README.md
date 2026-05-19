@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 4 (General Practice sites 16–20)
+## Latest Session: 2026-05-18 — MCP Batch 5 (General Practice sites 21–25)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–4 (General Practice sites 1–20), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), last run 2026-05-18 -->
 
 ---
 
@@ -2919,5 +2919,181 @@ Mode: vibium MCP
 2. **Random User Generator large response**: CLI `vibium text` crashes (buffer overflow) on `?results=5000`. MCP `browser_get_text` produces an oversized-output error instead of crashing — result saved to temp file but unusable. Both modes require `browser_evaluate` for large API responses.
 
 3. **Real World Apps 3s sleep**: Required in both CLI and MCP after `wait load` — SvelteKit SPA renders asynchronously. `browser_map` returns nothing without the sleep.
+
+---
+
+## Practice Test Report: The Internet (MCP)
+URL: http://the-internet.herokuapp.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s (44 examples listed)
+
+### Structure
+- Navigation: 44 example links (all mapped via `browser_map`)
+- Forms: login, file upload, checkboxes, dropdown, key presses, slider
+- Interactive elements: 45 refs on homepage
+
+### Navigation
+[PASS] All 44 example links present and clickable; navigation to sub-pages works
+
+### Core Functionality
+[PASS] Checkboxes — `browser_check` and `browser_is_checked` work; initial state: checkbox1=false, checkbox2=true
+[PASS] Dropdown — `browser_select` by value, `browser_get_value` confirms selection
+[PASS] Form Authentication — login with tomsmith / SuperSecretPassword! → "You logged into a secure area!" flash
+[PASS] Drag and Drop — `browser_drag` swaps columns A↔B correctly
+[PASS] JavaScript Alerts — alert/confirm/prompt all handled via `setTimeout(..., 300)` + `browser_sleep 350ms` + `browser_dialog_accept/dismiss`; direct-click still deadlocks (MB3)
+[PASS] Key Presses — `browser_press` captures Tab and letter keys; result field updates correctly
+[PASS] Hovers — `browser_mouse_move` to computed bounding-box center reveals figcaption (computed style = `display:block`)
+[PASS] iFrame / WYSIWYG — TinyMCE iframe readable via `eval + contentDocument.body.innerText`
+[PASS] File Upload — `browser_upload` + `browser_click` submit → "File Uploaded!" confirmation
+[PASS] Status Codes — 404 page returns correct message
+[PASS] Horizontal Slider — `browser_fill` fails ("not editable"); `eval + dispatchEvent` sets value correctly
+[FAIL] `browser_count` on table rows — MB1 (Go unmarshal error); workaround: `eval querySelectorAll().length.toString()`
+[NOTE] MB6 triggered when checking `.style.display` on unhovered element (returns `""`); `|| null` workaround returns null; computed style via `getComputedStyle()` is the correct approach
+
+### Bugs Found
+1. MB1 — `browser_count` crashes on any selector — Severity: High (workaround: eval)
+2. MB3 — `browser_click` on JS alert buttons deadlocks indefinitely — Severity: Critical (workaround: setTimeout + sleep + dialog_accept)
+3. MB6 — `browser_evaluate` with empty-string result → `invalid_union` — Severity: High (workaround: `|| null`)
+
+### Notes
+- `browser_map` returns all 44+1 links correctly on homepage — no shadow DOM issues
+- Hover via `browser_mouse_move` to computed coords works reliably
+- `browser_frames` would list nested frames flatly (not tested in MCP this batch)
+- shadow_dom sub-page returns 404 (same as CLI)
+
+---
+
+## Practice Test Report: The Random Number Service (MCP)
+URL: https://www.random.org/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; cookie banner present on load
+
+### Structure
+- Navigation: full nav (Home, Games, Numbers, Lists & More, Drawings, Web Tools, Statistics, etc.) — all mapped
+- Interactive elements: 81 refs including cookie banner buttons, nav links, search
+- Generator forms not in `browser_map` scope (rendered off-screen); reachable via URL params
+
+### Navigation
+[PASS] Cookie banner dismissed via `browser_click "Allow All"` button
+[PASS] Nav links work via `browser_click` — "Numbers" → `#numbers` anchor
+[PASS] `browser_map` returns all nav links and interactive elements correctly
+
+### Core Functionality
+[PASS] Integer generator via URL params — `?num=5&min=1&max=100&col=1&base=10&format=plain&rnd=new` returns 5 random integers as plain text
+[PASS] Validation — min > max → "The maximum value must be greater than the minimum value"
+[PASS] Validation — num > 10000 → "The number of requested integers must be an integer in the [1,10000] interval"
+[PASS] `format=html` returns styled page with results and correct title
+[NOTE] `format=csv` not tested — triggers download; known to crash BiDi session (avoid)
+
+### Bugs Found
+None.
+
+### Notes
+- Generator form inputs exist in DOM but are not in `browser_map` interactive scope; URL params are the reliable approach
+- `browser_evaluate` with `document.body.innerText || null` needed for plain-text API responses (MB9 workaround for empty pages)
+
+---
+
+## Practice Test Report: Testing Challenges (MCP)
+URL: http://testingchallenges.thetestingmap.org/
+Date: 2026-05-18
+
+### Reachability
+[SKIP] HTTP-only site — `browser_navigate` returns BiDi "unknown error"; Chrome blocks HTTP-only origins entirely. Cannot be tested with vibium MCP (same as CLI).
+
+### Notes
+- Accessible via curl (HTTP 200) but Chrome refuses BiDi navigation
+- No MCP-specific workaround exists
+
+---
+
+## Practice Test Report: ToDo List (MCP)
+URL: https://todolist.james.am/#/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~1s (AngularJS app)
+
+### Structure
+- Navigation: filter links (All / Active / Completed), Clear completed button
+- Forms: new-todo input field
+- Interactive elements: only the input on initial load; list items appear after adding todos
+
+### Navigation
+[PASS] Filter links (All / Active / Completed) work via `browser_click`
+[PASS] "Clear completed" button removes completed items
+
+### Core Functionality
+[PASS] Add todo — `browser_fill` + `browser_press "Enter"` creates item
+[PASS] Edit todo — `browser_dblclick` on label enters edit mode; `browser_fill` + Enter saves
+[PASS] Delete button title bug — `.destroy` button has `title="TODO:REMOVE THIS EVENTUALLY"` (confirmed in MCP)
+[PASS] Whitespace-only input silently rejected — todo count unchanged after submitting "   "
+[PASS] Checkbox toggle — `browser_check` fails ("obscured"); `browser_mouse_click` at computed bounding-box coordinates works
+[PASS] Clear completed — removes checked item; unchecked item remains
+[BUG] Item counter off by 1 — 2 todos shows "1 items left"; 1 todo shows "0 items left" (same as CLI)
+[NOTE] `browser_map` only returns the new-todo input on initial empty state; list items appear in map after todos are added
+
+### Bugs Found
+1. Item counter off by 1 (shows N-1 active items) — Severity: Medium (known bug, same as CLI)
+2. Delete button title "TODO:REMOVE THIS EVENTUALLY" — Severity: Low (exposed debug artifact)
+
+### Notes
+- `browser_check` fails with "obscured" on todo checkboxes — `browser_mouse_click` at coords is the workaround
+- No localStorage persistence — state resets on page reload (same as CLI)
+- `browser_dblclick` + `browser_fill` edit flow works reliably in MCP
+
+---
+
+## Practice Test Report: UI5 Demo Kit (MCP)
+URL: https://ui5.sap.com/#/demoapps
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s; SAPUI5 SDK v1.148.0
+
+### Structure
+- Navigation: Home, Documentation, API Reference, Samples, Demo Apps, Resources (top nav)
+- Demo apps: Shopping Cart, Browse Orders, Team Calendar, UXC Integration, AI Integration, TypeScript Hello World, and more (20 total)
+- Interactive elements: 128 refs on `#/demoapps` page
+
+### Navigation
+[PASS] Top nav links work via `browser_click` — Documentation → `#/topic` URL
+[PASS] `browser_back` returns to `#/demoapps`
+[PASS] `browser_map` returns 128 elements on the main demoapps page (unlike CLI which returns "No interactive elements found")
+
+### Core Functionality
+[PASS] Shopping Cart demo — `browser_navigate` to app URL directly; `browser_map` returns full product catalog + cart controls
+[PASS] Add to cart — `browser_click "Add to Shopping Cart"` on Notebook Basic 15; cart panel shows 1 × 956.00 EUR
+[PASS] Proceed to checkout — `browser_click "Proceed"` → navigates to `#/checkout` with items summary and Step 2 navigation
+[PASS] Search input — present and accessible via `browser_map`
+[NOTE] Cart item count badge not directly readable via `browser_map` — use `browser_evaluate` for cart count
+[NOTE] Download links use `href="#"` (JS download) — do not navigate directly
+
+### Bugs Found
+None.
+
+### Notes
+- Key MCP difference: `browser_map` works on the main `#/demoapps` page in MCP (returns 128 refs). CLI returns "No interactive elements found" due to UI5 Web Component rendering differences.
+- Individual demo apps have regular DOM and `browser_map` works normally (confirmed with Shopping Cart)
+- All "Open App" link hrefs extractable via `browser_evaluate` (UI5 routing doesn't expose them as plain href attributes in DOM queries)
+- Full add-to-cart → checkout flow confirmed working end-to-end
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 5)
+
+1. **The Internet — `browser_count` still fails (MB1)**: `browser_count { selector: "#table1 tbody tr" }` returns Go unmarshal error. Workaround: `browser_evaluate { expression: "querySelectorAll(...).length.toString()" }`.
+
+2. **The Internet — Hover via `browser_mouse_move`**: Works correctly in MCP. Move to computed bounding-box center of target element, then check `getComputedStyle()` — not `element.style.display` (returns `""`, triggers MB6).
+
+3. **UI5 Demo Kit — `browser_map` works on main page**: MCP returns 128 interactive refs on `#/demoapps`. CLI returns nothing. Likely due to how the MCP BiDi driver handles SAP UI5 Web Components vs the CLI daemon.
+
+4. **Testing Challenges — HTTP blocked in both**: `browser_navigate` fails with BiDi "unknown error" in MCP (identical to CLI). Chrome refuses HTTP-only origins in both modes.
+
+5. **ToDo List — checkbox workaround same**: `browser_check` fails with "obscured" in MCP as in CLI. `browser_mouse_click` at computed coords is required in both modes.
 
 4. **B5 confirmed in MCP**: `browser_select` with non-existent option value returns success in both CLI and MCP, but silently sets `selectedIndex=-1`. Always verify select state after setting a value.
