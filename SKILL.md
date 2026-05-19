@@ -280,7 +280,7 @@ Date: <date>
 ### MCP-specific
 - Use `browser_dialog_accept` / `browser_dialog_dismiss` for native dialogs — no deadlock risk
 - `browser_find` with `role="link"` times out on `<button>` elements — use `browser_map` refs or CSS selectors instead
-- `browser_get_text` throws `invalid_union` schema error when the page has no text content (blank page) — vibium bug MB9; workaround: use `browser_evaluate { expression: "document.body.innerText || null" }` instead
+- `browser_get_text` throws `invalid_union` when page/element text is empty — vibium bug MB9; affects full-page form, selector on empty element, `about:blank`, whitespace-only body, and pages where all content is `display:none`; workaround: `browser_evaluate { expression: "document.body.innerText || null" }` (use `|| null`, NOT `|| ''` — empty string triggers MB6)
 - `browser_evaluate` throws `invalid_union` when expression returns `""` — vibium bug MB6; ensure expressions never return empty string (use `|| null` fallback)
 - MCP `browser_map` finds more elements on some pages than CLI `vibium map` (e.g. puzzle index links, Angular Material list items)
 - Stop/restart MCP browser session with `browser_stop` + `browser_start` when BiDi errors occur — this does NOT affect the CLI daemon
