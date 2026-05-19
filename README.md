@@ -1,11 +1,55 @@
 # Practice Testing — Test Reports
 
 <!-- Run history:
-  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 4–5 (2026-05-19)
+  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 3–5 (2026-05-19)
   Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batch 6 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
+
+---
+
+## CLI vs MCP Performance Comparison — General Practice Batch 3 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** PHP Travels, Polymer Shop, Practice Software Testing, PrestaShop, QA Practice (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000`. CLI token delta unavailable for this batch — session files were reset during a Claude Code restart between CLI and MCP runs, causing the post-CLI dedup count to fall below baseline. MCP delta measured cleanly from pre-MCP baseline captured immediately after restart.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| PHP Travels | 1,711 | 43,164 | 25.2× |
+| Polymer Shop | 8,619 | 49,408 | 5.7× |
+| Practice Software Testing | 4,905 | 30,944 | 6.3× |
+| PrestaShop | 6,209 | 33,595 | 5.4× |
+| QA Practice | 784 | 27,047 | 34.5× |
+| **Total** | **22,228** | **184,158** | **8.3×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | N/A¹ | +61 | — |
+| Cost | N/A¹ | +$2.9122 | — |
+
+¹ Session files reset during Claude Code restart between CLI and MCP runs; CLI delta unreliable.
+
+### Notes
+- CLI is **8.3× faster** overall; timing ratio is reliable since wall-clock measurement was unaffected by session reset
+- QA Practice has the widest gap (34.5×) — CLI login + product check takes <800ms; MCP adds navigate/wait/fill/click/evaluate tool call overhead even for this simple flow
+- PHP Travels shows 25.2× gap — CLI is fast here (no sleep required, minimal DOM); MCP map returned 69 elements and then FAQ click + blog navigation added overhead
+- Polymer Shop and PrestaShop have the smallest gaps (5.7× and 5.4×) — both require mandatory sleep waits (3–5s) that equalize minimum time across interfaces
+- Both Polymer Shop and PrestaShop confirm: when fixed sleep floors exist, MCP overhead is absorbed and ratios compress toward 5–6×
+- MCP `browser_map` returned "No interactive elements found" on Polymer Shop (all shadow DOM) — same as CLI; no behavioral difference here
 
 ---
 
