@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 10 (Automation Testing sites 21–25)
+## Latest Session: 2026-05-18 — MCP Batch 11 (Automation Testing sites 26–30)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–10 (Automation Testing sites 1–25), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–11 (Automation Testing sites 1–30), last run 2026-05-18 -->
 
 ---
 
@@ -3928,3 +3928,153 @@ None (all known intentional bugs are user-specific: problem_user, performance_gl
 4. **Selenium Playground rebranded to TestMu AI**: The site is now at `testmuai.com`. CLI note "blocked by Cloudflare" is outdated — site is accessible. Demo results (Simple Form) appear broken but forms fill correctly.
 
 5. **Swag Labs — full checkout flow confirmed in MCP**: Cart icon not in map is consistent with CLI. All checkout steps work via direct ID selectors. `browser_select` sort values confirmed: `"az"`, `"za"`, `"lohi"`, `"hilo"`.
+
+---
+
+## Practice Test Report: Sweet Shop
+URL: https://sweetshop.netlify.app/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Sweet Shop"
+
+### Structure
+- Navigation: Sweets, About, Login, Basket
+- Forms: basket page — promo code, checkout (name, email, address, card details)
+- Interactive elements: `browser_map` returns 6 refs on homepage; 23 on basket page
+
+### Core Functionality
+[PASS] `browser_map` works on all pages
+[FAIL] "Add to Basket" links not in `browser_map` (href="#"); use `eval Array.from(document.querySelectorAll('a')).find(a => a.textContent.includes('Add to Basket')).click()` ✓
+[PASS] Basket count updates ("1 Basket") after eval click ✓
+[FAIL] Delivery radio buttons obscured — `browser_check` fails; use `eval document.querySelector('input[name="exampleRadios"]').click()` ✓
+[PASS] `browser_fill "#name"` fills first name input only
+[INFO] Two inputs with `id="name"` — second (card holder name) requires `eval document.querySelectorAll('#name')[1].value = 'Name'`
+[PASS] `browser_select` works for Country/State dropdowns ✓
+
+### Bugs Found
+None beyond duplicate `id="name"` (intentional practice site quirk).
+
+### Notes
+- All product "Add to Basket" links have `href="#"` and are excluded from map — always use eval click
+- Checkout form accessible: `#name` (shipping), `#email`, `#address`, `#address2`, `#zip`, `#cc-name`, `#cc-number`, `#cc-expiration`, `#cc-cvs`
+
+---
+
+## Practice Test Report: Tricentis Obstacle Course
+URL: https://obstaclecourse.tricentis.com/Obstacles
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Tricentis Obstacle Course • Test Automation Obstacle: Red stripe"
+
+### Structure
+- Navigation: Home, Obstacle Course, Search
+- Forms: none (obstacle interaction only)
+- Interactive elements: `browser_map` returns 17 refs
+
+### Core Functionality
+[PASS] Generate button: `browser_click` works ✓
+[PASS] Red stripe obstacle solved:
+  1. Click "Generate" → red stripe appears at random x position
+  2. `eval JSON.stringify(document.querySelector('div[style*="background-color: red"]')?.getBoundingClientRect())` to get x coordinate
+  3. `browser_scroll_into_view` to bring stripe into viewport
+  4. Re-read rect after scroll (x updates)
+  5. `browser_mouse_click { x, y }` at stripe position → success
+[PASS] Success modal: "Good job! You solved this automation problem." — buttons clickable directly via `browser_find` + `browser_click` (CLI note about "obscured" is outdated in MCP)
+[PASS] "Hit me with the next riddle!" navigates to next obstacle ✓
+
+### Bugs Found
+None.
+
+### Notes
+- getBoundingClientRect returns position relative to current viewport — must re-read AFTER scroll_into_view
+- Red stripe width is only 3px — click must land precisely at the stripe's x coordinate
+- success modal buttons are accessible without eval in MCP (unlike CLI)
+
+---
+
+## Practice Test Report: UI Test Automation Playground
+URL: http://uitestingplayground.com/
+Date: 2026-05-18
+
+### Reachability
+[FAIL] HTTP-only — Chrome BiDi blocks with "BiDi error: unknown error - unknown error"
+
+### Notes
+Cannot be tested with vibium MCP (same as CLI). Chrome refuses all HTTP-only origins.
+
+---
+
+## Practice Test Report: Weather Shopper
+URL: https://weathershopper.pythonanywhere.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Current Temperature"
+
+### Structure
+- Navigation: Buy moisturizers, Buy sunscreens, About
+- Forms: cart page — Stripe checkout iframe
+- Interactive elements: `browser_map` returns 6 refs on homepage; 9 on product page
+
+### Core Functionality
+[PASS] Temperature displayed (11°C) ✓
+[PASS] Buy Moisturizers: `browser_click` works ✓
+[PASS] Product page: 6 Add buttons in map — `browser_click` works; cart updates to "Cart - 1 item(s)" ✓
+[PASS] Cart navigation via `browser_find` + `browser_click` on cart button ✓
+[FAIL] Stripe checkout iframe (`checkout.stripe.com`) — cross-origin; `browser_frames` lists it, `browser_frame` identifies it, but context does NOT switch → card fields inaccessible
+[INFO] `browser_frame` returns frame metadata only — does not switch execution context in MCP
+
+### Bugs Found
+None — Stripe iframe limitation is by design (cross-origin security).
+
+### Notes
+- Temperature determines product: <19°C → moisturizers, >34°C → sunscreens
+- Can reach cart and confirm items, but cannot complete payment (Stripe iframe cross-origin)
+- `browser_frame` useful for listing frames; use `browser_navigate` to iframe URL for interaction if same-origin
+
+---
+
+## Practice Test Report: XYZ Bank
+URL: https://www.globalsqa.com/angularJs-protractor/BankingProject/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "XYZ Bank"
+
+### Structure
+- Navigation: Customer Login, Bank Manager Login
+- Forms: customer select + login; deposit/withdraw amount; add customer
+- Interactive elements: `browser_map` returns 3 refs on home; 8+ after login
+
+### Core Functionality
+[PASS] `browser_map` works throughout ✓
+[FAIL] `browser_select` on customer dropdown — does not trigger Angular ng-model; dropdown value stays null
+[PASS] `eval select.value = '2'; select.dispatchEvent(new Event('change', {bubbles:true}))` → Harry Potter selected ✓
+[PASS] Login button: `browser_click` works after eval select ✓
+[PASS] Deposit: `browser_fill` on `input[type=number]` DOES trigger Angular (unlike select) → "Deposit Successful" ✓
+[PASS] Withdrawal: same pattern → "Transaction successful" ✓
+[PASS] Bank Manager — Add Customer: `browser_fill` works on all text inputs; pre-stub `window.alert = () => {}` before submit prevents deadlock; customer "MCP Tester" added and visible in Customers list ✓
+
+### Bugs Found
+None.
+
+### Notes
+- Angular select requires eval workaround; Angular number/text inputs work directly with `browser_fill`
+- Always pre-stub window.alert before submitting Add Customer form: `eval window.alert = () => {}`
+- Customer login option values: 1=Hermoine Granger, 2=Harry Potter, 3=Ron Weasly, 4=Albus Dumbledore, 5=Neville Longbottom
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 11)
+
+1. **Tricentis — success modal no longer obscured in MCP**: CLI noted "success modal obscured — use eval btn-success.click()". In MCP, `browser_find` + `browser_click` work directly on modal buttons.
+
+2. **Weather Shopper — `browser_frame` identifies but doesn't switch context**: Unlike CLI `vibium frame` which switches execution context, MCP `browser_frame` returns frame metadata only. Cross-origin Stripe iframe remains inaccessible either way.
+
+3. **XYZ Bank — `browser_fill` triggers Angular on inputs, not selects**: Angular's ng-model listens to different events for inputs vs selects. `browser_fill` fires events that update `ng-model` on text/number inputs. `browser_select` does not — use `eval .value= + dispatchEvent(change)` for all Angular `<select>` elements.
+
+4. **Sweet Shop — duplicate `id="name"` handled by `browser_fill` predictably**: `browser_fill "#name"` always fills the first matching element. Second duplicate requires explicit `eval querySelectorAll('#name')[1].value = ...`.
+
+5. **Tricentis Red Stripe — `browser_scroll_into_view` + re-read rect is the correct pattern**: Element may render off-screen. Scroll it into view first, then re-read `getBoundingClientRect()` before clicking — the x/y values change after scroll.
