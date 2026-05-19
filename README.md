@@ -9,6 +9,57 @@
 
 ---
 
+## CLI vs MCP Performance Comparison — API Testing Sites (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (darwin)
+- vibium: v26.3.18
+- Chrome: 148.0.7778.168
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Methodology:** same 9 API Testing sites run twice back-to-back — CLI batch first, MCP batch second. Each site timed individually (ms wall clock). Token/cost delta measured via session history before and after each batch. Same fetch expression used in both modes (`$V eval` for CLI, `browser_evaluate` for MCP).
+
+### Per-site timing
+
+| Site | CLI time | MCP time | MCP slower by |
+|------|----------|----------|---------------|
+| JSON Placeholder | 433ms | 9,650ms | 22× |
+| Restful Booker | 1,357ms | 8,451ms | 6× |
+| ReqRes | 3,669ms | 11,619ms | 3× |
+| httpbin | 1,422ms | 12,752ms | 9× |
+| Swagger Petstore | 1,347ms | 17,599ms | 13× |
+| Poké API | 1,515ms | 10,306ms | 7× |
+| Rick and Morty | 2,895ms | 9,873ms | 3× |
+| Airport Gap | 1,372ms | 9,317ms | 7× |
+| Automation Exercise | 4,862ms | 13,186ms | 3× |
+| **TOTAL** | **18,872ms** | **102,753ms** | **5.4×** |
+
+### Token / cost delta (claude-sonnet-4-6)
+
+| Phase | Turns | Cost delta | Notes |
+|-------|-------|------------|-------|
+| Baseline | 12,749 | — | $460.4450 |
+| After CLI batch | 12,752 | +$0.1872 | +3 turns — bash does the work, LLM just orchestrates |
+| After MCP batch | 12,789 | +$1.7311 | +37 turns — every navigate + evaluate is an LLM tool call |
+| **MCP costs 9.3× more** | | | |
+
+### Summary
+
+| Metric | CLI | MCP | Winner |
+|--------|-----|-----|--------|
+| Total time (9 sites) | 18.9s | 102.8s | CLI 5.4× faster |
+| LLM turns consumed | +3 | +37 | CLI 12× fewer |
+| Cost delta | +$0.19 | +$1.73 | CLI 9.3× cheaper |
+| Setup friction | daemon start only | browser start + broken pipe recovery | CLI |
+| Parallel fetch | `Promise.all()` via eval | `Promise.all()` via evaluate | tie |
+| API result fidelity | identical | identical | tie |
+
+**For API-only testing, CLI wins decisively.** MCP overhead comes from the protocol layer — each `browser_navigate` + `browser_evaluate` pair generates its own LLM turn and network round-trip. CLI dispatches via bash, so the LLM barely participates in execution.
+
+---
+
 ## Performance Testing Batch 1 — CLI + MCP (2026-05-19)
 
 Sites: Blaze Demo, Computer Database, Demoblaze, Pet Store Web
