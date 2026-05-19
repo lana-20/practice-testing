@@ -1,11 +1,52 @@
 # Practice Testing — Test Reports
 
 <!-- Run history:
-  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batch 5 (2026-05-19)
+  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 4–5 (2026-05-19)
   Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batch 6 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
+
+---
+
+## CLI vs MCP Performance Comparison — General Practice Batch 4 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** QA Training Simulator (BugEater), Random User Generator, Real World Example Apps, The Boozang Test Lab, The iframe Search Engine (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| QA Training Simulator | 2,651 | 39,670 | 15.0× |
+| Random User Generator | 3,601 | 35,485 | 9.9× |
+| Real World Example Apps | 5,785 | 29,548 | 5.1× |
+| Boozang Test Lab | 2,565 | 45,367 | 17.7× |
+| iframe Search Engine | 5,257 | 37,780 | 7.2× |
+| **Total** | **19,859** | **187,850** | **9.5×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +11 | +65 | 5.9× |
+| Cost | +$0.4833 | +$2.6134 | 5.4× |
+
+### Notes
+- CLI is **9.5× faster** and **5.4× cheaper** for this batch
+- Boozang Test Lab shows the widest gap (17.7×) — CLI's Form Fill is 5 sequential fills + 1 eval click; MCP adds navigate/wait/get_title/map/5×fill overhead per tool call
+- Real World Example Apps has the smallest gap (5.1×) — both sides require mandatory `sleep 3000` for SvelteKit hydration, which floors the minimum time and narrows the ratio
+- Random User Generator (9.9×): URL-param API calls are very fast in CLI; MCP still pays tool-call overhead per navigate/wait/evaluate even for lightweight JSON pages
+- QA Training Simulator includes cookie banner handling and multi-page navigation (homepage → /app/list → challenge) — both sides pay the same page load time, so MCP overhead is purely protocol
 
 ---
 
