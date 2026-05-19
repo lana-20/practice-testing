@@ -2,7 +2,7 @@
 
 <!-- Run history:
   General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 2–5 (2026-05-19)
-  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 9 (2026-05-19)
+  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 9, 11 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
@@ -263,6 +263,48 @@
 - Locator Game (7.2×) is a clean GitHub Pages static site — no sleep floors, so MCP overhead is fully exposed
 - CLI Let Code shows slow `wait load` on Angular pages (~3s per navigate) which narrows the gap; MCP's BiDi failures more than offset this
 - MCP `browser_map` found ads (iframe elements) on Let Code pages; CLI `vibium map` silently filtered these
+
+---
+
+## CLI vs MCP Performance Comparison — Automation Testing Batch 11 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** Sweet Shop, Tricentis Obstacle Course, UI Test Automation Playground (DOWN/HTTP), Weather Shopper, XYZ Bank (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. CLI run live in this session (original 2026-05-18 runs had no timing capture). Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| Sweet Shop | 2,809 | 28,262 | 10.1× |
+| Tricentis Obstacle Course | 5,536 | 25,179 | 4.5× |
+| UI Test Automation (HTTP-only) | 515 | 5,266 | 10.2× |
+| Weather Shopper | 2,834 | 36,811 | 13.0× |
+| XYZ Bank | 3,788 | 42,695 | 11.3× |
+| **Total** | **15,482** | **138,213** | **8.9×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +5 | +55 | 11.0× |
+| Cost | +$0.1645 | +$1.5786 | 9.6× |
+
+### Notes
+- CLI is **8.9× faster** and **9.6× cheaper** — high cost ratio driven by MCP's per-tool-call token overhead on straightforward sites
+- Sweet Shop (10.1×): `addItem` links invisible to both CLI `vibium map` and MCP `browser_map` — eval required in both cases; same workaround, same limitation
+- Tricentis (4.5×) has the smallest gap — page is scroll-heavy with multiple interactive elements; CLI `vibium eval` for next-link and MCP `browser_evaluate` both equally fast here
+- UI Test Automation Playground is HTTP-only: both CLI and MCP fail immediately with BiDi error (~500ms CLI, ~5s MCP); MCP adds ~4.5s overhead even for an instant failure (tool-call serialization cost)
+- Weather Shopper (13.0×) — clean, no mandatory sleeps; MCP's navigate/map/click/evaluate sequence on a 3-page e-commerce flow dominates
+- XYZ Bank (11.3×) — AngularJS `ng-model` select workaround (eval + dispatchEvent) required in both interfaces; MCP needed extra find+click steps for the Login/Deposit buttons vs CLI's inline eval
 
 ---
 
