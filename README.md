@@ -2,7 +2,7 @@
 
 <!-- Run history:
   General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 2–5 (2026-05-19)
-  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batch 6 (2026-05-19)
+  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 9 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
@@ -217,6 +217,52 @@
 - Automation Exercise and Applitools show smaller gaps because both required login flows and ad-overlay handling that take real browser time regardless of interface
 - MCP per-site time is fairly uniform (~18–32s) regardless of site complexity; CLI time varies widely (0.5s–7s) based on actual page complexity
 - MCP reconnect overhead not included in MCP timing (occurred between CLI and MCP runs)
+
+---
+
+## CLI vs MCP Performance Comparison — Automation Testing Batch 9 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** Hands-On Selenium WebDriver, Lambdatest Playground, Let Code, Locator Game, Practice Test Automation (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. CLI run live in this session (original 2026-05-18 runs had no timing capture). Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| Hands-On Selenium WebDriver | 2,615 | 28,412 | 10.9× |
+| Lambdatest Playground | 8,095 | 34,057 | 4.2× |
+| Let Code | 14,962 | 211,405¹ | 14.1×¹ |
+| Locator Game | 2,897 | 20,819 | 7.2× |
+| Practice Test Automation | 9,338 | 42,713 | 4.6× |
+| **Total** | **37,907** | **337,406** | **8.9×** |
+| **Total (excl. Let Code)** | **22,945** | **126,001** | **5.5×** |
+
+¹ Let Code MCP inflated by multiple BiDi "unknown error" navigation failures on `letcode.in` — the site triggered SSL/privacy errors on first attempts, requiring retry pattern. Excluding Let Code anomaly, the batch runs at 5.5×.
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +6 | +68 | 11.3× |
+| Cost | +$0.1948 | +$1.5511 | 8.0× |
+
+### Notes
+- CLI is **8.9× faster** overall; **8.0× cheaper** — one of the highest cost ratios seen across batches
+- Let Code MCP time is anomalous (211s vs 15s CLI) due to repeated BiDi navigation failures; clean runs on this Angular site should be ~35–45s (3–4× ratio)
+- Hands-On Selenium WebDriver shows 10.9× gap — clean static site with no mandatory sleeps; CLI navigate+fill+click dominates, MCP adds map + multiple tool-call round trips
+- Lambdatest Playground (4.2×) and Practice Test Automation (4.6×) have the smallest gaps — both require wait sleeps (2–3s mandatory) that absorb MCP overhead
+- Locator Game (7.2×) is a clean GitHub Pages static site — no sleep floors, so MCP overhead is fully exposed
+- CLI Let Code shows slow `wait load` on Angular pages (~3s per navigate) which narrows the gap; MCP's BiDi failures more than offset this
+- MCP `browser_map` found ads (iframe elements) on Let Code pages; CLI `vibium map` silently filtered these
 
 ---
 
