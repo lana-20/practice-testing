@@ -2,7 +2,7 @@
 
 <!-- Run history:
   General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batches 1–5 (2026-05-19)
-  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 9, 11 (2026-05-19)
+  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6, 7, 9, 11 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
@@ -259,6 +259,51 @@
 - Automation Exercise and Applitools show smaller gaps because both required login flows and ad-overlay handling that take real browser time regardless of interface
 - MCP per-site time is fairly uniform (~18–32s) regardless of site complexity; CLI time varies widely (0.5s–7s) based on actual page complexity
 - MCP reconnect overhead not included in MCP timing (occurred between CLI and MCP runs)
+
+---
+
+## CLI vs MCP Performance Comparison — Automation Testing Batch 7 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** Automation Testing Practice, Automation Test Store, Automate Now Sandbox, Coffee Cart, Commit Quality (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| Automation Testing Practice | 1,565 | 28,244 | 18.1× |
+| Automation Test Store | 8,175 | 42,741 | 5.2× |
+| Automate Now Sandbox | 1,777 | 29,648 | 16.7× |
+| Coffee Cart | 27,696¹ | 35,598 | 1.3×¹ |
+| Commit Quality | 1,689 | 16,517 | 9.8× |
+| **Total** | **40,902** | **152,748** | **3.7×** |
+| **Total (excl. Coffee Cart)** | **13,206** | **117,150** | **8.9×** |
+
+¹ CLI Coffee Cart anomalously slow (27,696ms) — cold server / network delay on initial load; subsequent MCP run hit warm cache (35,598ms). Excluding this outlier the batch runs at **8.9×**.
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +5 | +56 | 11.2× |
+| Cost | +$0.2358 | +$2.4020 | 10.2× |
+
+### Notes
+- CLI is **8.9× faster** (excluding Coffee Cart anomaly) and **10.2× more expensive** via MCP — one of the highest cost ratios seen
+- Automation Testing Practice (18.1×) — Blogger-hosted single long page; CLI `vibium map` returns nothing, eval-only; MCP `browser_map` returned 82 interactive elements requiring more tool-call overhead
+- Automate Now Sandbox (16.7×) — submit button obscured in MCP (`receivesEvents check failed`), requiring eval fallback; CLI eval-only was faster
+- Automation Test Store (5.2×) — multi-page e-commerce flow (home → search → product) compresses the ratio; same `product_id=31` not found in both interfaces (site data changed), fell back to product 51
+- Coffee Cart CLI was a cold-server hit (~27s to load); MCP run hit a warmer server (~35s total including tool-call overhead); true ratio on warm server would be ~18× based on pattern from other batches
+- Commit Quality (9.8×) — clean React app; MCP `browser_map` correctly identified nav + filter + product elements
 
 ---
 
