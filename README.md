@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 9 (Automation Testing sites 16–20)
+## Latest Session: 2026-05-18 — MCP Batch 10 (Automation Testing sites 21–25)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–9 (Automation Testing sites 1–20), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–10 (Automation Testing sites 1–25), last run 2026-05-18 -->
 
 ---
 
@@ -3761,3 +3761,170 @@ Date: 2026-05-18
 6. **Lambdatest Playground — `cart.add(id)` more reliable than GUI button**: GUI Add to Cart requires size selection for many products; `eval cart.add('id')` bypasses option requirements for products without mandatory options.
 
 5. **Commit Quality — `browser_type` for date input**: `input[type=date]` not editable via `browser_fill` in MCP (same as CLI). `browser_type` with `MMDDYYYY` format works.
+
+---
+
+## Practice Test Report: QA Playground
+URL: https://qaplayground.dev/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Playground for the QA automation engineers"
+
+### Structure
+- Navigation: 24 mini-apps linked from hub
+- Forms: varies per app
+- Interactive elements: `browser_map` returns 30 refs from hub
+
+### Navigation
+[PASS] Hub links use correct `/apps/<name>/` URLs (not `/apps/<shortname>/`)
+[PASS] All sub-pages navigate via direct URL
+
+### Core Functionality
+[PASS] OTP (`/apps/verify-account/`): `browser_fill` fills individual inputs; `browser_type` on first input fires keyup event → auto-advance triggers; pre-set values via eval + `browser_type` on first = "Success" shown; correct code: 9-9-9-9-9-9
+[PASS] Shadow DOM (`/apps/shadow-dom/`): `browser_map` shows 3 refs only (shadow content excluded); shadow host tag: `<progress-bar>`; button accessible via `shadowRoot.querySelector('button').click()`; progress bar updates to 95%
+[FAIL] `input[type=range]` — `browser_fill` fails ("input type range not editable"); use `eval el.value = N + dispatchEvent(input/change)` ✓
+[PASS] Sortable list (`/apps/sortable-list/`): `browser_drag` works — items reorder correctly; `browser_click` on "Check Order" works; correct positions highlighted green
+
+### Bugs Found
+None — all behaviors are by design.
+
+### Notes
+- OTP pattern: `eval` sets values + `browser_type` on first input triggers the verification check
+- Shadow DOM: only open shadow roots accessible; use `Array.from(document.querySelectorAll('*')).filter(el => el.shadowRoot)` to find shadow hosts
+- Range slider: eval + both `input` and `change` events needed for UI update
+
+---
+
+## Practice Test Report: React Shopping Cart
+URL: https://react-shopping-cart-67954.firebaseapp.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Typescript React Shopping cart"
+
+### Structure
+- Navigation: none (SPA)
+- Forms: none
+- Interactive elements: `browser_map` returns 42 refs (7 size checkboxes + 16 products + cart button)
+
+### Core Functionality
+[PASS] `browser_map` works — all products and Add to Cart buttons visible
+[PASS] `browser_click` on "Add to Cart" — works directly; cart drawer opens automatically
+[PASS] Cart contents: item name, quantity, price, +/- buttons, Checkout all accessible
+[FAIL] `browser_check` on size filter checkboxes — "receivesEvents check failed — element is obscured"; use `eval input.click()` ✓
+[PASS] Size filter via eval — XS filter shows 1 product ✓
+[INFO] No real checkout (frontend demo only)
+
+### Bugs Found
+None.
+
+### Notes
+- Cart icon (@e42 "0") visible in map but cart opens automatically after Add to Cart click
+- Size filters: always use `eval document.querySelector('input[value="XS"]').click()` — never `browser_check`
+
+---
+
+## Practice Test Report: Selectors Hub
+URL: https://selectorshub.com/xpath-practice-page/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title includes "Shadow dom, nested shadow dom, iframe, nested iframe..."
+
+### Structure
+- Navigation: full page with multiple practice sections
+- Forms: email/password/company/mobile inputs, payment form, table with checkboxes
+- Interactive elements: `browser_map` returns 125 refs
+
+### Core Functionality
+[PASS] `browser_map` works with 125 refs — comprehensive coverage
+[FAIL] `browser_fill` on email input — "editable check failed — readonly attribute"; use `eval .removeAttribute('readonly')` then `browser_fill` ✓
+[PASS] Open shadow DOM (`#userName`): `shadowRoot` accessible; input fillable via `eval shadowRoot.querySelector('input').value = '...'`
+[FAIL] Closed shadow DOM (`#userPass`): `shadowRoot` returns null — cannot be accessed or automated
+[SKIP] Alert buttons: browser hung on eval-triggered click (MB3 risk) — aborted
+[PASS] `browser_select` on dropdowns, `browser_check` on table checkboxes work normally
+
+### Bugs Found
+None — readonly and closed shadow DOM are intentional design features.
+
+### Notes
+- Always inspect `shadowRoot` mode first: open = accessible via eval, closed = inaccessible
+- Readonly removal pattern: `eval el.removeAttribute('readonly')` → then `browser_fill` works normally
+- Alert buttons: use `setTimeout(() => alert(...), 300)` pattern, NOT direct button click via eval
+
+---
+
+## Practice Test Report: Selenium Playground
+URL: https://www.lambdatest.com/selenium-playground/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Homepage loads (rebranded: LambdaTest → TestMu AI)
+
+### Structure
+- Navigation: 40+ practice demo links
+- Forms: simple form, input form, checkbox, dropdown, etc.
+- Interactive elements: `browser_map` returns 156 refs from homepage
+
+### Navigation
+[PASS] Homepage loads with all demo links
+[INFO] All demo links redirect to `testmuai.com` domain (e.g. `testmuai.com/selenium-playground/simple-form-demo/`)
+[PASS] Sub-pages load correctly on testmuai.com
+
+### Core Functionality
+[PASS] `browser_fill` on Simple Form Demo text inputs ✓
+[PASS] `browser_click` on "Get Checked Value" and "Get Sum" buttons — clicks register
+[FAIL] Result output fields blank after button clicks ("Your Message:" / "Result:" empty) — possible JS event timing or Cloudflare interference with scripts
+[INFO] Previous CLI note "blocked by Cloudflare bot protection" outdated — site now accessible as testmuai.com
+
+### Bugs Found
+1. Simple Form Demo — button result output not displaying after click. Steps: fill input → click "Get Checked Value" → "Your Message:" area stays empty. Possible JS initialization issue. Severity: Medium (blocks core demo functionality)
+
+### Notes
+- SKILL.md note "not accessible as of 2026-05-18" needs update — site now redirects to testmuai.com and is accessible
+- Use `testmuai.com/selenium-playground/<demo-name>/` URLs directly for sub-pages
+
+---
+
+## Practice Test Report: Swag Labs
+URL: https://www.saucedemo.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Swag Labs"
+
+### Structure
+- Navigation: hamburger menu, cart icon (not in map)
+- Forms: login, checkout (3 fields)
+- Interactive elements: `browser_map` returns 23 refs on inventory page
+
+### Core Functionality
+[PASS] Login: `browser_fill` on `#user-name`/`#password` + `browser_click` on `#login-button` → `inventory.html` ✓
+[PASS] `browser_map` works on inventory page (6 products + sort + cart buttons)
+[PASS] Add to Cart: `browser_click` works directly; `.shopping_cart_badge` updates to "1" ✓
+[PASS] Sort: `browser_select` with values `"az"`, `"za"`, `"lohi"`, `"hilo"` — prices sorted high-to-low confirmed ✓
+[FAIL] Cart icon not in `browser_map`; use `eval document.querySelector('.shopping_cart_link').click()` ✓
+[PASS] Full checkout: fill first-name/last-name/postal-code → continue → finish → "Thank you for your order!" ✓
+
+### Bugs Found
+None (all known intentional bugs are user-specific: problem_user, performance_glitch_user, etc.)
+
+### Notes
+- Cart icon consistent across all sessions — always needs eval click
+- `problem_user` shows broken images and broken sort (intentional) — test with `standard_user` for normal flow
+- Checkout form IDs: `#first-name`, `#last-name`, `#postal-code`, `#continue`, `#finish`
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 10)
+
+1. **QA Playground OTP — `browser_type` triggers auto-advance, `browser_fill` does not**: `browser_type` fires real keyup events that trigger the OTP auto-advance JS. `browser_fill` sets the value silently. Use `eval` to pre-set all values then `browser_type` on the first to trigger verification.
+
+2. **React Shopping Cart checkboxes always obscured**: Size filter checkboxes are behind styled label overlays — `browser_check` will always fail. `eval input.click()` is the only reliable method.
+
+3. **Selectors Hub — `browser_fill` correctly rejects readonly inputs**: Unlike CLI where readonly attributes might be bypassed, MCP's `browser_fill` explicitly checks and rejects readonly fields with a clear error. Use `eval .removeAttribute('readonly')` to enable.
+
+4. **Selenium Playground rebranded to TestMu AI**: The site is now at `testmuai.com`. CLI note "blocked by Cloudflare" is outdated — site is accessible. Demo results (Simple Form) appear broken but forms fill correctly.
+
+5. **Swag Labs — full checkout flow confirmed in MCP**: Cart icon not in map is consistent with CLI. All checkout steps work via direct ID selectors. `browser_select` sort values confirmed: `"az"`, `"za"`, `"lohi"`, `"hilo"`.
