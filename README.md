@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 7 (Automation Testing sites 6–10)
+## Latest Session: 2026-05-18 — MCP Batch 8 (Automation Testing sites 11–15)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–7 (Automation Testing sites 1–10), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–8 (Automation Testing sites 1–15), last run 2026-05-18 -->
 
 ---
 
@@ -3412,3 +3412,156 @@ None.
 3. **Practice Automation — name input obscured**: `#name-input` obscured to `browser_click`; `eval '#name-input'.click()` required before `browser_fill`. Same as CLI.
 
 4. **MB7 confirmed on all 3 textarea sites**: Automation Testing Practice, Automation Camp, Automate Now Sandbox — `browser_fill` consistently fails on `<textarea>`. Use `browser_type` for framework-driven textareas, `eval .value= + dispatchEvent` for vanilla JS textareas.
+
+---
+
+## Practice Test Report: Commit Quality (MCP)
+URL: https://commitquality.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~1s (React SPA)
+
+### Structure
+- Navigation: Products, Add Product, Practice, Learn, Login
+- Products table with name filter, Show More, Reset
+- Practice sub-pages: General Components, Accordions, Popups, Iframes, APIs, Dynamic Text, File Upload, Drag and Drop, Contact Form, Mock Data Layer, File Download, Time Testing
+
+### Core Functionality
+[PASS] Product filter — `browser_fill` on text input + click Filter; "Product 1" filters correctly
+[PASS] Reset — clears filter and restores all products
+[PASS] Practice → General Components — `browser_click` on container div navigates to `/practice-general-components`; buttons, radio, dropdown, checkboxes all work via `browser_click`/`browser_check`/`browser_select`
+[PASS] Add Product — `browser_fill` for name/price; `browser_fill` fails on `input[type=date]` ("not editable"); `browser_type` with `01152026` sets value `2026-01-15`; submit redirects to products list and new item appears
+[NOTE] Date filter on products page not present — date field only on Add Product form
+
+### Bugs Found
+None.
+
+### Notes
+- `browser_type` required for `input[type=date]` (same as CLI); format: `MMDDYYYY` (keyboard input order)
+- Credentials for login not public — login flow not tested
+- Past date filter note from CLI applies only to Add Product, not the products list filter
+
+---
+
+## Practice Test Report: Contact List App (MCP)
+URL: https://thinking-tester-contact-list.herokuapp.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s (Heroku app)
+
+### Structure
+- Navigation: login/signup on landing; contact list + Add/Logout after auth
+- Forms: signup (first name, last name, email, password), add contact (name, DOB, email, phone, address)
+
+### Core Functionality
+[PASS] Signup — `browser_fill` all fields; submit redirects to `/contactList`
+[PASS] Add contact — `browser_fill` works for all fields including `#birthdate` (plain text input `yyyy-MM-dd` format); submit adds contact to list
+[PASS] Edit contact — `browser_click` on contact row → detail page → Edit Contact; field value updated via `eval .value=`; submit saves
+[PASS] Delete contact — pre-stub `window.confirm = () => true`; `browser_click` on Delete → redirects to contact list; contact removed
+[PASS] Full CRUD flow confirmed end-to-end
+
+### Bugs Found
+None.
+
+### Notes
+- Edit form inputs don't have `placeholder` attribute — use `#firstName`, `#lastName` etc. selectors or eval
+- `window.confirm` pre-stub required for delete (same as CLI)
+- Account creates persistent data on Heroku — use unique email per test run
+
+---
+
+## Practice Test Report: Demo SaaS (MCP)
+URL: https://demo-saas.bugbug.io/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Landing page loaded; signup and login flows accessible
+
+### Structure
+- Navigation: Log in, Sign up buttons; "Go to example sign up" CTA
+- Forms: signup (first name, last name, email, password), login (email, password)
+
+### Core Functionality
+[PASS] Signup form — `browser_fill` works for all fields; invalid email → "Invalid email" error shown inline
+[PASS] Login form — `browser_fill` + `browser_click` submit; wrong credentials → "Invalid email or password" shown below button
+[NOTE] Dashboard inaccessible without real verified email — confirmed same as CLI
+
+### Bugs Found
+None.
+
+### Notes
+- Email verification required for dashboard access — only landing page and validation flows testable without real email
+- Mantine UI components use dynamic IDs (`#mantine-xyz`) — use `name` attribute selectors for reliability: `input[name="email"]`, `input[name="password"]`
+
+---
+
+## Practice Test Report: GreenKart (MCP)
+URL: https://rahulshettyacademy.com/seleniumPractise/#/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s; ticker banner present at top
+
+### Structure
+- Navigation: Top Deals, Flight Booking (ticker banner intercepts direct clicks)
+- Products: 26+ items with qty +/– controls and ADD TO CART buttons
+- Interactive elements: 126 refs (all product controls mapped)
+
+### Core Functionality
+[PASS] Search — `browser_fill` + `browser_press "Enter"` filters products; "Broc" → Brocolli
+[PASS] Add to cart — `browser_click` on ADD TO CART button; cart updates to "Items: 1, Price: 120"
+[PASS] Cart navigation — `browser_navigate` to `/seleniumPractise/#/cart` (not `eval location.href='/#/cart'` — that resolves to root domain)
+[PASS] Promo code — fill "rahulshettyacademy" + click Apply → "Code applied..!" + Discount: 10 (not silent failure)
+[BUG] "Quantiry" typo in cart table header (column should be "Quantity") — confirmed in MCP
+[BUG] "No. of Items: 0" in cart summary despite 1 item in cart
+
+### Bugs Found
+1. "Quantiry" column header typo in cart — Severity: Low
+2. Cart item count shows 0 despite items present — Severity: Medium
+
+### Notes
+- Ticker banner intercepts nav link clicks — use `browser_navigate` for all navigation
+- `eval location.href='/#/cart'` navigates to wrong domain root; always use full URL
+- Promo code is functional in MCP (CLI note said "silent promo failure" — may have been fixed or intermittent)
+
+---
+
+## Practice Test Report: Global SQA Demo (MCP)
+URL: http://www.globalsqa.com/demo-site/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s
+
+### Structure
+- Navigation: Tabs, Slider, ToolTip, AlertBox, DialogBox, ProgressBar, Frames, Windows, Accordion, DropDown, AutoComplete, SelectElements, Sorting, Spinner, Toolbar, DatePicker, DragAndDrop, DraggableBox, SamplePage, AngularJS Site, Content Management, E-CommerceSite, PhotographySite
+- Interactive elements: 49 refs on homepage
+
+### Core Functionality
+[PASS] Homepage maps correctly (49 refs)
+[FAIL] Component links — `browser_click` on "Tabs" redirects to ad vignette (`#google_vignette`) — same as CLI; navigate sub-pages by direct URL
+[PASS] Drag and Drop — navigate to `https://www.globalsqa.com/demo-site/draganddrop/`; iframe content URLs discoverable via `eval document.querySelectorAll('iframe')`; navigate to iframe URL directly (`/demoSite/practice/droppable/photo-manager.html`); `browser_drag` works — dragged photo to trash, 3 photos remain
+
+### Bugs Found
+None.
+
+### Notes
+- Component nav links intercepted by ads — direct URL navigation required for all sub-pages
+- Drag widget lives in iframe — navigate to iframe URL (`/demoSite/practice/droppable/photo-manager.html`) directly; `browser_drag` works from top-level navigation
+- Same as CLI: `browser_drag` works when page content is directly accessible (not cross-origin iframe)
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 8)
+
+1. **GreenKart — `eval location.href='/#/cart'` navigates to wrong domain**: Use full URL `https://rahulshettyacademy.com/seleniumPractise/#/cart` with `browser_navigate`. CLI note about using `eval location.href` for navigation was correct for the CLI daemon's context — MCP needs full URLs.
+
+2. **GreenKart — promo code functional**: "Code applied..!" + Discount: 10 shown. CLI note "silent promo failure" may have been fixed or was intermittent.
+
+3. **Global SQA — `browser_drag` works on iframe content via direct URL**: Navigate to the iframe's src URL directly instead of trying to interact with framed content. `browser_drag` then works reliably.
+
+4. **Contact List — `#birthdate` fillable with `browser_fill`**: Plain text input (not `input[type=date]`), so `browser_fill` works directly in `yyyy-MM-dd` format.
+
+5. **Commit Quality — `browser_type` for date input**: `input[type=date]` not editable via `browser_fill` in MCP (same as CLI). `browser_type` with `MMDDYYYY` format works.
