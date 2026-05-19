@@ -2534,3 +2534,200 @@ None. All rates and validations match documented rate card.
 3. **Invalid date error**: Parking Cost Calculator shows inline error message for invalid date ranges — not a blank page as noted in SKILL.md. SKILL.md note needs correction.
 
 4. **Parabank any-creds bug**: Reproduced in MCP mode. Likely intentional demo behavior but worth noting as a testing target.
+
+---
+
+## MCP Batch 3 Re-run — Sites 11–15 (vibium MCP tools)
+
+*Tested 2026-05-18 using `mcp__vibium__browser_*` MCP tools.*
+
+---
+
+## Practice Test Report: PHP Travels (MCP)
+URL: http://phptravels.com/demo/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Free Travel Booking Software Demo – Flights, Hotels, Tours & Cars"
+
+### Structure
+- 69 interactive elements via `browser_map`
+- Form: First Name, Last Name, Business Name, Country (select), WhatsApp number, Email, math captcha, Submit
+- FAQ accordion, blog links, footer nav
+
+### Navigation
+[FAIL] Login nav link → redirects back to `/demo/` (broken — confirmed same as CLI note)
+[PASS] All other nav links accessible via map refs
+
+### Core Functionality
+[PASS] Form fill — `browser_fill` works on all inputs via map refs (@e14–@e19)
+[PASS] Country select — `browser_select {value: "226"}` for United States
+[PASS] Math captcha — read `numb1` + `numb2` from DOM, fill answer dynamically
+[PARTIAL] Submit — button obscured to direct `browser_click`; must use `eval document.getElementById('demo').click()`; no visible success/error feedback after submission (AJAX POST, credentials sent to email if valid)
+[PASS] No dialog deadlock on Submit — no native `alert()` triggered (CLI note "deadlocks daemon" may have been outdated or site-specific)
+
+### Bugs Found
+1. Login nav link broken — redirects to same demo page — Steps: click Login in nav — Severity: Medium
+
+### Notes
+- Submit button (`#demo`) is obscured to `browser_click` (covered by sticky element); use `eval document.getElementById('demo').click()` instead
+- Form requires: First Name, Last Name, Business Name, WhatsApp (tel), Email, Country, math captcha — all required
+- No deadlock observed in MCP mode on submit (differs from CLI note); pre-stub not needed
+
+---
+
+## Practice Test Report: Polymer Shop (MCP)
+URL: https://shop.polymer-project.org/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Home - SHOP"
+
+### Structure
+- `browser_map` → "No interactive elements found" (same as CLI — all UI in Web Components shadow DOM)
+- Shadow DOM traversal via `browser_evaluate`: `shop-app > shop-home > 4 categories`, `shop-list > products`, `shop-detail > Add to Cart button`
+- 4 categories: Men's Outerwear, Ladies Outerwear, Men's T-Shirts, Ladies T-Shirts
+
+### Navigation
+[PASS] Category links extracted via `shop-app.shadowRoot.querySelector('shop-home').shadowRoot.querySelectorAll('a')`
+[PASS] `eval location.href = '...'` navigates to listing and detail pages (same as CLI — browser_navigate also works for top-level URLs)
+
+### Core Functionality
+[PASS] Product listing — `shop-list` shadow root contains product links; navigated to `/list/mens_outerwear` successfully
+[PASS] Product detail — `shop-detail` shadow root shows title, price ($50.20), size/qty selects, Add to Cart button
+[FAIL] Shadow DOM eval `.click()` on Add to Cart — cart count stayed 0 (event not dispatched correctly)
+[PASS] Coordinate click `browser_mouse_click {x:814, y:752}` — cart badge updated to 1 ✓
+[PASS] Cart page — navigated to `/cart`, item verified in `shop-cart` shadow root: "Your Cart (1 items) | Men's Tech Shell Full-Zip"
+
+### Bugs Found
+None. Shadow DOM traversal requires eval; coordinate clicks required for buttons inside shadow roots.
+
+### Notes
+- `browser_map` and `browser_find` return nothing — entire UI is in Web Components shadow roots
+- All interaction requires `browser_evaluate` to traverse shadow DOM, then `browser_mouse_click` at computed coordinates for button clicks
+- `shadowRoot.querySelector('button').click()` does NOT trigger Polymer event handlers — use coordinate click instead
+- Category URLs: `/list/mens_outerwear`, `/list/ladies_outerwear`, `/list/mens_tshirts`, `/list/ladies_tshirts`
+- Cart is in-memory (same as CLI note — server-side state)
+
+---
+
+## Practice Test Report: Practice Software Testing (MCP)
+URL: https://practicesoftwaretesting.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Practice Software Testing - Toolshop - v5.0"
+
+### Structure
+- 71 interactive elements via `browser_map`: nav, search, price slider, 19 category checkboxes, 9 products, pagination
+- Angular app; `browser_map` finds everything cleanly
+
+### Navigation
+[PASS] Product click → detail page (71 → 34 elements, includes Add to Cart, qty controls, related products)
+[PASS] Sign in link → login page
+
+### Core Functionality
+[PASS] Add to cart from detail page — `browser_click @e19` ("Add to cart") → cart badge showed 1 ✓
+[PASS] Login — `browser_fill` on email/password + `browser_click` on `input[type=submit]` → logged in as "Jane Doe" ✓
+[PASS] `browser_click` on `input[type=submit]` works directly — **no eval needed** (CLI note "use eval.click()" is outdated for MCP mode)
+
+### Bugs Found
+None found. Site fully functional.
+
+### Notes
+- `browser_click` works on `input[type=submit]` in MCP mode — CLI note about needing `eval.click()` does not apply here
+- Search, category filter checkboxes, price range slider all accessible via `browser_map` refs
+- Test credentials: `customer@practicesoftwaretesting.com` / `welcome01` (account active as of 2026-05-18)
+
+---
+
+## Practice Test Report: Presta Shop (MCP)
+URL: https://demo.prestashop.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Wrapper page loaded; iframe src extracted after 5s: `https://<subdomain>.demo.prestashop.com/en/`
+[PASS] Direct `browser_navigate` to subdomain URL works — **no deadlock** (CLI required `eval + location.href`)
+
+### Structure
+- 106 interactive elements via `browser_map` on subdomain homepage
+- Full store: nav (Clothes, Accessories, Art), search, product cards with Add to Cart, newsletter signup, footer
+
+### Navigation
+[PASS] `browser_navigate` to subdomain URL — no deadlock (unlike CLI `vibium go`)
+[FAIL] Product detail URL navigation — subdomain expires within ~2 minutes; direct URL navigation returns "The page is temporarily unavailable"
+
+### Core Functionality
+[FAIL] Add to cart from homepage — `browser_click @e26` clicks button (it gets disabled afterward) but cart stays at 0 — AJAX silently fails; no error or modal shown. Confirmed on 2 products.
+[INFO] Subdomain TTL is very short (~2 min active use); need to re-fetch iframe src from demo.prestashop.com for each session
+
+### Bugs Found
+None new — all known issues from CLI session confirmed.
+
+### Notes
+- MCP advantage: `browser_navigate` to subdomain pages does NOT deadlock (CLI required `eval + location.href` workaround)
+- Add-to-cart AJAX fails silently on both CLI and MCP — not a tool issue, appears to be a demo backend limitation
+- Subdomain expires quickly; re-fetch from `demo.prestashop.com` → `#framelive` iframe src for each session
+- `browser_map` finds 106 elements on homepage — much richer than CLI experience
+
+---
+
+## Practice Test Report: QA Practice (MCP)
+URL: https://qa-practice.razvanvancea.ro/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "QA Practice | Learn with RV"
+
+### Structure
+- 29 interactive elements via `browser_map`: full nav + section entry links
+- Sections: Ecommerce, Spot Bugs, GraphQL, API, Forms, Buttons, Dropdowns, Iframes, Alerts, File Upload, etc.
+
+### Navigation
+[PASS] All nav links accessible via map refs; sections load within same page (SPA behavior)
+
+### Core Functionality
+[PASS] Login — `browser_fill` + `browser_click @e27` → logged in; products + ADD TO CART buttons appear
+[PASS] ADD TO CART via map ref (@e27) — item added; cart shows "Essence Mascara Lash Princess $9.99"
+[PASS] PROCEED TO CHECKOUT → Shipping Details form (phone, street, city, country select)
+[PASS] Fill and submit order → "Congrats! Your order of $9.99 has been received"
+[PASS] Alert (setTimeout workaround) — `browser_evaluate { setTimeout(..., 300) }` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` → "Dialog accepted" ✓
+[BUG/MB3] Direct `browser_click` on Alert button → deadlock (user interrupted); MB3 confirmed same as CLI
+
+### Bugs Found
+1. MB3 — `browser_click` deadlock on native alert trigger — Steps: navigate to Alerts, click Alert button directly — Severity: High (requires session restart)
+
+### Notes
+- ADD TO CART buttons are CSS-uppercase in DOM (`button type="button" "ADD TO CART"`) — `browser_map` finds them correctly by ref; do not use `browser_find {text: "Add to Cart"}` (case mismatch)
+- Submit Order: pre-stubbing dialogs is NOT required when using `browser_click` on `#submitOrderBtn` — no native alert triggered
+- Shipping Details country select: option value matches display text exactly (e.g. `"United States of America"`)
+- MB3 deadlock pattern confirmed: direct click on any element that triggers `window.alert()` synchronously will hang
+
+---
+
+## MCP Batch 3 — Cross-site Comparison
+
+| Site | Reachability | Core Flow | MCP vs CLI Difference |
+|------|-------------|-----------|----------------------|
+| PHP Travels | PASS | PARTIAL (submit obscured, no feedback) | No deadlock on submit in MCP; Submit obscured to browser_click — use eval |
+| Polymer Shop | PASS | PASS (with coord clicks) | Shadow DOM same; eval .click() doesn't fire Polymer events — use mouse_click coords |
+| Practice Software Testing | PASS | PASS | browser_click on input[type=submit] works directly — no eval needed (CLI note outdated) |
+| Presta Shop | PASS (subdomain) | FAIL (add-to-cart AJAX) | browser_navigate works without deadlock (CLI needed eval+location.href) |
+| QA Practice | PASS | PASS | Full e-commerce flow works; MB3 deadlock same as CLI on direct alert click |
+
+### Key MCP vs CLI Behavioral Differences (Batch 3)
+
+1. **Polymer Shop shadow DOM buttons**: `shadowRoot.querySelector('button').click()` via eval does NOT fire Polymer component event handlers. Must use `browser_mouse_click` at computed bounding-box coordinates instead.
+
+2. **Practice Software Testing `input[type=submit]`**: `browser_click` works directly in MCP mode. CLI note saying to use `eval.click()` is outdated for MCP.
+
+3. **Presta Shop navigation**: `browser_navigate` to subdomain pages works without deadlock. CLI required `eval + location.href` workaround due to BiDi issue. MCP does not have this limitation.
+
+4. **PHP Travels Submit button**: Obscured to `browser_click` (intercepted by sticky overlay). Use `eval document.getElementById('demo').click()`. No native dialog deadlock in MCP (CLI note may be outdated).
+
+5. **MB3 persists**: QA Practice Alerts confirms MB3 deadlock is consistent across all sites where buttons directly call `window.alert()` synchronously.
