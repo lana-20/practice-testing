@@ -116,12 +116,12 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 ### Performance Testing
 
-| Name | URL |
-|------|-----|
-| Blaze Demo | http://blazedemo.com/index.php |
-| Computer Database | https://computer-database.gatling.io/computers |
-| Demoblaze | https://demoblaze.com/ |
-| Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action |
+| Name | URL | CLI Notes | MCP Notes |
+|------|-----|-----------|-----------|
+| Blaze Demo | http://blazedemo.com/index.php | Full booking flow works: 7 departure/destination options, reserve page (5 flights), purchase form (9 fields); submit via `eval select.value + button.click()` | Identical via `browser_evaluate`; same eval pattern |
+| Computer Database | https://computer-database.gatling.io/computers | **DOWN** — HTTP 000, no TCP connection; BiDi unknown error on navigate (2026-05-19) | **DOWN** — same BiDi unknown error |
+| Demoblaze | https://demoblaze.com/ | Categories via `#itemc` (3s async load); product detail at `/prod.html?idp_=N` (use quotes to avoid zsh glob); **add-to-cart deadlocks daemon** — pre-stub `window.alert` before clicking; Demoblaze API at `api.demoblaze.com` | Same deadlock on add-to-cart — pre-stub required; `browser_map` misses async-loaded products initially |
+| Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | Category nav via `area[href*=Category]` or direct URL (`?viewCategory=&categoryId=FISH`); login `j2ee`/`j2ee` → "Welcome ABC!"; jsessionid in URL (path-based, not cookie); `vibium map` misses image map areas | Identical — `browser_map` misses image areas; use `area[href]` selectors or direct URL navigation |
 
 ---
 
