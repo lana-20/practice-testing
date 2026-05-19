@@ -2731,3 +2731,190 @@ Mode: vibium MCP
 4. **PHP Travels Submit button**: Obscured to `browser_click` (intercepted by sticky overlay). Use `eval document.getElementById('demo').click()`. No native dialog deadlock in MCP (CLI note may be outdated).
 
 5. **MB3 persists**: QA Practice Alerts confirms MB3 deadlock is consistent across all sites where buttons directly call `window.alert()` synchronously.
+
+---
+
+## MCP Batch 4 Re-run — Sites 16–20 (vibium MCP tools)
+
+*Tested 2026-05-18 using `mcp__vibium__browser_*` MCP tools.*
+
+---
+
+## Practice Test Report: QA Training Simulator (MCP)
+URL: https://bugeater.web.app/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Level Up Your QA and BA Skills - BugEater"
+Note: Site has been redesigned as **BugEater 2.0** (announced 12.04.2026). "Trails" replace old challenge categories. Homepage now shows: Trails, Pricing, Demo, Games navigation.
+
+### Structure
+- 51 interactive elements on homepage via `browser_map` (nav, FAQ accordions, cookie banner, footer)
+- `/app/list` challenge list: 26 challenges across 7 groups (1.x–7.x), numbered explicitly
+
+### Navigation
+[PASS] "TRY LIVE DEMO" → `/app/list` (challenge list loaded cleanly)
+[PASS] Cookie banner dismissed via `browser_click @e49` (Accept all cookies)
+[PASS] Second cookie banner on `/app/list` — dismissed via `browser_click @e34` (Accept)
+
+### Core Functionality
+[PASS] Challenge #1.1 (learn/adder) via list link — loaded correctly; tutorial overlay dismissed via Skip; `browser_fill` works on React inputs; form submit works; progress tracking "1 out of 6" confirmed
+[PASS] Direct URL to scripted route — `browser_navigate` to `/app/challenge/scripted/multiplier` loads without TypeError crash
+[PASS] Direct URL to functional route — `/app/challenge/functional/calculator` loads without TypeError crash
+[INFO] **CLI crash note is outdated** — direct URL navigation to scripted/functional routes works in both CLI (as of BugEater 2.0) and MCP; old TypeError behavior was likely pre-2.0
+
+### Bugs Found
+None. All tested routes load correctly.
+
+### Notes
+- BugEater 2.0 redesign: challenge numbering changed to `#1.1`, `#2.1` etc.; old route names (learn/adder, scripted/multiplier, etc.) still work as URL slugs
+- Challenge list accessible directly at `/app/list` — no login required for demo
+- `browser_fill` works on React inputs; tutorial overlay appears on first visit per challenge — dismiss with Skip button
+- Old CLI note "scripted/functional routes crash with TypeError" is no longer accurate as of 2.0
+
+---
+
+## Practice Test Report: Random User Generator (MCP)
+URL: https://randomuser.me/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "Random User Generator | Home"
+
+### Structure
+- 22 interactive elements via `browser_map`; nav links, iframe ads
+- API at `/api/` — JSON response
+
+### Core Functionality
+[PASS] `?results=3` → 3 results, version 1.4
+[PASS] `?results=0` → silently returns 1 result (same as CLI)
+[PASS] `?results=abc` → silently returns 1 result (same as CLI)
+[PASS] `?format=pretty` → pretty-printed JSON (confirmed)
+[PASS] `?format=xml` → XML response rendered in browser
+[PASS] `?results=5000` → `browser_evaluate { JSON.parse(document.body.innerText) }` works for large responses
+[FAIL/MB] `browser_get_text` on `?results=5000` → "result (5,397,480 characters) exceeds maximum allowed tokens" — saved to file, not a crash but unusable; use `browser_evaluate` instead
+[SKIP] `?format=csv` — skipped (CLI note: triggers download, crashes BiDi session; not tested in MCP to avoid session loss)
+
+### Bugs Found
+None new. All behavior consistent with CLI findings.
+
+### Notes
+- `browser_get_text` on large responses (~5M chars) produces oversized output error — not a crash but the result is saved to a temp file and is unusable; always use `browser_evaluate { JSON.parse(document.body.innerText).results.length }` for large API responses
+- `?results=0`, `?results=abc`, `?results=-1`, `?results=5001` all silently return 1 result — confirmed in MCP same as CLI
+- Skip `?format=csv` test — download triggers browser navigation away from API page
+
+---
+
+## Practice Test Report: Real World Example Apps (MCP)
+URL: https://codebase.show/projects/realworld
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded after 3s sleep; title "CodebaseShow – RealWorld Example Apps"
+
+### Structure
+- Frontend tab: 100 interactive elements; Backend tab: 187 elements; includes framework cards with GitHub links
+- Language filter chips, Frontend/Backend/Fullstack tabs all in `browser_map`
+
+### Navigation
+[PASS] Backend tab → filtered to backend implementations (187 elements)
+[PASS] Go language filter → 19 Go implementations shown
+[PASS] Sign in → redirects to GitHub OAuth (`github.com/login?client_id=...`) ✓
+
+### Core Functionality
+[PASS] Tab switching (Frontend/Backend/Fullstack) — `browser_click` works directly
+[PASS] Language filter chips — `browser_click` works; filter applies immediately
+[PASS] Sign in redirects correctly to GitHub OAuth (old note "reloads page" confirmed stale)
+
+### Bugs Found
+None.
+
+### Notes
+- **3s sleep required** after `browser_wait_for_load` — SvelteKit SPA renders content asynchronously; without sleep, `browser_map` finds nothing
+- After sign in redirect to GitHub and going back, sleep 3s again before interacting
+- `browser_map` finds all tabs, filters, and implementation links cleanly
+
+---
+
+## Practice Test Report: The Boozang Test Lab (MCP)
+URL: https://thelab.boozang.com/
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "theLab - Boozang"
+
+### Structure
+- Homepage: only 10 elements via `browser_map` (Menu button, nav/social links — no challenge content visible)
+- Direct URL to challenge pages works: `/formFill` → 21 elements (form + social links)
+
+### Navigation
+[PASS] Direct URL `/formFill` loads form challenge (4 inputs + Save to db button)
+[PASS] `browser_map` finds challenge form fields on direct URL pages
+
+### Core Functionality
+[PASS] Form Fill — `browser_fill` works on all 4 fields (firstname, lastname, email, password)
+[PASS] "Save to db" → "Data saved to DB" success message
+[PASS] `browser_click` on buttons works directly (no eval needed)
+
+### Bugs Found
+None.
+
+### Notes
+- Homepage `browser_map` returns only 10 elements — challenge section not in map; always navigate directly to challenge URL (e.g. `/formFill`, `/sortedList`)
+- `browser_fill` works on all React inputs
+- Form Fill saves to shared API DB (`api.boozang.com/users`) — test data persists across sessions; use unique test data to avoid collisions
+
+---
+
+## Practice Test Report: The iframe Search Engine (MCP)
+URL: https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html
+Date: 2026-05-18
+Mode: vibium MCP
+
+### Reachability
+[PASS] Site loaded; title "The iFramed Search Engine"
+
+### Structure
+- 7 interactive elements: Index/Apps/Games nav, engine select dropdown, search text input, Search button, "Go search" link
+
+### Core Functionality
+[PASS] `browser_fill` on search input — fills "vibium testing" cleanly
+[PASS] `browser_select` with full URL value `"https://bing.com/search?q="` — selects Bing correctly
+[PASS] Search button click — updates "Go search" href to `https://bing.com/search?q=vibium%20testing` ✓
+[BUG/B5] `browser_select` with non-existent value → returns success, but `selectedIndex=-1`, `value=""` — silent failure; bug confirmed same as CLI
+
+### Bugs Found
+1. B5 — `browser_select` silent failure on non-existent option value — Steps: select with value not in options list — `selectedIndex=-1`, `value=""`, no error — Severity: Medium (same as CLI bug)
+
+### Notes
+- Must use full URL as option value (e.g. `"https://bing.com/search?q="` not `"bing.com"`)
+- "Go search" href only updates after clicking Search — not after fill alone
+- "Go search" opens search in a new tab — not in the iframe
+- Bing embeds in iframe; Google/DuckDuckGo block iframe (broken page icon)
+- B5 confirmed in MCP: `browser_select` returns success even for non-existent values — always verify `selectedIndex` after select
+
+---
+
+## MCP Batch 4 — Cross-site Comparison
+
+| Site | Reachability | Core Flow | MCP vs CLI Difference |
+|------|-------------|-----------|----------------------|
+| QA Training Simulator | PASS | PASS | BugEater 2.0 redesign; direct URL to all routes works — CLI crash note outdated |
+| Random User Generator | PASS | PASS | `browser_get_text` on large response → oversized error (not crash); use `browser_evaluate` |
+| Real World Example Apps | PASS | PASS | 3s sleep required; tabs/filters/sign-in all work same as CLI |
+| The Boozang Test Lab | PASS | PASS | Homepage map returns 10 elements; use direct challenge URLs; `browser_fill` works cleanly |
+| The iframe Search Engine | PASS | PASS (B5 confirmed) | B5 confirmed in MCP same as CLI; `browser_fill` works; select by full URL value |
+
+### Key MCP vs CLI Behavioral Differences (Batch 4)
+
+1. **BugEater 2.0**: Site redesigned — Trails replace old challenge categories; all route types now load directly without TypeError. The old CLI note about scripted/functional routes crashing applies to pre-2.0 only.
+
+2. **Random User Generator large response**: CLI `vibium text` crashes (buffer overflow) on `?results=5000`. MCP `browser_get_text` produces an oversized-output error instead of crashing — result saved to temp file but unusable. Both modes require `browser_evaluate` for large API responses.
+
+3. **Real World Apps 3s sleep**: Required in both CLI and MCP after `wait load` — SvelteKit SPA renders asynchronously. `browser_map` returns nothing without the sleep.
+
+4. **B5 confirmed in MCP**: `browser_select` with non-existent option value returns success in both CLI and MCP, but silently sets `selectedIndex=-1`. Always verify select state after setting a value.
