@@ -60,6 +60,52 @@
 
 ---
 
+## CLI vs MCP Performance Comparison — Performance Testing Sites (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (darwin)
+- vibium: v26.3.18
+- Chrome: 148.0.7778.168
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Methodology:** same 4 Performance Testing sites run twice — CLI batch first, MCP batch second. Each site timed individually (ms wall clock) covering the same core flow (navigate + primary interaction + verification). Token/cost delta measured via session history before and after each batch. Computer Database is DOWN — time reflects failed navigation only.
+
+### Per-site timing
+
+| Site | CLI time | MCP time | MCP slower by | Notes |
+|------|----------|----------|---------------|-------|
+| Blaze Demo | 5,039ms | 20,418ms | 4× | Full search→reserve→purchase flow |
+| Computer Database | 932ms | 5,789ms | 6× | Both DOWN — time is error response latency |
+| Demoblaze | 4,996ms | 21,626ms | 4× | Navigate + product detail + pre-stub + add-to-cart |
+| Pet Store Web | 4,144ms | 16,049ms | 4× | Navigate + login → "Welcome ABC!" |
+| **TOTAL** | **15,111ms** | **63,882ms** | **4.2×** | |
+
+### Token / cost delta (claude-sonnet-4-6)
+
+| Phase | Turns | Cost delta | Notes |
+|-------|-------|------------|-------|
+| Baseline | 12,800 | — | $462.9521 |
+| After CLI batch | 12,804 | +$0.2510 | +4 turns — bash orchestration only |
+| After MCP batch | 12,834 | +$1.5300 | +30 turns — each navigate/evaluate/wait_for_load is an LLM tool call |
+| **MCP costs 6.1× more** | | | |
+
+### Summary
+
+| Metric | CLI | MCP | Winner |
+|--------|-----|-----|--------|
+| Total time (4 sites) | 15.1s | 63.9s | CLI 4.2× faster |
+| LLM turns consumed | +4 | +30 | CLI 7.5× fewer |
+| Cost delta | +$0.25 | +$1.53 | CLI 6.1× cheaper |
+| Broken pipe recovery | daemon restart needed | browser stop/start needed | tie |
+| Alert pre-stub required | yes (deadlock without it) | yes (deadlock without it) | tie |
+| DOWN site detection | fast (BiDi error immediate) | slower (BiDi round-trip via MCP) | CLI |
+
+**MCP overhead is higher on UI-interactive sites than API sites.** Each UI step (navigate, wait_for_load, evaluate, evaluate again) generates multiple LLM turns vs CLI's single bash call per site. The 4× time gap is consistent across all three working sites.
+
+---
+
 ## Performance Testing Batch 1 — CLI + MCP (2026-05-19)
 
 Sites: Blaze Demo, Computer Database, Demoblaze, Pet Store Web
