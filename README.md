@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 8 (Automation Testing sites 11–15)
+## Latest Session: 2026-05-18 — MCP Batch 9 (Automation Testing sites 16–20)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–8 (Automation Testing sites 1–15), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–9 (Automation Testing sites 1–20), last run 2026-05-18 -->
 
 ---
 
@@ -3563,5 +3563,201 @@ None.
 3. **Global SQA — `browser_drag` works on iframe content via direct URL**: Navigate to the iframe's src URL directly instead of trying to interact with framed content. `browser_drag` then works reliably.
 
 4. **Contact List — `#birthdate` fillable with `browser_fill`**: Plain text input (not `input[type=date]`), so `browser_fill` works directly in `yyyy-MM-dd` format.
+
+---
+
+## Practice Test Report: Hands-On Selenium WebDriver
+URL: https://bonigarcia.dev/selenium-webdriver-java/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded immediately
+
+### Structure
+- Navigation: 30 sub-pages (Web form, Login, Dialogs, Drag & drop, Cookies, Slow calculator, etc.)
+- Forms: multiple (web form, login, slow calculator)
+- Interactive elements: `browser_map` returns 31 refs from index
+
+### Navigation
+[PASS] Web form → `web-form.html` — full form with text, password, textarea, select, checkbox, radio, date, range
+[PASS] Login form → `login-form.html` — username/password inputs + submit
+[PASS] Dialog boxes → `dialog-boxes.html` — alert, confirm, prompt, modal buttons
+
+### Core Functionality
+[PASS] `browser_fill` on text/password inputs
+[FAIL/MB7] `browser_fill` on `<textarea>` — "failed to fill: fill:" error; use `browser_type`
+[PASS] `browser_type` on textarea — value set correctly
+[PASS] `browser_select` on `<select>` elements
+[PASS] `browser_check` on checkboxes
+[PASS] Form submission → `submitted-form.html` with values in query string
+[PASS] Login with `student`/`student` → `login-sucess.html` (note: typo "sucess" is the site's own URL)
+[PASS] Dialogs — alert/confirm/prompt all handled via `setTimeout(..., 300)` + `browser_sleep {ms:350}` + `browser_dialog_accept/dismiss`
+[FAIL] Direct `browser_click` on dialog buttons deadlocks (MB3 confirmed)
+[FAIL] Drag-and-drop — `browser_drag` fires but jQuery UI droppable doesn't register; draggable stays in place
+[PASS] Cookies page — "Display cookies" button shows `username=John Doe; date=10/07/2018`
+[PASS] Slow calculator — `span.btn` buttons not in `browser_map`; use `eval Array.from(document.querySelectorAll('span.btn')).find(b=>b.textContent.trim()==='3').click()`; 3+7=10 after 3s
+
+### Bugs Found
+1. Drag-and-drop non-functional — `browser_drag` executes without error but jQuery UI droppable ignores the synthetic drag. Severity: Medium (tool limitation)
+2. "login-sucess.html" — URL typo in the site itself (not a tool bug). Severity: Low (site cosmetic)
+
+### Notes
+- 30 practice sub-pages covering most automation scenarios
+- `browser_fill ""` throws "value is required" — cannot clear a field with empty string; use `eval el.value=''`
+- CLI note about `vibium fill` failing on textarea confirmed in MCP as MB7
+- Slow calculator: `@e2 [input type="text"]` in map is the display; buttons are `span.btn`, not interactive per map
+- Login page delay: `browser_click` + `browser_sleep {ms:2000}` before `browser_get_url` for reliable post-login URL check
+
+---
+
+## Practice Test Report: Lambdatest Playground
+URL: https://ecommerce-playground.lambdatest.io/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded with full product catalog
+
+### Structure
+- Navigation: category nav + mega menu + breadcrumbs
+- Forms: search bar, product qty, checkout
+- Interactive elements: `browser_map` returns 309 refs on homepage
+
+### Navigation
+[PASS] Search with `browser_fill` + submit → `/index.php?route=product/search&search=laptop`
+[PASS] Direct URL navigation to product detail pages
+
+### Core Functionality
+[PASS] `browser_map` works (309 refs — full product listing visible)
+[PASS] Search functional via search input + submit
+[PASS] `cart.add('41')` via `browser_evaluate` — iMac added to cart ($170.00 shown in cart dropdown)
+[FAIL] GUI "Add to Cart" buttons on homepage require size selection for some products — "Size required!" error
+[FAIL] Many product detail pages show "Out Of Stock" — no Add to Cart button
+[INFO] Checkout redirects to cart page for guest users (standard OpenCart behavior)
+
+### Bugs Found
+None found — behaviors are expected for this OpenCart demo.
+
+### Notes
+- Cart manipulation via `eval cart.add('product_id')` is most reliable — bypasses any size/option requirements for products that don't have mandatory options
+- Product IDs: iMac=41, HTC Touch HD=28 (out of stock), Canon EOS 5D=30
+- Nav links work via `browser_click` — no sticky header obstruction in MCP (unlike CLI note about nav being obscured)
+- `browser_map` works well from homepage with 309 refs
+
+---
+
+## Practice Test Report: Let Code
+URL: https://letcode.in/test
+Date: 2026-05-18
+
+### Reachability
+[PASS] Hub page loaded; title: "Workspace | LetCode with Koushik"
+
+### Structure
+- Navigation: 20+ practice links (Edit, Click, Drop-Down, Dialog, Tables, etc.)
+- Forms: varies per sub-page
+- Interactive elements: `browser_map` returns 33 refs from hub
+
+### Navigation
+[PASS] `/edit` — text input practice page
+[PASS] `/dropdowns` — multiple select elements
+[PASS] `/alert` — dialog page (alert, confirm, prompt, modal)
+
+### Core Functionality
+[PASS] `browser_fill` on text inputs
+[FAIL] `browser_fill ""` — "value is required" error; use `eval el.value = ''` to clear fields
+[PASS] Readonly fields correctly rejected: "failed to fill: timeout after 0s: editable check failed — readonly attribute"
+[PASS] `browser_select` with numeric values — options use 0/1/2 as values, not text labels; `browser_select { value: "1" }` selects "Mango" ✓
+[PASS] `/alert` page — loaded without auto-firing confirm (no deadlock in MCP); dialogs via `setTimeout(..., 300)` + sleep + dialog_accept/dismiss ✓
+[FAIL] Angular button clicks via eval don't trigger framework event listeners — use `setTimeout(() => alert/confirm/prompt(...), 300)` directly instead of clicking buttons programmatically
+
+### Bugs Found
+None — behaviors are Angular framework specifics, not bugs.
+
+### Notes
+- `browser_select` must use the option's `value` attribute, not display text — inspect options first with `Array.from(select.options).map(o => o.value + '|' + o.text)`
+- `/alert` CLI deadlock issue (auto-firing confirm on load) not reproduced in MCP — may be timing-dependent or MCP handles it differently
+- MB6 triggered when checking select's `value` — use `|| null` workaround
+
+---
+
+## Practice Test Report: Locator Game
+URL: https://testsmith-io.github.io/locator-game/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Locator game"
+
+### Structure
+- Navigation: none (single-page game)
+- Forms: selector input + submit
+- Interactive elements: `browser_map` returns 8 refs (Help, CSS/XPath toggle, input, Try!, Submit, Prev, Next, End tour)
+
+### Core Functionality
+[PASS] `browser_fill` on selector input ✓
+[FAIL] `browser_click` on Submit button — "receivesEvents check failed — element is obscured"; use `eval document.querySelector('button[type="submit"]').click()`
+[PASS] Level 0 → 1: `h3` (select all titles) ✓
+[PASS] Level 1 → 2: `#description` (select description text) ✓
+[PASS] Level 2 → 3: `li.active` (select active list item) ✓
+[PASS] XPath/CSS toggle works via `browser_select`
+
+### Bugs Found
+None.
+
+### Notes
+- 13 levels (0–12); CSS and XPath modes switchable
+- Submit button always obscured — always use eval click
+- Level advances on correct answer; stays on same level for wrong answer
+- `browser_fill` correctly replaces previous answer before each submit
+
+---
+
+## Practice Test Report: Practice Test Automation
+URL: https://practicetestautomation.com/practice/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded; title: "Practice | Practice Test Automation"
+
+### Structure
+- Navigation: Test Login Page, Test Exceptions, Test Table
+- Forms: login (username/password), exceptions (row input)
+- Interactive elements: `browser_map` returns 12 refs from hub
+
+### Navigation
+[PASS] `/practice-test-login/` — login form
+[PASS] `/practice-test-exceptions/` — dynamic row exceptions page
+
+### Core Functionality
+[PASS] Valid login: `student`/`Password123` → `logged-in-successfully/` with "Logged In Successfully" h1 ✓
+[PASS] Invalid login: `wronguser`/`wrongpass` → error "Your username is invalid!" ✓
+[PASS] Exceptions page: Add button adds Row 2 dynamically (new input + Save/Remove buttons appear after 2s)
+[PASS] Row 2 input: `browser_fill` works on dynamically added input ✓
+[FAIL] Save button zero-size — `browser_click` fails; use `eval document.querySelector('#save_btn').click()`
+[PASS] Save confirmation: "Row 1 was saved" appears after eval click ✓
+[BUG] Save confirmation always says "Row 1 was saved" regardless of which row was saved — possible labeling bug
+
+### Bugs Found
+1. Save confirmation label always reads "Row 1 was saved" — even when saving Row 2. Steps: Add row, fill Row 2, save. Expected: "Row 2 was saved". Severity: Low
+
+### Notes
+- CLI note about needing `sleep 5` before `browser_get_url` after login: in MCP, `browser_sleep {ms:2000}` is sufficient
+- Save button zero-size is consistent — always needs eval click; `browser_click` will always fail here
+- `browser_map` works from hub page and from sub-pages ✓
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 9)
+
+1. **Bonigarcia.dev — `browser_type` required for textarea (MB7)**: Same as all other sites — `browser_fill` fails on `<textarea>`, use `browser_type`.
+
+2. **Locator Game — Submit obscured**: `browser_click` fails with "receivesEvents check failed — element is obscured" for the submit button. Always use `eval querySelector('button[type="submit"]').click()`.
+
+3. **Let Code — `browser_fill ""` blocked**: `browser_fill` with empty string throws "value is required" error. Use `eval el.value = ''; el.dispatchEvent(new Event('input', {bubbles:true}))` to clear fields.
+
+4. **Let Code — `browser_select` needs option values not text**: Options use numeric indices (0, 1, 2) as values. Must inspect options first and use the value attribute, not the display text.
+
+5. **Practice Test Automation — Save button zero-size**: `#save_btn` is zero-size despite being visible. Use eval click for all save actions on this page.
+
+6. **Lambdatest Playground — `cart.add(id)` more reliable than GUI button**: GUI Add to Cart requires size selection for many products; `eval cart.add('id')` bypasses option requirements for products without mandatory options.
 
 5. **Commit Quality — `browser_type` for date input**: `input[type=date]` not editable via `browser_fill` in MCP (same as CLI). `browser_type` with `MMDDYYYY` format works.
