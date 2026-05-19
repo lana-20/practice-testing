@@ -1,9 +1,9 @@
 # Practice Testing — Test Reports
 
-## Latest Session: 2026-05-18 — MCP Batch 6 (Automation Testing sites 1–5)
+## Latest Session: 2026-05-18 — MCP Batch 7 (Automation Testing sites 6–10)
 
 <!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
-<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6 (Automation Testing sites 1–5), last run 2026-05-18 -->
+<!-- MCP history: Batch 1–5 (General Practice sites 1–25), Batch 6–7 (Automation Testing sites 1–10), last run 2026-05-18 -->
 
 ---
 
@@ -3251,3 +3251,164 @@ Date: 2026-05-18
 3. **Automation Exercise — direct URL navigation preferred**: Clicking "View Product" in search results lands on a div wrapper, not the product link. Navigate to `/product_details/N` directly for reliability.
 
 4. **Automation Bookstore — filter uses CSS class, not style.display**: DOM inspection via `querySelectorAll` style checks will mislead — use screenshot or check computed visibility instead.
+
+---
+
+## Practice Test Report: Automation Testing Practice (MCP)
+URL: https://testautomationpractice.blogspot.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~3s (Blogger-hosted single long page)
+
+### Structure
+- Navigation: Home, Udemy Courses, Online Trainings, Blog, PlaywrightPractice, GUI Elements
+- Forms: text inputs, textarea, radio, checkboxes, selects, date, drag & drop, file upload, alerts, copy text, autocomplete, AJAX sub-page
+- Interactive elements: 82 refs mapped
+
+### Core Functionality
+[PASS] Text input — `browser_fill` works on `#name`, `#email`, `#phone`
+[PASS] Radio — `browser_check` works on `#male`
+[PASS] Select — `browser_select` by value; "Canada", "red" confirmed; Colors dropdown has duplicate values: `red` × 2, `green` × 2 (same as CLI)
+[PASS] Date input — `browser_fill` fails; `eval .value= + dispatchEvent(change)` works
+[FAIL] Textarea — `browser_fill` returns "fill:" error (MB7); `browser_type` works
+[PASS] Alert (Simple) — setTimeout + sleep 350ms + `browser_dialog_accept` works
+[PASS] Confirm — setTimeout + sleep 350ms + `browser_dialog_dismiss` works
+[PASS] Copy text — `browser_fill` on `#field1` + `browser_dblclick` on `button[ondblclick]` → value copied to `#field2`
+[SKIP] Alert buttons (direct click) — not tested to avoid MB3 deadlock; setTimeout workaround confirmed working
+
+### Bugs Found
+1. MB7 — `browser_fill` fails on textarea — Severity: High (workaround: `browser_type`)
+2. Colors dropdown duplicate values (`red` × 2, `green` × 2) — Severity: Low (intentional test data issue)
+
+### Notes
+- Refs expire after page interaction — re-map or use stable CSS selectors after clicking
+- `browser_dblclick` works on `button[ondblclick]` for copy text functionality
+- Same as CLI: date inputs require eval; alert buttons require setTimeout workaround
+
+---
+
+## Practice Test Report: Automation Test Store (MCP)
+URL: https://automationteststore.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~2s (AbanteCart e-commerce demo)
+
+### Structure
+- Navigation: Apparel & Accessories, Makeup, Skincare, Fragrance, Men, Hair Care, Books
+- Forms: search, product quantity, checkout (guest/login)
+- Interactive elements: full catalog accessible
+
+### Core Functionality
+[PASS] Product detail — navigate to `/index.php?rt=product/product&product_id=51` directly; product info and "Add to Cart" accessible
+[PASS] Add to cart — `browser_click` on "Add to Cart" link → redirects to Shopping Cart; cart shows "1 ITEMS - $19.00"
+[PASS] Guest checkout — navigate to `/index.php?rt=account/login`; `browser_click` on `#accountFrm_accountguest` radio + Continue → "GUEST CHECKOUT - STEP 1"
+[NOTE] URL-based search (`?rt=product/search&keyword=...`) unexpectedly redirected to a product page — category path navigation is more reliable
+[NOTE] "Checkout" link in cart is zero-size — `eval 'document.querySelector("a[href*=checkout]").click()'` required; direct URL checkout returns 404
+
+### Bugs Found
+None.
+
+### Notes
+- Navigate to product pages via direct URL (`/product_details/N` or `?rt=product/product&product_id=N`) for reliability
+- Cart checkout link zero-size — use eval click; the correct checkout entry is via the login/guest page at `/index.php?rt=account/login`
+
+---
+
+## Practice Test Report: Automate Now Sandbox / Practice Automation (MCP)
+URL: https://practice-automation.com/form-fields/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Form Fields page loaded in ~2s
+
+### Structure
+- Navigation: Courses, Blog, Home nav
+- Forms: name, password, checkboxes (drinks), radio (color), select (Yes/No), email, textarea, submit button
+- Interactive elements: 31 refs
+
+### Core Functionality
+[PASS] Text input — `browser_fill` works after `eval '#name-input'.click()` (name input obscured to direct `browser_click`)
+[PASS] Checkbox — `browser_check` works on `#drink1`, `#color1`
+[PASS] Select — `browser_select` by value works (`"Yes"`)
+[PASS] Email input — `browser_fill` works directly
+[FAIL] Textarea — `browser_fill` returns "fill:" error (MB7); `browser_type` works
+[PASS] Alert pre-stub — `window.alert = () => {}` before clicking Submit prevents deadlock; form stays on page (no success message)
+[NOTE] Name input obscured to `browser_click` — `eval '#name-input'.click()` required before `browser_fill`
+
+### Bugs Found
+1. MB7 — `browser_fill` fails on textarea — Severity: High (workaround: `browser_type`)
+
+### Notes
+- Same as CLI: name input needs eval click; submit fires alert — pre-stub required
+- `browser_type` preferred over eval for textareas in all sites
+
+---
+
+## Practice Test Report: Expand Testing (MCP)
+URL: https://practice.expandtesting.com/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Login page loaded via direct URL `/login`; ad iframes present but not blocking
+
+### Structure
+- Navigation: SUT, Demos, Tools, Tips, Test Cases, API Testing, About
+- Forms: username/password login
+- Interactive elements: login form accessible; 36 refs (includes multiple ad iframes)
+
+### Core Functionality
+[PASS] Valid login — `browser_fill` + `browser_click` on submit button works directly → "You logged into a secure area!"
+[PASS] Invalid login — "Your password is invalid!" flash message displayed
+[PASS] Logout — navigate to `/logout` directly clears session
+[NOTE] Submit button sometimes obscured by ad overlay — `eval '#submit-login'.click()` as fallback
+[NOTE] After login, navigating to `/login` redirects to secure area (session persists); must navigate to `/logout` to clear session
+
+### Bugs Found
+None.
+
+### Notes
+- CLI note "Login button obscured — use eval click" is partially incorrect in MCP: `browser_click` works on first login attempt; obscured on subsequent attempts after ad re-renders
+- Direct URL navigation for all pages (`/login`, `/logout`, `/secure`, `/inputs`, etc.) is reliable
+
+---
+
+## Practice Test Report: Coffee Cart (MCP)
+URL: https://coffee-cart.app/
+Date: 2026-05-18
+
+### Reachability
+[PASS] Site loaded in ~1s (Vue SPA)
+
+### Structure
+- Navigation: Menu page, Cart page, GitHub page
+- Products: 9 drinks (Espresso, Espresso Macchiato, Cappuccino, Mocha, Flat White, Americano, Cafe Latte, Espresso Con Panna, Cafe Breve)
+- Interactive elements: only 4 refs on initial map (product cards not in `browser_map`)
+
+### Core Functionality
+[PASS] Add to cart — products accessible via `[data-test="Espresso"]` selector; `browser_click` adds item; cart count updates to `cart (1)`
+[PASS] Cart view — navigate via `browser_click` on cart link (not direct URL); shows item list with +/-/× buttons
+[PASS] Checkout modal — `eval '[data-test="checkout"].click()'`; modal appears with name/email/promo checkbox
+[PASS] Submit — `browser_fill` name/email + `browser_click` Submit → "Thanks for your purchase. Please check your email for payment."; cart resets to 0
+
+### Bugs Found
+None.
+
+### Notes
+- Product cards not in `browser_map` — use `[data-test="ProductName"]` CSS selectors (spaces → underscores: `Flat_White`, `Cafe_Latte`)
+- Checkout button `[data-test="checkout"]` not in map — use `eval .click()`
+- Navigate to cart via UI link click, not `browser_navigate` to `/cart` — in-memory cart state
+- Same as CLI behavior
+
+---
+
+### Key MCP vs CLI Behavioral Differences (Batch 7)
+
+1. **Expand Testing — Login button obscured intermittently**: `browser_click` works on first login but may be obscured by ad re-renders on subsequent page loads. Use `eval '#submit-login'.click()` for reliability.
+
+2. **Automation Test Store — checkout link zero-size**: The "Checkout" link in the cart has zero rendered size. Use `eval 'document.querySelector("a[href*=checkout]").click()'` or navigate to `/index.php?rt=account/login` for guest checkout flow.
+
+3. **Practice Automation — name input obscured**: `#name-input` obscured to `browser_click`; `eval '#name-input'.click()` required before `browser_fill`. Same as CLI.
+
+4. **MB7 confirmed on all 3 textarea sites**: Automation Testing Practice, Automation Camp, Automate Now Sandbox — `browser_fill` consistently fails on `<textarea>`. Use `browser_type` for framework-driven textareas, `eval .value= + dispatchEvent` for vanilla JS textareas.
