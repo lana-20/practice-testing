@@ -1,11 +1,52 @@
 # Practice Testing — Test Reports
 
 <!-- Run history:
-  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18)
+  General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18) · CLI+MCP comparison Batch 5 (2026-05-19)
   Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batch 6 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
+
+---
+
+## CLI vs MCP Performance Comparison — General Practice Batch 5 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** The Internet, The Random Number Service, Testing Challenges, ToDo List, UI5 Demo Kit (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run. Testing Challenges is an expected fail for both CLI and MCP (HTTP-only, Chrome blocks navigation).
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| The Internet | 2,514 | 50,177 | 20.0× |
+| Random Number Service | 1,875 | 27,220 | 14.5× |
+| Testing Challenges (fail) | 366 | 4,828 | 13.2× |
+| ToDo List | 1,729 | 37,502 | 21.7× |
+| UI5 Demo Kit | 9,242 | 49,649 | 5.4× |
+| **Total** | **15,726** | **169,376** | **10.8×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +7 | +66 | 9.4× |
+| Cost | +$0.4867 | +$2.0283 | 4.2× |
+
+### Notes
+- CLI is **10.8× faster** and **4.2× cheaper** for this batch
+- The Internet shows 20× gap despite being a multi-page flow (checkboxes + login + drag-and-drop) — each MCP navigate/wait/fill/click is a separate tool call adding ~3–5s overhead
+- UI5 Demo Kit has the smallest speed gap (5.4×) due to mandatory `sleep 3000` + `sleep 2000` waits on both sides — fixed sleep floors equalize timing
+- **MCP behavioral difference:** `browser_map` found 128 interactive elements on the UI5 main page; CLI `vibium map` returned "No interactive elements found" on the same page — MCP exposes more elements for SAP UI5 Web Components
+- Testing Challenges fails identically on both (HTTP-only, BiDi unknown error); MCP takes ~13× longer to fail due to connection timeout overhead
 
 ---
 
