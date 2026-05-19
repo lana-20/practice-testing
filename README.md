@@ -2321,7 +2321,7 @@ Mode: vibium MCP
 
 ### Bugs Found
 1. **React routing bug on /concepts/*** — direct navigation to any /concepts/* URL renders blank page; `#root` has 0 children. Steps: click any footer link (Iframes, Multi Window, etc.). Severity: Medium
-2. **MCP `browser_get_text` schema error on blank pages** — tool throws "Invalid input: expected string, received undefined" when page text content is empty. Not a site bug — MCP tool limitation. Severity: N/A (tool behavior)
+2. **vibium bug MB9: `browser_get_text` invalid_union on blank pages** — throws "Invalid input: expected string, received undefined" when `document.body.innerText` returns `""`. Not a site bug — vibium MCP bug (same root cause as MB6). Workaround: `browser_evaluate { expression: "document.body.innerText || null" }`. Filed as MB9.
 
 ### MCP vs CLI Comparison
 | Finding | CLI | MCP |

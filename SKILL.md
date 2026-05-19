@@ -41,7 +41,7 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 | Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | Prototype + builds 1–9; select operation by value ("0"–"4"), not text; all bugs identical in CLI and MCP |
 | Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | Most puzzles need Flash — only 22, 24, 26b, 29, 31, 33, 34 work; **CLI**: `vibium map` returns nothing on index; **MCP**: `browser_map` finds all puzzle nav links; both modes require coordinate clicks inside puzzle custom elements |
 | BookCart | https://bookcart.azurewebsites.net/ | Azure-hosted; backend frequently hibernated — products may not load; **MCP**: `browser_find role=link text=Login` times out (Login is a button) — use map ref; Angular Material inputs fill by `#mat-input-N` |
-| Cnarios | https://www.cnarios.com/ | Challenges work; /concepts/* pages render blank (React routing bug); **MCP**: `browser_get_text` throws schema error on blank concepts pages — use `browser_evaluate` with string return |
+| Cnarios | https://www.cnarios.com/ | Challenges work; /concepts/* pages render blank (React routing bug); **MCP**: `browser_get_text` throws `invalid_union` on blank pages (vibium bug MB9) — use `browser_evaluate { expression: "document.body.innerText || null" }` |
 | Evil Tester | https://testpages.eviltester.com/styled/index.html | Stub alert/confirm/prompt via eval BEFORE clicking alert buttons |
 | Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | Intentionally inaccessible; contact form fields need `input[name=x]` selectors |
 | Magento | https://magento.softwaretestingboard.com/ | DOWN — Cloudflare 526 SSL error as of 2026-04-22 |
@@ -280,6 +280,7 @@ Date: <date>
 ### MCP-specific
 - Use `browser_dialog_accept` / `browser_dialog_dismiss` for native dialogs — no deadlock risk
 - `browser_find` with `role="link"` times out on `<button>` elements — use `browser_map` refs or CSS selectors instead
-- `browser_get_text` and `browser_evaluate` throw MCP schema errors when the page returns empty/null content — ensure eval expressions return a string (append `+ ''`)
+- `browser_get_text` throws `invalid_union` schema error when the page has no text content (blank page) — vibium bug MB9; workaround: use `browser_evaluate { expression: "document.body.innerText || null" }` instead
+- `browser_evaluate` throws `invalid_union` when expression returns `""` — vibium bug MB6; ensure expressions never return empty string (use `|| null` fallback)
 - MCP `browser_map` finds more elements on some pages than CLI `vibium map` (e.g. puzzle index links, Angular Material list items)
 - Stop/restart MCP browser session with `browser_stop` + `browser_start` when BiDi errors occur — this does NOT affect the CLI daemon
