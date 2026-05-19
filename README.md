@@ -1,6 +1,9 @@
 # Practice Testing — Test Reports
 
-## Session: 2026-05-10 — Batch 7 (sites 31–35)
+## Latest Session: 2026-05-18 — MCP Batch 4 (General Practice sites 16–20)
+
+<!-- CLI history: Batch 1–7 (sites 1–35, Automation Testing section), last run 2026-05-10 -->
+<!-- MCP history: Batch 1–4 (General Practice sites 1–20), last run 2026-05-18 -->
 
 ---
 
