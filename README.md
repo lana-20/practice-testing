@@ -2,10 +2,51 @@
 
 <!-- Run history:
   General Practice (25 sites):  CLI Batches 1–5 (2026-04-22 to 2026-04-27) · MCP Batches 1–5 re-run (2026-05-18)
-  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18)
+  Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batch 6 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
 -->
+
+---
+
+## CLI vs MCP Performance Comparison — Automation Testing Batch 6 (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested:** Automation Bookstore, Automation Camp, Applitools Demo, Automation Exercise, Automation in Testing (5 sites)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000` bracketing each site's full interaction sequence. Token/cost delta measured from `~/.claude/projects/**/*.jsonl` immediately before and after each run. CLI baseline captured before first CLI site; MCP baseline captured immediately before first MCP site (after MCP reconnect).
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio |
+|------|----------|----------|-------|
+| Automation Bookstore | 491 | 17,664 | 36.0× |
+| Automation Camp | 1,080 | 21,262 | 19.7× |
+| Applitools Demo | 3,000 | 21,959 | 7.3× |
+| Automation Exercise | 6,995 | 28,363 | 4.1× |
+| Automation in Testing | 2,755 | 31,544 | 11.5× |
+| **Total** | **14,321** | **120,792** | **8.4×** |
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +18 | +55 | 3.1× |
+| Cost | +$0.4019 | +$1.3316 | 3.3× |
+
+### Notes
+- CLI is **8.4× faster** and **3.3× cheaper** for this batch
+- Automation Bookstore shows the largest speed gap (36×) — minimal CLI steps vs. MCP tool-call overhead per navigate/map/eval
+- Automation Exercise and Applitools show smaller gaps because both required login flows and ad-overlay handling that take real browser time regardless of interface
+- MCP per-site time is fairly uniform (~18–32s) regardless of site complexity; CLI time varies widely (0.5s–7s) based on actual page complexity
+- MCP reconnect overhead not included in MCP timing (occurred between CLI and MCP runs)
 
 ---
 
