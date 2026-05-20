@@ -5,6 +5,8 @@
   Automation Testing (30 sites): CLI Batches 6–11 (2026-05-10 to 2026-05-18) · MCP Batches 6–11 (2026-05-18) · CLI+MCP comparison Batches 6–11 (2026-05-19)
   API Testing (9 sites):         CLI + MCP Batch 1 (2026-05-18)
   Performance Testing (4 sites): CLI + MCP Batch 1 (2026-05-19)
+  Security Testing (13 sites):   CLI + MCP Batch 1 (2026-05-19); 8 publicly accessible tested; 5 local/account-only
+  Total sites: 81 (68 original + 13 security)
 -->
 
 ---
@@ -578,6 +580,55 @@
 | DOWN site detection | fast (BiDi error immediate) | slower (BiDi round-trip via MCP) | CLI |
 
 **MCP overhead is higher on UI-interactive sites than API sites.** Each UI step (navigate, wait_for_load, evaluate, evaluate again) generates multiple LLM turns vs CLI's single bash call per site. The 4× time gap is consistent across all three working sites.
+
+---
+
+## CLI vs MCP Performance Comparison — Security Testing Sites (2026-05-19)
+
+**Environment:**
+- Machine: Intel Core i9-10910 @ 3.60GHz · 64 GB RAM
+- OS: macOS 26.3.1 (Darwin 25.3.0)
+- vibium: v26.3.18
+- Chrome: 147.0.7727.56 (CLI) / 147.0.7727.56 (MCP)
+- Node: v25.8.0
+- Model: claude-sonnet-4-6
+
+**Sites tested (publicly accessible):** Gin & Juice Shop, Firing Range, Google Gruyere, OWASP Juice Shop, Zero Bank, Supercar Showdown, Try Hack Me, OWASP VWAD (8 of 13 sites; 5 require local install or account)
+
+**Methodology:** Wall-clock time per site measured with `python3 time.time()*1000`. CLI run first (navigate + map + primary interaction), then MCP. Token/cost delta from `~/.claude/projects/**/*.jsonl` before and after each run.
+
+### Timing
+
+| Site | CLI (ms) | MCP (ms) | Ratio | Notes |
+|------|----------|----------|-------|-------|
+| Gin & Juice Shop | 3,137 | 22,635 | 7.2× | Home → 500; tested /catalog; MCP found search form + 17 products |
+| Firing Range | 959 | 11,346 | 11.8× | CLI map: 10 entries; MCP map: 44 DOM XSS sub-entries |
+| Google Gruyere | 1,103 | 11,006 | 10.0× | Codelab index page; 60 topic links enumerated by MCP |
+| OWASP Juice Shop | 5,116 | 33,161 | 6.5×¹ | CLI: Application Error (Angular crash); MCP: fully loaded, 15 products |
+| Zero Bank | 1,339 | 7,338 | 5.5× | Both BiDi error — HTTP-only site |
+| Supercar Showdown | 859 | 10,575 | 12.3× | Both reached decommissioned placeholder |
+| Try Hack Me | 7,719 | 15,741 | 2.0× | Heavy Next.js app; MCP map: 72 elements vs CLI: 8 |
+| OWASP VWAD | 1,573 | 7,273 | 4.6× | OWASP directory page |
+| **Total** | **21,805** | **119,075** | **5.5×** | |
+
+¹ OWASP Juice Shop: critical behavioral difference — CLI received "Application Error" (Angular SSR crash); MCP followed redirect correctly and loaded the full app.
+
+### Token / Cost
+
+| Metric | CLI | MCP | Ratio |
+|--------|-----|-----|-------|
+| LLM turns | +19 | +48 | 2.5× |
+| Cost | +$0.5392 | +$1.2975 | 2.4× |
+
+### Notes
+- CLI is **5.5× faster** and **2.4× cheaper** — cost ratio is second-lowest after Batch 10, driven by MCP's rich map results on information-dense security reference pages
+- **OWASP Juice Shop** is the standout behavioral difference of this batch: CLI gets Application Error (Angular SSR fails on the CLI's BiDi navigation), MCP fully loads the app — suggests MCP's navigation handling is more resilient to Angular Universal SSR timing
+- **Firing Range** (11.8×) — clean static Google App Engine site; MCP map returns full 44-item DOM XSS category listing; CLI map stops at 10; no sleeps so MCP overhead fully exposed
+- **Supercar Showdown** (12.3×) — Troy Hunt's `hackyourselffirst.troyhunt.com` is decommissioned; placeholder page has a link to `hack-yourself-first.com` (unverified alternative URL); fastest absolute CLI time (859ms)
+- **Try Hack Me** (2.0×) — smallest ratio of all security sites; heavy Next.js marketing page with significant JS bundle load time narrows the gap; MCP wait_for_load adds proportionally less overhead when base load is already slow
+- **Zero Bank** and **Gin & Juice Shop home** fail in both interfaces for different reasons (HTTP-only BiDi error; 500 server error) — consistent cross-interface failure modes
+- Sites requiring local setup (bWAPP, DVGA, VAmPI) and account-gated sites (LabEx, Try Hack Me labs) excluded from timing — see site directory for notes
+- **Ticket Magpie** URL timed out (HTTP 000) — may be permanently down
 
 ---
 
