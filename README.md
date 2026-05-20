@@ -1,6 +1,6 @@
 # Practice Testing — Site Directory & CLI vs MCP Comparison
 
-<!-- 106 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
+<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
   OS:        macOS 26.3.1 (Build 25D771280a)
@@ -19,12 +19,12 @@
 
 | Category | Sites | CLI (ms) | MCP (ms) | Speed | Cost |
 |----------|-------|----------|----------|-------|------|
-| General Practice | 30 | 108,503 | 874,731 | CLI **8.1×** faster | CLI ~5× cheaper |
-| Automation Testing | 42 | 256,484 | 1,071,573 | CLI **4.2×** faster¹ | CLI ~7× cheaper |
-| Security Testing | 8 tested / 13 total | 21,805 | 119,075 | CLI **5.5×** faster | CLI ~2.4× cheaper |
-| API Testing | 17 | 54,432 | 178,333 | CLI **3.3×** faster² | CLI ~6× cheaper |
-| Performance Testing | 4 | 15,111 | 63,882 | CLI **4.2×** faster | CLI **6.1×** cheaper |
-| **All sites** | **101 timed / 106 total** | **456,335** | **2,307,594** | **CLI 5.1× faster** | **CLI ~5–9× cheaper** |
+| General Practice | 28 | 107,711 | 863,817 | CLI **8.0×** faster | CLI ~5× cheaper |
+| Automation Testing | 41 | 255,969 | 1,066,307 | CLI **4.2×** faster¹ | CLI ~7× cheaper |
+| Security Testing | 7 tested / 11 total | 20,946 | 108,500 | CLI **5.2×** faster | CLI ~2.4× cheaper |
+| API Testing | 16 | 50,763 | 166,714 | CLI **3.3×** faster² | CLI ~6× cheaper |
+| Performance Testing | 3 | 14,179 | 58,093 | CLI **4.1×** faster | CLI **6.1×** cheaper |
+| **All sites** | **95 timed / 99 total** | **449,568** | **2,263,431** | **CLI 5.0× faster** | **CLI ~5–9× cheaper** |
 
 ¹ Automation Testing totals skewed by two anomalies: CLI Expand Testing daemon i/o timeout (87,302ms) and MCP Let Code repeated BiDi failures (211,405ms). Excluding both: CLI 5.4× faster.  
 ² API ratio narrows to 3.3× due to SpaceTraders anomaly (MCP faster than CLI — CLI cold start). Excluding SpaceTraders: CLI 4.8× faster.
@@ -33,7 +33,7 @@
 
 ---
 
-## General Practice (30 sites)
+## General Practice (28 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
@@ -46,7 +46,6 @@
 | Cnarios | https://www.cnarios.com/ | 2,471 | 15,238 | 6.2× | React SPA; homepage nav maps fine in both; challenge cards at /challenges/ not rendered (React routing bug — heading only) |
 | Evil Tester | https://testpages.eviltester.com/styled/index.html | 7,429 | 19,491 | 2.6× | **Narrowest ratio in dataset** — alert pre-stub via eval nearly equalizes both interfaces; pre-stub window.alert/confirm/prompt BEFORE clicking any alert button |
 | Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | 1,288 | 18,556 | 14.4× | Intentionally inaccessible site for accessibility testing; contact form needs `input[name=x]` selectors; fast nav → high MCP overhead ratio |
-| Magento | https://magento.softwaretestingboard.com/ | 426 | 6,086 | 14.3× | **DOWN** — Cloudflare 526 SSL error as of 2026-04-22; both interfaces fail on navigate; 14.3× reflects MCP's longer error-response latency |
 | Parabank | https://parabank.parasoft.com/parabank/admin.htm | 4,825 | 84,782³ | 17.6×³ | CLI `input[name=customer.firstName]` fails (dot in name); MCP ID-based selectors work fine; run DB Initialize from admin panel before testing |
 | Parking Cost Calculator | https://www.shino.de/parkcalc/ | 4,171 | 29,675 | 7.1× | Returns $0.00 consistently in both interfaces — AM/PM radio default or date parse bug on the site itself; use option values not text for lot dropdown; invalid dates cause blank page |
 | PHP Travels | http://phptravels.com/demo/ | 1,711 | 43,164 | 25.2× | Submit button deadlocks daemon — pre-stub dialogs first; Login nav link broken (redirects same page); 25.2× — minimal DOM, no mandatory waits |
@@ -60,7 +59,6 @@
 | Real World Example Apps | https://codebase.show/projects/realworld | 5,785 | 29,548 | 5.1× | SvelteKit SPA needs 3s sleep after wait load before content renders; GitHub OAuth required for Sign In; mandatory sleep floor narrows ratio to 5.1× |
 | testers.ai | https://testers.ai/testing/ | 1,704 | 7,939 | 4.7× | 59-link checklist index covering WCAG A/AA/AAA, screen reader, keyboard, color, ARIA, forms, security, privacy, code quality, i18n, GenAI, DevOps, and more |
 | Test Track | https://testtrack.org/ | 2,251 | 4,732 | 2.1× | Structured training site; 15 practice modules Basic→Intermediate→Advanced→Expert (buttons, inputs, login, dropdowns, checkboxes, tables, modals, alerts, drag & drop, frames, canvas, 3D chess); used as vibium reference site |
-| Testing Challenges | http://testingchallenges.thetestingmap.org/ | 366 | 4,828 | 13.2× | **FAIL (both)** — HTTP-only; Chrome blocks navigation entirely; BiDi unknown error in both interfaces; 13.2× reflects MCP's slower failure latency |
 | The Boozang Test Lab | https://thelab.boozang.com/ | 2,565 | 45,367 | 17.7× | React SPA; 16 challenges; Form Fill saves to shared DB at api.boozang.com; vibium fill works on all inputs; vibium click works on all buttons |
 | The iframe Search Engine | https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html | 5,257 | 37,780 | 7.2× | Use vibium fill (not type) for search input; select by full URL value; "Go search" link opens in a new tab; vibium select with non-existent value silently sets selectedIndex=-1 |
 | The Internet | http://the-internet.herokuapp.com/ | 2,514 | 50,177 | 20.0× | 44 examples; hover fails on non-interactive elements; vibium frame context resets per CLI call; TinyMCE iframe via contentDocument; input[type=range] needs eval+dispatchEvent |
@@ -72,7 +70,7 @@
 
 ---
 
-## Automation Testing (42 sites)
+## Automation Testing (41 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
@@ -114,7 +112,6 @@
 | TestDino | https://storedemo.testdino.com/ | 982 | 7,450 | 7.6× | E-commerce demo; **MCP map: 216 elements** (products repeat across carousel sections); **CLI map returns nothing** (SPA); full product, cart, and FAQ sections accessible via MCP |
 | Travel Agileway | http://travel.agileway.net/login | 3,203 | 8,475 | 2.6× | HTTP-only app; MCP silently loads the page (no BiDi error, unlike CLI); 6-element login form (username, password, remember_me, submit); credentials untested |
 | Tricentis Obstacle Course | https://obstaclecourse.tricentis.com/Obstacles | 5,536 | 25,179 | 4.5× | Scroll-heavy; eval for next-link navigation; moderate interaction overhead |
-| UI Test Automation Playground | http://uitestingplayground.com/ | 515 | 5,266 | 10.2× | **DOWN** — HTTP-only; both interfaces fail immediately with BiDi error; 10.2× reflects MCP's slower error latency (5.3s vs 0.5s) |
 | var.parts | https://var.parts/ | 2,199 | 8,271 | 3.8× | Vibium-branded robot parts shop; 41 elements (nav + 12 products with Add to Cart); clean e-commerce; used as vibium MCP test reference site |
 | Weather Shopper | https://weathershopper.pythonanywhere.com/ | 2,834 | 36,811 | 13.0× | 3-page e-commerce flow (temperature check → product selection → checkout); no mandatory sleeps; 13.0× |
 | XYZ Bank | https://www.globalsqa.com/angularJs-protractor/BankingProject/ | 3,788 | 42,695 | 11.3× | AngularJS; ng-model select needs eval+dispatchEvent; Login/Deposit buttons need eval click in MCP; 11.3× |
@@ -125,9 +122,9 @@
 
 ---
 
-## Security Testing (13 sites)
+## Security Testing (11 sites)
 
-*8 publicly accessible sites timed; 5 require local setup or account (marked —).*
+*7 publicly accessible sites timed; 4 require local setup or account (marked —).*
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
@@ -139,15 +136,13 @@
 | LabEx Cybersecurity | https://labex.io/ | — | — | — | Account required; 403 on course pages without login; interactive cybersecurity learning paths |
 | OWASP Juice Shop | https://demo.owasp-juice.shop/ | 5,116 | 33,161 | 6.5× | **Critical behavioral difference:** CLI receives Application Error (Angular SSR crash); **MCP fully loads the app** with 15 products — most significant cross-interface divergence in the dataset |
 | OWASP VWAD | https://owasp.org/www-project-vulnerable-web-applications-directory/ | 1,573 | 7,273 | 4.6× | Directory of vulnerable web apps (not itself a test target); links to the full registry at vwad.owasp.org |
-| Supercar Showdown | https://hackyourselffirst.troyhunt.com/ | 859 | 10,575 | 12.3× | **Decommissioned** — placeholder page; Troy Hunt's original Pluralsight course demo no longer hosted; page links to hack-yourself-first.com (unverified) |
-| Ticket Magpie | unknown | — | — | — | URL unreachable (HTTP 000 timeout) — may be permanently down |
 | Try Hack Me | https://tryhackme.com/ | 7,719 | 15,741 | 2.0× | **Narrowest ratio in Security batch** — heavy Next.js app (7–15s load time) narrows gap; landing page fully accessible; MCP map returns 72 elements; labs require account |
 | VAmPI | local only | — | — | — | Vulnerable REST API; OWASP top 10 API vulnerabilities; requires local Docker; no public hosted demo |
 | Zero Bank | http://zero.webappsecurity.com/ | 1,339 | 7,338 | 5.5× | Micro Focus Fortify demo; **HTTP-only** — BiDi error in both CLI and MCP; curl returns 200 but Chrome/BiDi blocks HTTP origins entirely |
 
 ---
 
-## API Testing (17 sites)
+## API Testing (16 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
@@ -161,7 +156,6 @@
 | httpbin | https://httpbin.org/ | 1,422 | 12,752 | 9× | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
 | JSON Placeholder | https://jsonplaceholder.typicode.com/ | 433 | 9,650 | 22× | **Widest API ratio** (22×); **CLI 433ms — fastest in dataset**; full CRUD works; writes return 201 but don't persist (shared mock state) |
 | Poké API | https://pokeapi.co/ | 1,515 | 10,306 | 7× | Read-only; 1,350 Pokémon; aggressive caching; no auth |
-| ReqRes | https://reqres.in/ | 3,669 | 11,619 | 3× | **BROKEN** — all /api/* endpoints return 401 since 2026-05; x-api-key header now required; use app.reqres.in for account-based access |
 | Restful Booker | https://restful-booker.herokuapp.com/ | 1,357 | 8,451 | 6× | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
 | Rick and Morty API | https://rickandmortyapi.com/graphql | 2,895 | 9,873 | 3× | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
 | ServeRest | https://serverest.dev/ | 1,502 | 7,671 | 5.1× | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
@@ -174,11 +168,10 @@
 
 ---
 
-## Performance Testing (4 sites)
+## Performance Testing (3 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | Blaze Demo | http://blazedemo.com/index.php | 5,039 | 20,418 | 4× | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
-| Computer Database | https://computer-database.gatling.io/computers | 932 | 5,789 | 6× | **DOWN** — HTTP 000, no TCP connection; BiDi unknown error on navigate; 6× reflects error-response latency difference between interfaces |
 | Demoblaze | https://demoblaze.com/ | 4,996 | 21,626 | 4× | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces; Demoblaze API available at api.demoblaze.com |
 | Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 4,144 | 16,049 | 4× | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |
