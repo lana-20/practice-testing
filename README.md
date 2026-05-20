@@ -2,7 +2,7 @@
 
 **[Live benchmark page →](https://lana-20.github.io/practice-testing/)**
 
-<video src="cli_mcp_research.mov" controls width="390"></video>
+<video src="cli_mcp_research.mp4" controls width="390"></video>
 
 <!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
 <!--
