@@ -1,5 +1,7 @@
 # Practice Testing — Site Directory & CLI vs MCP Comparison
 
+**[Live benchmark page →](https://lana-20.github.io/practice-testing/)**
+
 <!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
