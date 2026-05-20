@@ -1,6 +1,6 @@
 # Practice Testing — Site Directory & CLI vs MCP Comparison
 
-<!-- 81 sites across 5 categories · vibium v26.3.18 · Chrome 147 · claude-sonnet-4-6 · Intel i9-10910 3.6GHz · macOS 26.3 · Tested 2026-04-22 to 2026-05-19 -->
+<!-- 106 sites across 5 categories · vibium v26.3.18 · Chrome 147 · claude-sonnet-4-6 · Intel i9-10910 3.6GHz · macOS 26.3 · Tested 2026-04-22 to 2026-05-20 -->
 <!-- Methodology: wall-clock time per site (python3 time.time()*1000), bracketing navigate + primary interaction + verification. Token/cost delta from ~/.claude/projects/**/*.jsonl before and after each run. -->
 
 ---
@@ -9,58 +9,65 @@
 
 | Category | Sites | CLI (ms) | MCP (ms) | Speed | Cost |
 |----------|-------|----------|----------|-------|------|
-| General Practice | 25 | 95,774 | 834,885 | CLI **8.7×** faster | CLI ~5× cheaper |
-| Automation Testing | 30 | 224,620 | 956,732 | CLI **4.3×** faster¹ | CLI ~7× cheaper |
+| General Practice | 30 | 108,503 | 874,731 | CLI **8.1×** faster | CLI ~5× cheaper |
+| Automation Testing | 42 | 256,484 | 1,071,573 | CLI **4.2×** faster¹ | CLI ~7× cheaper |
 | Security Testing | 8 tested / 13 total | 21,805 | 119,075 | CLI **5.5×** faster | CLI ~2.4× cheaper |
-| API Testing | 9 | 18,872 | 102,753 | CLI **5.4×** faster | CLI **9.3×** cheaper |
+| API Testing | 17 | 54,432 | 178,333 | CLI **3.3×** faster² | CLI ~6× cheaper |
 | Performance Testing | 4 | 15,111 | 63,882 | CLI **4.2×** faster | CLI **6.1×** cheaper |
-| **All sites** | **76 timed / 81 total** | **376,182** | **2,077,327** | **CLI 5.5× faster** | **CLI ~5–9× cheaper** |
+| **All sites** | **101 timed / 106 total** | **456,335** | **2,307,594** | **CLI 5.1× faster** | **CLI ~5–9× cheaper** |
 
-¹ Automation Testing totals skewed by two anomalies: CLI Expand Testing daemon i/o timeout (87,302ms) and MCP Let Code repeated BiDi failures (211,405ms). Excluding both: CLI 5.4× faster.
+¹ Automation Testing totals skewed by two anomalies: CLI Expand Testing daemon i/o timeout (87,302ms) and MCP Let Code repeated BiDi failures (211,405ms). Excluding both: CLI 5.4× faster.  
+² API ratio narrows to 3.3× due to SpaceTraders anomaly (MCP faster than CLI — CLI cold start). Excluding SpaceTraders: CLI 4.8× faster.
 
-**Key insight:** MCP time per site is fairly uniform (~10–50s regardless of site complexity). CLI time tracks actual site complexity (0.4s–88s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) absorb MCP's per-tool-call overhead.
+**Key insight:** MCP time per site is fairly uniform (~7–50s regardless of site complexity). CLI time tracks actual site complexity (0.4s–88s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) absorb MCP's per-tool-call overhead.
 
 ---
 
-## General Practice (25 sites)
+## General Practice (30 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | AcademyBugs | https://academybugs.com/ | 8,130 | 31,787 | 3.9× | Narrowest GP ratio — cookie banner + tutorial modal overhead equalizes both interfaces; dismiss before interacting; 25 planted bugs; sort works via value-based select |
+| A11y Coffee | https://a11y.coffee/ | 2,477 | 7,322 | 3.0× | Accessibility learning resource; 13 nav links; dark/light toggle; static site; no mandatory waits |
 | Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | 1,793 | 33,255 | 18.5× | Select operation by value ("0"–"4"), not label text; 9 prototype builds selectable; minimal form with no mandatory waits → high MCP overhead ratio |
 | Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | 1,565 | 19,275 | 12.3× | Most puzzles require Flash — only 7 work (22, 24, 26b, 29, 31, 33, 34); use `mouse click x y`, not map refs; no sleep floors so MCP overhead fully exposed |
 | BookCart | https://bookcart.azurewebsites.net/ | 5,863 | 35,356 | 6.0× | Azure backend frequently hibernated — only 1 mat-card visible after 3s wait in both interfaces; 3s mandatory sleep floor compresses ratio |
+| Candy Mapper | https://www.candymapper.net/ | 5,720 | 10,979 | 1.9× | UK testing sandbox; 54 MCP elements — county selector, contact form, social links, reCAPTCHA challenge; heavy page content compresses ratio to one of the narrowest in GP |
 | Cnarios | https://www.cnarios.com/ | 2,471 | 15,238 | 6.2× | React SPA; homepage nav maps fine in both; challenge cards at /challenges/ not rendered (React routing bug — heading only) |
 | Evil Tester | https://testpages.eviltester.com/styled/index.html | 7,429 | 19,491 | 2.6× | **Narrowest ratio in dataset** — alert pre-stub via eval nearly equalizes both interfaces; pre-stub window.alert/confirm/prompt BEFORE clicking any alert button |
 | Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | 1,288 | 18,556 | 14.4× | Intentionally inaccessible site for accessibility testing; contact form needs `input[name=x]` selectors; fast nav → high MCP overhead ratio |
 | Magento | https://magento.softwaretestingboard.com/ | 426 | 6,086 | 14.3× | **DOWN** — Cloudflare 526 SSL error as of 2026-04-22; both interfaces fail on navigate; 14.3× reflects MCP's longer error-response latency |
-| Parabank | https://parabank.parasoft.com/parabank/admin.htm | 4,825 | 84,782² | 17.6×² | CLI `input[name=customer.firstName]` fails (dot in name); MCP ID-based selectors work fine; run DB Initialize from admin panel before testing |
+| Parabank | https://parabank.parasoft.com/parabank/admin.htm | 4,825 | 84,782³ | 17.6×³ | CLI `input[name=customer.firstName]` fails (dot in name); MCP ID-based selectors work fine; run DB Initialize from admin panel before testing |
 | Parking Cost Calculator | https://www.shino.de/parkcalc/ | 4,171 | 29,675 | 7.1× | Returns $0.00 consistently in both interfaces — AM/PM radio default or date parse bug on the site itself; use option values not text for lot dropdown; invalid dates cause blank page |
 | PHP Travels | http://phptravels.com/demo/ | 1,711 | 43,164 | 25.2× | Submit button deadlocks daemon — pre-stub dialogs first; Login nav link broken (redirects same page); 25.2× — minimal DOM, no mandatory waits |
 | Polymer Shop | https://shop.polymer-project.org/ | 8,619 | 49,408 | 5.7× | All UI in Web Components shadow DOM — map returns nothing in both; eval+shadowRoot traversal required; mandatory 3–5s sleeps compress ratio to 5.7× |
+| Potion Shop | https://qe-at-cgi-fi.github.io/potion-shop/ | 577 | 8,874 | 15.4× | Medieval order form; 32 form controls (radio for potion type/size/potency, ingredient checkboxes, delivery options, textarea); browser_fill works on all inputs |
 | Practice Software Testing | https://practicesoftwaretesting.com/ | 4,905 | 30,944 | 6.3× | Angular; Login is `input[type=submit]` not button — use eval.click(); test login: customer@practicesoftwaretesting.com / welcome01; add to cart works without login |
 | PrestaShop | https://demo.prestashop.com/ | 6,209 | 33,595 | 5.4× | Store in iframe — get inner URL via eval after 5s; subdomain expires in ~2min; use eval location.href for all navigation (vibium go deadlocks daemon); mandatory sleeps compress ratio |
 | QA Practice | https://qa-practice.razvanvancea.ro/ | 784 | 27,047 | 34.5× | **Widest ratio in General Practice** (34.5×); CLI ~800ms total; ADD TO CART uses CSS uppercase — use map refs; pre-stub alert/confirm; login: admin@admin.com / admin123 |
 | QA Training Simulator | https://bugeater.web.app/ | 2,651 | 39,670 | 15.0× | 23 challenges across 7 categories; cookie banners on homepage + /app/list; dismiss react-joyride overlay; scripted/functional/api routes crash if accessed directly — navigate from /app/list |
 | Random User Generator | https://randomuser.me/ | 3,601 | 35,485 | 9.9× | URL-param API calls are the fastest pattern; ?format=csv triggers download and crashes BiDi session (restart required); use eval for large JSON (vibium text overflows at 5000 results) |
 | Real World Example Apps | https://codebase.show/projects/realworld | 5,785 | 29,548 | 5.1× | SvelteKit SPA needs 3s sleep after wait load before content renders; GitHub OAuth required for Sign In; mandatory sleep floor narrows ratio to 5.1× |
+| testers.ai | https://testers.ai/testing/ | 1,704 | 7,939 | 4.7× | 59-link checklist index covering WCAG A/AA/AAA, screen reader, keyboard, color, ARIA, forms, security, privacy, code quality, i18n, GenAI, DevOps, and more |
+| Test Track | https://testtrack.org/ | 2,251 | 4,732 | 2.1× | Structured training site; 15 practice modules Basic→Intermediate→Advanced→Expert (buttons, inputs, login, dropdowns, checkboxes, tables, modals, alerts, drag & drop, frames, canvas, 3D chess); used as vibium reference site |
+| Testing Challenges | http://testingchallenges.thetestingmap.org/ | 366 | 4,828 | 13.2× | **FAIL (both)** — HTTP-only; Chrome blocks navigation entirely; BiDi unknown error in both interfaces; 13.2× reflects MCP's slower failure latency |
 | The Boozang Test Lab | https://thelab.boozang.com/ | 2,565 | 45,367 | 17.7× | React SPA; 16 challenges; Form Fill saves to shared DB at api.boozang.com; vibium fill works on all inputs; vibium click works on all buttons |
 | The iframe Search Engine | https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html | 5,257 | 37,780 | 7.2× | Use vibium fill (not type) for search input; select by full URL value; "Go search" link opens in a new tab; vibium select with non-existent value silently sets selectedIndex=-1 |
 | The Internet | http://the-internet.herokuapp.com/ | 2,514 | 50,177 | 20.0× | 44 examples; hover fails on non-interactive elements; vibium frame context resets per CLI call; TinyMCE iframe via contentDocument; input[type=range] needs eval+dispatchEvent |
 | The Random Number Service | https://www.random.org/ | 1,875 | 27,220 | 14.5× | Cookie banner on load; generator forms not in map — use URL params or eval form.submit(); validation: min>max and num>10000 both trigger errors |
-| Testing Challenges | http://testingchallenges.thetestingmap.org/ | 366 | 4,828 | 13.2× | **FAIL (both)** — HTTP-only; Chrome blocks navigation entirely; BiDi unknown error in both interfaces; 13.2× reflects MCP's slower failure latency |
 | ToDo List | https://todolist.james.am/#/ | 1,729 | 37,502 | 21.7× | AngularJS; **counter off-by-1 bug** (shows N-1 active items); dblclick label to enter edit mode; checkbox check "obscured" — use mouse click by coords; no localStorage persistence |
 | UI5 Demo Kit | https://ui5.sap.com/#/demoapps | 9,242 | 49,649 | 5.4× | **Behavioral difference:** MCP browser_map finds 128 elements on main page; CLI vibium map returns nothing (SAP UI5 Web Components not exposed to CLI map); sleep 3s mandatory |
 
-² Parabank MCP inflated by 30s browser_find timeout on non-existent "Register" role. Without timeout: ~54,782ms (11.4×).
+³ Parabank MCP inflated by 30s browser_find timeout on non-existent "Register" role. Without timeout: ~54,782ms (11.4×).
 
 ---
 
-## Automation Testing (30 sites)
+## Automation Testing (42 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | Applitools Demo | https://demo.applitools.com/ | 3,000 | 21,959 | 7.3× | Intentional visual testing site; any credentials accepted including empty; **dashboard shows $350%7** corrupted total (intentional bug); search non-functional; all action links dead (href="#") |
+| ATM Practice App | https://qe-at-cgi-fi.github.io/atm/ | 383 | 6,301 | 16.4× | Minimal ATM simulator; 4 elements (DEBUG, ADMIN, number input, WITHDRAW); pure overhead exposure — one of the widest ratios for minimal-DOM sites |
 | Automate Now Sandbox | https://automatenow.io/sandbox-automation-testing-practice-website/ | 1,777 | 29,648 | 16.7× | Submit fires window.alert — pre-stub required; slider needs eval+dispatchEvent; **MCP submit button obscured** (receivesEvents check failed) — use browser_evaluate fallback; name input needs click before fill |
 | Automation Bookstore | https://automationbookstore.dev/ | 491 | 17,664 | 36.0× | **Widest ratio in Automation Testing** (36×); filter-only SPA; all 8 book hrefs="#" (no detail pages); CLI 491ms is the **fastest time in the entire dataset** |
 | Automation Camp | https://play2.automationcamp.ir/ | 1,080 | 21,262 | 19.7× | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
@@ -68,32 +75,43 @@
 | Automation in Testing | https://automationintesting.online/#/ | 2,755 | 31,544 | 11.5× | Full B&B booking site; Check Availability button obscured by calendar — use eval click; contact form #description textarea not fillable via fill — use eval+dispatchEvent(input) |
 | Automation Test Store | https://automationteststore.com/ | 8,175 | 42,741 | 5.2× | AbanteCart e-commerce; full flow: search → detail → cart → checkout; guest checkout available via accountFrm_accountguest radio; vibium select for product variants |
 | Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 1,565 | 28,244 | 18.1× | Blogger single long page; **CLI map returns nothing** — eval-only; **MCP map returns 82 elements**; date input needs eval; alert buttons deadlock — pre-stub; Colors dropdown has duplicate option values (red×2, green×2) |
-| Coffee Cart | https://coffee-cart.app/ | 27,696³ | 35,598 | 1.3×³ | Vue SPA; product cards via data-test attribute (not class name); full checkout flow works; name+email required; CLI anomaly: cold server hit (27,696ms); **warm CLI ratio ~18×** |
+| Coffee Cart | https://coffee-cart.app/ | 27,696⁴ | 35,598 | 1.3×⁴ | Vue SPA; product cards via data-test attribute (not class name); full checkout flow works; name+email required; CLI anomaly: cold server hit (27,696ms); **warm CLI ratio ~18×** |
 | Commit Quality | https://commitquality.com/ | 1,689 | 16,517 | 9.8× | Clean React app; map correctly identifies nav + filter + product elements in both interfaces |
 | Contact List App | https://thinking-tester-contact-list.herokuapp.com/ | 2,194 | 25,909 | 11.8× | Heroku app; login required for all operations; full CRUD contact management flow works |
 | Demo SaaS | https://demo-saas.bugbug.io/ | 1,059 | 13,455 | 12.7× | Clean SPA; minimal interaction; MCP 13.5s is among the fastest MCP times in dataset; 12.7× pure overhead ratio |
-| Expand Testing | https://practice.expandtesting.com/ | 87,302⁴ | 44,906 | 0.5×⁴ | Login button obscured — use eval click; valid login: practice / SuperSecretPassword!; **CLI anomaly: daemon i/o timeout** on first navigate (87,302ms); normal CLI ratio ~5.7× |
+| DemoQA | https://demoqa.com/ | 5,316 | 16,401 | 3.1× | Component library; 7 practice sections (Elements, Forms, Alerts/Frames/Windows, Widgets, Interactions, Book Store); many sub-pages; clean map in both interfaces |
+| Expand Testing | https://practice.expandtesting.com/ | 87,302⁵ | 44,906 | 0.5×⁵ | Login button obscured — use eval click; valid login: practice / SuperSecretPassword!; **CLI anomaly: daemon i/o timeout** on first navigate (87,302ms); normal CLI ratio ~5.7× |
+| GitHub Users Search | https://gh-users-search.netlify.app/ | 2,286 | 7,505 | 3.3× | React GitHub user search; default user pre-loaded; 34 elements (search input + submit + follower links); clean minimal SPA |
 | Global SQA Demo | http://www.globalsqa.com/demo-site/ | 3,097 | 20,876 | 6.7× | **Key behavioral difference:** CLI gets BiDi error on http:// URL; **MCP silently follows HTTP→HTTPS redirect** and loads site successfully; MCP maps 49 interactive elements |
 | GreenKart | https://rahulshettyacademy.com/seleniumPractise/#/ | 8,134 | 22,470 | 2.8× | Angular; 31 products; **MCP browser_map returns 126 elements** (31 products × 4 controls); large map call compresses ratio to 2.8× — one of the narrowest Automation ratios |
 | Hands-On Selenium WebDriver | https://bonigarcia.dev/selenium-webdriver-java/ | 2,615 | 28,412 | 10.9× | Static site; 30 practice sub-pages at clean URLs; fill fails on textarea — use type instead; calculator buttons are span.btn not button (use eval) |
 | Lambdatest Playground | https://ecommerce-playground.lambdatest.io/ | 8,095 | 34,057 | 4.2× | OpenCart-based e-commerce; category nav obscured by sticky header — use direct URLs; **Add to Cart silently fails for guests** (no error); size select has no values (impossible to add Canon EOS 5D) |
-| Let Code | https://letcode.in/test | 14,962 | 211,405⁵ | 14.1×⁵ | Angular; 22 practice sections; **MCP BiDi SSL/privacy error failures** inflated to 211s; clean MCP ratio ~4×; MCP map captures iframe ads, CLI map filters them |
+| Let Code | https://letcode.in/test | 14,962 | 211,405⁶ | 14.1×⁶ | Angular; 22 practice sections; **MCP BiDi SSL/privacy error failures** inflated to 211s; clean MCP ratio ~4×; MCP map captures iframe ads, CLI map filters them |
 | Locator Game | https://testsmith-io.github.io/locator-game/ | 2,897 | 20,819 | 7.2× | GitHub Pages static locator challenge; clean, no anomalies or mandatory waits |
+| NearForm Testing Playground | https://nearform.github.io/testing-playground/ | 845 | 7,338 | 8.7× | 18 challenge cards (Add/Remove, Checkbox, Drag & Drop, Dynamic Table, File Up/Download, Login Form, Notifications, Radio Buttons, Sliders, Tooltips, Various Inputs); language switcher + difficulty filter |
+| OrangeHRM | https://opensource-demo.orangehrmlive.com/ | 10,980 | 22,053 | 2.0× | HR management SPA; map returns nothing in both interfaces — eval required for all interactions; login: Admin / admin123; 2.0× reflects heavy JS init time equalizing overhead |
+| Practice Automation | https://practice-automation.com/ | 1,933 | 7,553 | 3.9× | 28 nav links covering delays, sliders, tables, iframes, forms, calendars, gestures, spinners, modals, hover, file upload/download; sub-pages at practice-automation.com/* |
 | Practice Test Automation | https://practicetestautomation.com/practice/ | 9,338 | 42,713 | 4.6× | Multiple practice pages; valid login: student / Password123!; 2–3s mandatory waits compress ratio to 4.6× |
+| QA Cloud | https://www.qacloud.dev/ | 1,089 | 7,476 | 6.9× | Multi-app QA platform; 38 elements (full nav + app cards with Open App / Docs / API Docs links); Login/Register; search bar; no public API credentials needed for browsing |
 | QA Playground | https://qaplayground.dev/ | 1,688 | 9,660 | 5.7× | Clean static site; 28+ challenge links; map works in both interfaces; no anomalies |
+| QE Buggy Todo | https://qe-at-cgi-fi.github.io/todo | 882 | 7,059 | 8.0× | Single-input todo app with intentional bugs (placeholder typo "What need's to be done?"); 1 map element; minimal DOM → high overhead ratio |
 | React Shopping Cart | https://react-shopping-cart-67954.firebaseapp.com/ | 1,744 | 15,338 | 8.8× | Firebase SPA; **MCP map enumerates all 16 products**; **CLI map returns 0** (styled-components hash classes change between builds); CLI still faster due to lower tool overhead |
+| SeleniumBase | https://seleniumbase.io/ | 1,766 | 8,959 | 5.1× | Docs site with 256 MCP elements; 52+ demo pages (Coffee Cart, Drag & Drop, Calculator, Shadow DOM, CAPTCHA); CAPTCHA test pages for CF Turnstile, reCAPTCHA v2 |
 | Selectors Hub | https://selectorshub.com/xpath-practice-page/ | 3,993 | 15,509 | 3.9× | 125-element XPath practice page; shadow DOM elements disabled; large map narrows ratio (MCP spends proportionally more time on map call itself) |
 | Selenium Playground | https://www.lambdatest.com/selenium-playground/ | 5,130 | 20,952 | 4.1× | Cloudflare blocks sub-page navigation (/simple-form-demo) for both; main page maps 156 elements; use direct URL to /simple-form-demo page |
 | Swag Labs | https://www.saucedemo.com/ | 1,667 | 18,498 | 11.1× | Clean login→inventory→add-to-cart; login: standard_user / secret_sauce; 6 inventory items; no mandatory sleeps → overhead fully exposed |
 | Sweet Shop | https://sweetshop.netlify.app/ | 2,809 | 28,262 | 10.1× | addItem links invisible to both CLI and MCP map — eval required in both; full purchase flow works via eval |
+| TestDino | https://storedemo.testdino.com/ | 982 | 7,450 | 7.6× | E-commerce demo; **MCP map: 216 elements** (products repeat across carousel sections); **CLI map returns nothing** (SPA); full product, cart, and FAQ sections accessible via MCP |
+| Travel Agileway | http://travel.agileway.net/login | 3,203 | 8,475 | 2.6× | HTTP-only app; MCP silently loads the page (no BiDi error, unlike CLI); 6-element login form (username, password, remember_me, submit); credentials untested |
 | Tricentis Obstacle Course | https://obstaclecourse.tricentis.com/Obstacles | 5,536 | 25,179 | 4.5× | Scroll-heavy; eval for next-link navigation; moderate interaction overhead |
 | UI Test Automation Playground | http://uitestingplayground.com/ | 515 | 5,266 | 10.2× | **DOWN** — HTTP-only; both interfaces fail immediately with BiDi error; 10.2× reflects MCP's slower error latency (5.3s vs 0.5s) |
+| var.parts | https://var.parts/ | 2,199 | 8,271 | 3.8× | Vibium-branded robot parts shop; 41 elements (nav + 12 products with Add to Cart); clean e-commerce; used as vibium MCP test reference site |
 | Weather Shopper | https://weathershopper.pythonanywhere.com/ | 2,834 | 36,811 | 13.0× | 3-page e-commerce flow (temperature check → product selection → checkout); no mandatory sleeps; 13.0× |
 | XYZ Bank | https://www.globalsqa.com/angularJs-protractor/BankingProject/ | 3,788 | 42,695 | 11.3× | AngularJS; ng-model select needs eval+dispatchEvent; Login/Deposit buttons need eval click in MCP; 11.3× |
 
-³ Coffee Cart CLI anomaly: cold server hit (27,696ms); MCP hit warmer server; warm CLI ratio ~18×.  
-⁴ Expand Testing CLI anomaly: daemon i/o timeout on first navigate; MCP ran cleanly at 44,906ms. Normal CLI ratio ~5.7×.  
-⁵ Let Code MCP anomaly: repeated BiDi navigation failures due to SSL/privacy errors; clean MCP ratio ~4×.
+⁴ Coffee Cart CLI anomaly: cold server hit (27,696ms); MCP hit warmer server; warm CLI ratio ~18×.  
+⁵ Expand Testing CLI anomaly: daemon i/o timeout on first navigate; MCP ran cleanly at 44,906ms. Normal CLI ratio ~5.7×.  
+⁶ Let Code MCP anomaly: repeated BiDi navigation failures due to SSL/privacy errors; clean MCP ratio ~4×.
 
 ---
 
@@ -119,21 +137,30 @@
 
 ---
 
-## API Testing (9 sites)
+## API Testing (17 sites)
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | Airport Gap | https://airportgap.com/ | 1,372 | 9,317 | 7× | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
+| AP+ Developers | https://developer.bpaygroup.com.au/ | 2,756 | 9,430 | 3.4× | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
 | Automation Exercise API | https://www.automationexercise.com/api_list | 4,862 | 13,186 | 3× | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
+| Chuck Norris API | https://api.chucknorris.io/ | 2,517 | 7,332 | 2.9× | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
+| Countries GraphQL | https://countries.trevorblades.com/ | 1,848 | 7,441 | 4.0× | Live GraphiQL editor; query countries, continents, languages; no auth; execute queries directly in browser |
+| FakeRestAPI | https://fakerestapi.azurewebsites.net/ | 8,648 | 16,171 | 1.9× | Azure-hosted Swagger UI; Activities, Authors, Books, CoverPhotos, Users endpoints; Azure cold start affects both CLI and MCP equally |
+| Go REST | https://gorest.co.in/ | 2,141 | 9,044 | 4.2× | Free REST API; token auth for write operations; code tabs (CURL/JS/Python/Ruby/Go) with live Run button; public read endpoints require no auth |
 | httpbin | https://httpbin.org/ | 1,422 | 12,752 | 9× | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
 | JSON Placeholder | https://jsonplaceholder.typicode.com/ | 433 | 9,650 | 22× | **Widest API ratio** (22×); **CLI 433ms — fastest in dataset**; full CRUD works; writes return 201 but don't persist (shared mock state) |
 | Poké API | https://pokeapi.co/ | 1,515 | 10,306 | 7× | Read-only; 1,350 Pokémon; aggressive caching; no auth |
 | ReqRes | https://reqres.in/ | 3,669 | 11,619 | 3× | **BROKEN** — all /api/* endpoints return 401 since 2026-05; x-api-key header now required; use app.reqres.in for account-based access |
 | Restful Booker | https://restful-booker.herokuapp.com/ | 1,357 | 8,451 | 6× | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
 | Rick and Morty API | https://rickandmortyapi.com/graphql | 2,895 | 9,873 | 3× | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
+| ServeRest | https://serverest.dev/ | 1,502 | 7,671 | 5.1× | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
+| SpaceTraders | https://spacetraders.io/ | 14,933 | 10,203 | 0.7×⁷ | Space game REST API; 58-link docs site; **MCP was faster than CLI** — unusual; CLI cold-start on this site unusually slow; register/play via API calls |
 | Swagger Petstore | https://petstore.swagger.io/ | 1,347 | 17,599 | 13× | GET findByStatus, POST pet; shared mutable state — counts vary across sessions; no auth |
+| The Cat API | https://thecatapi.com/ | 1,215 | 8,288 | 6.8× | Cat image API; live voting/breeds/favorites demo on homepage; 29 MCP elements; free API key for write operations |
 
-**API testing note:** CLI is **9.3× cheaper** than MCP for API-only workflows. MCP overhead comes from the protocol layer — each `browser_navigate` + `browser_evaluate` pair generates its own LLM turn. CLI dispatches via bash and the LLM barely participates in execution. For pure API testing, CLI is the clear winner.
+**API testing note:** CLI is cheaper than MCP for API-only workflows. MCP overhead comes from the protocol layer — each `browser_navigate` + `browser_evaluate` pair generates its own LLM turn. CLI dispatches via bash and the LLM barely participates in execution.  
+⁷ SpaceTraders: CLI cold-start unusually slow (14,933ms); excluding it the API batch ratio is 4.8×.
 
 ---
 
