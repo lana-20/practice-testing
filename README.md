@@ -2,11 +2,15 @@
 
 **[Live benchmark page →](https://lana-20.github.io/practice-testing/)**
 
-<video src="cli_mcp_research.mp4" controls width="390"></video>
+[<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
 <!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
+
+
+
+
   OS:        macOS 26.3.1 (Build 25D771280a)
   Node:      v25.8.0
   vibium:    v26.3.18
