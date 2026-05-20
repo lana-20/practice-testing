@@ -1,7 +1,17 @@
 # Practice Testing — Site Directory & CLI vs MCP Comparison
 
-<!-- 106 sites across 5 categories · vibium v26.3.18 · Chrome 147 · claude-sonnet-4-6 · Intel i9-10910 3.6GHz · macOS 26.3 · Tested 2026-04-22 to 2026-05-20 -->
-<!-- Methodology: wall-clock time per site (python3 time.time()*1000), bracketing navigate + primary interaction + verification. Token/cost delta from ~/.claude/projects/**/*.jsonl before and after each run. -->
+<!-- 106 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
+<!--
+  Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
+  OS:        macOS 26.3.1 (Build 25D771280a)
+  Node:      v25.8.0
+  vibium:    v26.3.18
+  Chrome:    148.0.7778.168
+  Model:     claude-sonnet-4-6
+  Network:   Wi-Fi · Router 10.0.0.1
+  Methodology: wall-clock time per site (python3 time.time()*1000), bracketing navigate + primary interaction + verification.
+               Token/cost delta from ~/.claude/projects/**/*.jsonl, deduplicated by message ID, sonnet-4-6 only.
+-->
 
 ---
 
