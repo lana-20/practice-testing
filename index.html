@@ -365,6 +365,20 @@
       letter-spacing: 0.06em;
     }
 
+    /* ── Reel embed ── */
+    .reel-section {
+      text-align: center;
+      margin: 72px auto 0;
+      max-width: 1040px;
+      padding: 0 28px;
+    }
+    .reel-frame {
+      border: none;
+      display: block;
+      margin: 24px auto 0;
+      box-shadow: 0 48px 120px rgba(0,0,0,0.7);
+    }
+
     @media (max-width: 640px) {
       .hero { padding: 56px 0 64px; }
       .cat-table th:nth-child(3),
@@ -372,6 +386,7 @@
       .cat-table th:nth-child(4),
       .cat-table td:nth-child(4) { display: none; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
+      .reel-frame { width: 100%; height: auto; min-height: 820px; }
     }
   </style>
 </head>
@@ -430,6 +445,14 @@
     <div class="stat-num steel">~10s</div>
     <div class="stat-label">Typical MCP Time</div>
   </div>
+</div>
+
+<!-- ── Reel embed ── -->
+<div class="reel-section">
+  <div class="section-eyebrow">— Preview</div>
+  <div class="section-title">At a <em>Glance</em></div>
+  <div class="section-sub">Tap left/right to navigate · auto-advances every few seconds</div>
+  <iframe src="reel.html" width="500" height="940" class="reel-frame" scrolling="no" title="CLI vs MCP benchmark reel"></iframe>
 </div>
 
 <!-- ── Category Breakdown ── -->
