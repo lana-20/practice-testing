@@ -1,6 +1,6 @@
 # CLI vs MCP — Behavioral Comparison
 
-Compiled from practice-testing exercise across 81 sites (2026-04-22 → 2026-05-19).
+Compiled from practice-testing exercise across 99 sites (2026-04-22 → 2026-05-19).
 Organized by command/tool pair. Confirmed differences come from observed cross-site behavior, not docs.
 
 ---
