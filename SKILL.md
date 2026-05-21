@@ -322,3 +322,285 @@ Date: <date>
 - `browser_evaluate` throws `invalid_union` when expression returns `""` — vibium bug MB6; ensure expressions never return empty string (use `|| null` fallback)
 - MCP `browser_map` finds more elements on some pages than CLI `vibium map` (e.g. puzzle index links, Angular Material list items)
 - Stop/restart MCP browser session with `browser_stop` + `browser_start` when BiDi errors occur — this does NOT affect the CLI daemon
+
+---
+
+## CLI vs MCP — Behavioral Comparison
+
+Compiled from practice-testing exercise across 81 sites (2026-04-22 → 2026-05-19).
+Organized by command/tool pair. Confirmed differences come from observed cross-site behavior, not docs.
+
+### Paired Commands — Diffs and Samesies
+
+#### navigate — `vibium go` / `browser_navigate`
+
+| | CLI | MCP |
+|---|---|---|
+| HTTP-only URLs | BiDi error, page not loaded | Loads silently, no error |
+| Subdomain pages | Deadlocks (B3) — must use `eval 'location.href="..."'` | Works without deadlock |
+| Same-origin navigation | Same | Same |
+
+**Verdict:** MCP wins on HTTP and subdomain navigation. CLI requires eval workaround for both.
+
+---
+
+#### map — `vibium map` / `browser_map`
+
+| | CLI | MCP |
+|---|---|---|
+| Standard DOM | Returns interactive refs | Same |
+| React/Angular SPAs (JS-heavy) | May return nothing on first map | Same |
+| Some SPAs (Angular Material, SAP UI5, Black Box Puzzles) | Returns nothing or subset | Returns more elements — up to 128+ vs 0 |
+| Shadow DOM pages (Polymer Shop) | Returns nothing | Same |
+| Async-loaded content | Misses elements not yet rendered | Same |
+
+**Verdict:** Same behavior in most cases. MCP `browser_map` finds more elements on a subset of pages where CLI returns nothing or a subset — not consistently across all frameworks.
+
+---
+
+#### get_text — `vibium text` / `browser_get_text`
+
+| | CLI | MCP |
+|---|---|---|
+| Normal pages | Returns visible text | Same |
+| Empty/blank/invisible pages | Works (returns empty string) | Throws `invalid_union` (MB9) — use `browser_evaluate {expression: "document.body.innerText \|\| null"}` |
+| Very large text bodies (e.g. 5000 API results) | Crashes BiDi session | Returns oversized-output error (no crash) |
+
+**Verdict:** Different failure modes — CLI crashes on huge pages, MCP schema-errors on empty pages.
+
+---
+
+#### evaluate — `vibium eval 'expr'` / `browser_evaluate {expression}`
+
+| | CLI | MCP |
+|---|---|---|
+| Multi-statement with semicolons | Fails due to shell quoting — split into separate calls | No shell quoting issue; all in one call |
+| Expression returning `""` | Works | Throws `invalid_union` (MB6) — use `\|\| null`, never `\|\| ''` |
+| Expression returning `null` | Works | Same |
+| Parallel/async (`Promise.all`) | Limited | Works cleanly |
+
+**Verdict:** CLI has shell quoting constraint. MCP has MB6 bug on empty-string return. Use `|| null` in MCP always.
+
+---
+
+#### fill — `vibium fill selector value` / `browser_fill {selector, value}`
+
+| | CLI | MCP |
+|---|---|---|
+| Text inputs | Works | Same |
+| `<textarea>` | Fails — use `vibium type` | Fails (MB7) — use `browser_type` |
+| Fill with empty string to clear | Works | Throws "value is required" — use eval to clear |
+| Framework-driven inputs (React, Angular) | May not trigger state update | Same; use `browser_type` for key-event-driven components |
+
+**Verdict:** Same on standard inputs and same textarea failure. MCP can't clear with empty string.
+
+---
+
+#### type — `vibium type selector value` / `browser_type {selector, value}`
+
+| | CLI | MCP |
+|---|---|---|
+| Text inputs | Works | Same |
+| `<textarea>` | Works | Same |
+| Framework-driven textareas (React/Angular) | Works — fires events | Works — fires key events that update component state |
+| Date inputs (`input[type=date]`) | Needs eval `.value =` (fill/type both fail) | Same — use eval |
+
+**Verdict:** Same behavior across the board.
+
+---
+
+#### select — `vibium select selector value` / `browser_select {selector, value}`
+
+| | CLI | MCP |
+|---|---|---|
+| Matching by option value | Matches by `value` attribute, not display text | Same |
+| Non-existent value | Silently sets `selectedIndex=-1` (B5); returns success | Same — B5 applies to both |
+| Angular ng-model select | Fails — model not updated | Same failure — use `eval .value= + dispatchEvent(change)` |
+
+**Verdict:** Identical. Both match by value attribute. B5 and Angular limitations apply to both.
+
+---
+
+#### click — `vibium click selector` / `browser_click {selector}`
+
+| | CLI | MCP |
+|---|---|---|
+| Standard interactive elements | Works | Same |
+| `input[type=submit]` | Sometimes needs `eval .click()` | Works directly — no eval needed |
+| Zero-size elements | Fails | Same |
+| Elements obscured by overlay | Fails | Same; try `eval element.click()` |
+
+**Verdict:** MCP `browser_click` succeeds on some elements (e.g. `input[type=submit]`) that CLI needs eval for.
+
+---
+
+#### check / uncheck — `vibium check` / `browser_check`, `vibium uncheck` / `browser_uncheck`
+
+| | CLI | MCP |
+|---|---|---|
+| Visible checkboxes | Works | Same |
+| Obscured checkboxes (ToDo List, React Shopping Cart) | Fails — use `vibium mouse click x y` | Fails — use `browser_mouse_click {x, y}` at computed coords |
+
+**Verdict:** Same — both fail on obscured checkboxes; both need coordinate click workaround.
+
+---
+
+#### hover — `vibium hover` / `browser_hover`
+
+| | CLI | MCP |
+|---|---|---|
+| Interactive elements | Works | Same |
+| Non-interactive elements | Fails — use `vibium mouse move x y` | Use `browser_mouse_move` to computed coords + `getComputedStyle()` |
+
+**Verdict:** Same — both need coordinate mouse_move for non-interactive hover targets.
+
+---
+
+#### find — `vibium find {role, text}` / `browser_find {role, text}`
+
+| | CLI | MCP |
+|---|---|---|
+| Finding by text | Works; returns outermost matching element | Same |
+| `role="link"` on `<a>` | Works | Same |
+| `role="link"` on `<button>` | Works | Times out — use `browser_map` ref or CSS selector instead |
+| `role="button"` on `<button>` | Works | Same |
+
+**Verdict:** MCP `browser_find {role: "link"}` times out on `<button>` elements. CLI handles it correctly.
+
+---
+
+#### drag — `vibium drag` / `browser_drag`
+
+| | CLI | MCP |
+|---|---|---|
+| Standard HTML drag-and-drop | Works | Same |
+| jQuery UI droppable | Fires events but framework ignores them | Same limitation |
+| Polymer events | Not fired by standard drag | Not fired — must use coordinate mouse clicks at bounding-box coords |
+| `vibium drag @ref` on some sites | Fails — use mouse coords | Works when content is top-level |
+
+**Verdict:** Same framework limitations. Coordinate-based mouse events are the common fallback for both.
+
+---
+
+#### frames / frame — `vibium frames` / `browser_frames`, `vibium frame` / `browser_frame`
+
+| | CLI | MCP |
+|---|---|---|
+| Listing frames | Works | Same |
+| Entering frame context | Does NOT persist between calls | Returns metadata only; does NOT switch context |
+| Workaround | `eval contentDocument.body` | `eval contentDocument.body` or navigate directly to iframe src URL |
+
+**Verdict:** Same limitation. Neither properly persists frame context. Both need eval workarounds.
+
+---
+
+#### get_url — `vibium url` / `browser_get_url`
+
+| | CLI | MCP |
+|---|---|---|
+| Normal read | Works | Same |
+| Immediately after navigation (post-login) | BiDi timing issue — need `sleep 5` | No timing issue observed |
+
+**Verdict:** CLI has post-navigation timing sensitivity. MCP doesn't.
+
+---
+
+#### stop / start — `vibium stop` / `browser_stop`, `vibium start` / `browser_start`
+
+| | CLI | MCP |
+|---|---|---|
+| Scope | Restarts the CLI daemon | Restarts the MCP browser session |
+| Cross-interface | No effect on MCP session | No effect on CLI daemon |
+
+**Verdict:** Completely isolated sessions. Restarting one does not affect the other.
+
+---
+
+#### Dialog handling — no CLI tool / `browser_dialog_accept` + `browser_dialog_dismiss`
+
+| | CLI | MCP |
+|---|---|---|
+| Native alert/confirm/prompt | Pre-stub BEFORE clicking: `eval 'window.alert=function(){}'` | Has native `browser_dialog_accept` / `browser_dialog_dismiss` |
+| Direct click on alert trigger | Deadlocks daemon — requires `vibium stop && sleep 2 && vibium start` | Also deadlocks (MB3) if `browser_click` fires before dialog intercept is ready |
+| Safe pattern | `eval 'window.alert=function(){}'` → then click | `browser_evaluate {setTimeout(..., 300)}` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` |
+
+**Verdict:** MCP has native dialog tools; CLI must pre-stub via eval. Both deadlock if click fires before the handler is in place — same root constraint, different syntax.
+
+---
+
+#### Samesies (no behavioral difference observed)
+
+- `vibium title` / `browser_get_title` — identical
+- `vibium screenshot` / `browser_screenshot` — identical
+- `vibium diff map` / `browser_diff_map` — identical
+- `vibium dblclick` / `browser_dblclick` — identical
+- `vibium press` / `browser_press` — identical
+- `vibium keys` / `browser_keys` — identical
+- `vibium scroll` / `browser_scroll` — identical
+- `vibium focus` / `browser_focus` — identical
+- `vibium upload` / `browser_upload` — identical
+- `vibium back` / `browser_back` — identical
+- `vibium forward` / `browser_forward` — identical
+- `vibium mouse move/click/down/up` / `browser_mouse_move/click/down/up` — identical
+
+---
+
+### MCP-Only Tools (no CLI equivalent)
+
+| MCP Tool | Purpose |
+|---|---|
+| `browser_a11y_tree` | Accessibility tree dump |
+| `browser_count {selector}` | Count matching elements (has MB1 bug) |
+| `browser_delete_cookies` | Delete cookies |
+| `browser_dialog_accept` / `browser_dialog_dismiss` | Native dialog interception |
+| `browser_download_set_dir` | Set download directory |
+| `browser_emulate_media` | Media type emulation (print/screen) |
+| `browser_find_all {selector}` | Find all matching elements (CLI `find` returns first only) |
+| `browser_get_attribute {selector, name}` | Get element attribute (CLI needs `eval getAttribute(...)`) |
+| `browser_get_cookies` / `browser_set_cookie` | Cookie read/write |
+| `browser_get_html {selector}` | Get innerHTML/outerHTML |
+| `browser_get_value {selector}` | Get input current value |
+| `browser_get_viewport` / `browser_set_viewport` | Viewport dimensions |
+| `browser_get_window` / `browser_set_window` | Window position/size |
+| `browser_highlight {selector}` | Visual highlight in browser |
+| `browser_is_checked` / `browser_is_enabled` / `browser_is_visible` | Boolean state queries (CLI needs eval) |
+| `browser_list_pages` / `browser_new_page` / `browser_close_page` / `browser_switch_page` | Multi-tab management |
+| `browser_pdf` | Export page as PDF |
+| `browser_record_start` / `browser_record_stop` (+ chunk/group variants) | Session recording |
+| `browser_reload` | Reload current page (CLI uses `eval 'location.reload()'`) |
+| `browser_restore_storage` / `browser_storage_state` | localStorage/sessionStorage snapshot/restore |
+| `browser_scroll_into_view {selector}` | Scroll element into viewport (CLI uses `eval scrollIntoView()`) |
+| `browser_set_content {html}` | Replace page content with raw HTML |
+| `browser_set_geolocation` | Spoof browser geolocation |
+| `browser_sleep {ms}` | Wait in milliseconds (CLI uses shell `sleep N` — seconds only) |
+| `browser_wait_for_fn {fn}` | Wait until JS expression is truthy |
+| `browser_wait_for_text {text}` | Wait until text appears on page |
+| `browser_wait_for_url {url}` | Wait until URL matches |
+| `page_clock_install` / `page_clock_set_fixed_time` / `page_clock_set_system_time` / `page_clock_set_timezone` / `page_clock_pause_at` / `page_clock_resume` / `page_clock_fast_forward` / `page_clock_run_for` | Mock/control page clock |
+
+---
+
+### CLI-Only Behaviors
+
+| Behavior | Notes |
+|---|---|
+| PATH prefix required | `export PATH="/usr/local/bin:$PATH"` to avoid Python vibium binary |
+| Shell sleep | `sleep N` — integer seconds only; MCP `browser_sleep {ms}` is milliseconds |
+| Daemon persistence | CLI daemon stays alive across Bash tool calls; MCP tools are stateless per-call |
+| Alert pre-stub pattern | Must `eval 'window.alert=function(){}'` before any click that triggers a dialog |
+
+---
+
+### Cross-Cutting Samesies (confirmed identical across all sites)
+
+- **select by value**: both match option `value` attribute, not display text; both have B5 silent failure on non-existent value
+- **textarea failure**: both fail with `fill`; both need `type` instead
+- **obscured checkbox**: both fail with `check`; both need coordinate click
+- **shadow DOM**: both return nothing from map; both need `eval shadowRoot`
+- **Angular ng-model select**: both fail to trigger model update; both need eval + dispatchEvent
+- **canvas/custom-painted elements**: both return nothing from map; both need coordinate click from getBoundingClientRect
+- **frame context**: neither properly persists frame switch; both need eval workaround
+- **jQuery UI droppable**: drag fires but framework ignores — eval workaround for both
+- **BiDi session recovery**: both need stop + start after broken pipe
+- **CSS text-transform**: both find by DOM text, not rendered text
+- **Azure/Heroku hibernated backends**: same 3s wait + reload pattern needed

@@ -1,6 +1,6 @@
 # Practice Testing — Site Directory & CLI vs MCP Comparison
 
-**[Live benchmark page →](https://lana-20.github.io/practice-testing/)**
+**[Live benchmark page →](https://lana-20.github.io/practice-testing/)** · **[CLI vs MCP behavioral comparison → SKILL.md](SKILL.md#cli-vs-mcp--behavioral-comparison)**
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
