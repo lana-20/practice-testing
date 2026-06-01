@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 -->
+<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Per-section token stats added 2026-06-01 -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -38,6 +38,8 @@
 ² API ratio narrows to 3.3× due to SpaceTraders anomaly (MCP faster than CLI — CLI cold start). Excluding SpaceTraders: CLI 4.8× faster.
 
 **Key insight:** MCP time per site is fairly uniform (~7–50s regardless of site complexity). CLI time tracks actual site complexity (0.4s–88s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) absorb MCP's per-tool-call overhead.
+
+Each section below includes an aggregate token/cost table — LLM turn counts and cost deltas measured from `~/.claude/projects/**/*.jsonl`.
 
 ---
 
