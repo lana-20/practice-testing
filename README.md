@@ -43,6 +43,14 @@
 
 ## General Practice (28 sites)
 
+| | CLI | MCP | Ratio |
+|---|---|---|---|
+| Time | 107,711ms | 863,817ms | 8.0× faster |
+| LLM turns | ~39 | ~301 | ~7.7× fewer |
+| Cost | ~$2.09 | ~$10.44 | ~5× cheaper |
+
+*Partial tracking: 23 of 28 sites — Batch 3 CLI data lost to session reset; A11y Coffee, Candy Mapper, Potion Shop, testers.ai, Test Track added without tracking.*
+
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | AcademyBugs | https://academybugs.com/ | 8,130 | 31,787 | 3.9× | Narrowest GP ratio — cookie banner + tutorial modal overhead equalizes both interfaces; dismiss before interacting; 25 planted bugs; sort works via value-based select |
@@ -79,6 +87,14 @@
 ---
 
 ## Automation Testing (41 sites)
+
+| | CLI | MCP | Ratio |
+|---|---|---|---|
+| Time | 255,969ms | 1,066,307ms | 4.2× faster |
+| LLM turns | ~46 | ~317 | ~6.9× fewer |
+| Cost | ~$1.65 | ~$9.63 | ~6× cheaper |
+
+*Partial tracking: 30 of 41 sites (Batches 6–11); 11 late-added sites not tracked.*
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
@@ -132,6 +148,14 @@
 
 ## Security Testing (11 sites)
 
+| | CLI | MCP | Ratio |
+|---|---|---|---|
+| Time | 20,946ms | 108,500ms | 5.2× faster |
+| LLM turns | 19 | 48 | 2.5× fewer |
+| Cost | $0.54 | $1.30 | 2.4× cheaper |
+
+*Full tracking — 7 publicly accessible timed sites. Archive batch included Supercar Showdown (decommissioned); excluded from directory.*
+
 *7 publicly accessible sites timed; 4 require local setup or account (marked —).*
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
@@ -151,6 +175,14 @@
 ---
 
 ## API Testing (16 sites)
+
+| | CLI | MCP | Ratio |
+|---|---|---|---|
+| Time | 50,763ms | 166,714ms | 3.3× faster |
+| LLM turns | 3 | 37 | 12× fewer |
+| Cost | $0.19 | $1.73 | 9.1× cheaper |
+
+*Partial tracking: 9-site original batch (includes removed ReqRes, 8 of which are in this directory); 7 late-added sites not tracked.*
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
@@ -177,6 +209,14 @@
 ---
 
 ## Performance Testing (3 sites)
+
+| | CLI | MCP | Ratio |
+|---|---|---|---|
+| Time | 14,179ms | 58,093ms | 4.1× faster |
+| LLM turns | 4 | 30 | 7.5× fewer |
+| Cost | $0.25 | $1.53 | 6.1× cheaper |
+
+*Full tracking — archived batch of 4 sites; Computer Database (DOWN) included in tracking but excluded from directory.*
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|

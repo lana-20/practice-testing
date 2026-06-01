@@ -165,6 +165,8 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 When given a site to test, run this structured protocol. Skip steps that are not applicable (e.g. login for sites without auth).
 
+Before Step 1, record the token baseline from `~/.claude/projects/**/*.jsonl` (deduplicated by message ID, sonnet-4-6 only) so you can compute cost delta in the report.
+
 ### Step 1 — Reachability
 
 **CLI:**
@@ -288,6 +290,11 @@ Date: <date>
 ### Bugs Found
 1. <description> — Steps: <steps> — Severity: Low/Medium/High
 2. ...
+
+### Token / Cost
+- LLM turns: +X (CLI) / +X (MCP)
+- Cost delta: +$X.XX (CLI) / +$X.XX (MCP)
+- Ratio: X× cheaper via CLI
 
 ### Notes
 <anything unusual or interesting>
