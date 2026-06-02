@@ -50,20 +50,9 @@ The comparison doc is already updated from confirmed test results. Only sites wi
 - Automation Testing Practice (Colors dropdown)
 - Pet Store Web
 
-### Dialog handling (MB3 fixed — MCP direct click works)
+### ~~Dialog handling~~ — MB3 still open (deferred in v26.5.31, #151)
 
-~10 MCP sites where setTimeout+sleep+dialog_accept was the documented pattern:
-
-- Evil Tester
-- The Internet
-- Test Track
-- QA Practice
-- Automation Testing Practice
-- Automation Camp
-- Contact List App
-- Hands-On Selenium WebDriver
-- Demoblaze
-- Candy Mapper
+Dialog deadlock confirmed on The Internet and Evil Tester. setTimeout+sleep+dialog_accept pattern remains required for MCP. No dialog sites need retesting — behavior unchanged.
 
 ### Textarea fill (B7/MB7 fixed — browser_fill now works)
 
@@ -82,10 +71,10 @@ The comparison doc is already updated from confirmed test results. Only sites wi
 
 ## Targeted rerun estimate
 
-~25–30 spot-checks across the three categories above.
+~23 spot-checks across select and textarea categories (dialog dropped — MB3 unchanged).
 
 | | Estimate |
 |---|---|
-| Sessions needed | ~4–6 |
+| Sessions needed | ~3–4 |
 | Time per session | ~30–40 min |
-| **Total wall-clock** | **~2–4 hours** |
+| **Total wall-clock** | **~1.5–2.5 hours** |

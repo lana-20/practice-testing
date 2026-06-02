@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Per-section token stats added 2026-06-01 · Behavioral notes updated for v26.5.31 (2026-06-01): B5 select now by label+value; B7/MB7 textarea fill fixed; MB3 dialog deadlock fixed in MCP; MB6/MB9 fixed in MCP -->
+<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Per-section token stats added 2026-06-01 · Behavioral notes updated for v26.5.31 (2026-06-01): B5 select now by label+value; B7/MB7 textarea fill fixed; MB5/MB6/MB9 MCP serialization fixed; B3/MB3 dialog deadlock still open (deferred) -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -223,5 +223,5 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | Blaze Demo | http://blazedemo.com/index.php | 5,039 | 20,418 | 4× | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
-| Demoblaze | https://demoblaze.com/ | 4,996 | 21,626 | 4× | Categories via #itemc (3s async load); **add-to-cart deadlocks CLI daemon** — pre-stub window.alert before clicking (B3 still open); MCP: direct browser_click + browser_dialog_accept works (MB3 fixed v26.5.31); Demoblaze API at api.demoblaze.com |
+| Demoblaze | https://demoblaze.com/ | 4,996 | 21,626 | 4× | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces (B3/MB3 still open, deferred); Demoblaze API at api.demoblaze.com |
 | Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 4,144 | 16,049 | 4× | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |

@@ -277,11 +277,11 @@ MCP: `browser_mouse_move {x,y}` / `browser_mouse_click {x,y}` / `browser_mouse_d
 | | CLI | MCP |
 |---|---|---|
 | Native alert/confirm/prompt | Pre-stub BEFORE clicking: `eval 'window.alert=function(){}'` — clicking first deadlocks daemon permanently | Has native `browser_dialog_accept` / `browser_dialog_dismiss` tools |
-| Direct click on alert trigger | Deadlocks daemon (B3 still open) — requires `pkill -f vibium && sleep 2 && vibium daemon start` | Works — direct `browser_click` + `browser_dialog_accept` no longer deadlocks (MB3 fixed v26.5.31) |
-| Safe CLI pattern | `eval 'window.alert=function(){}'` → then click | Direct: `browser_click {selector}` then `browser_dialog_accept {}` |
-| CLI recovery from deadlock | `pkill -f vibium && sleep 2 && vibium daemon start && sleep 2` | N/A — no deadlock |
+| Direct click on alert trigger | Deadlocks daemon (B3 open) — requires `pkill -f vibium && sleep 2 && vibium daemon start` | Also deadlocks (MB3 open, deferred) — `browser_click` hangs until i/o timeout |
+| Safe pattern | `eval 'window.alert=function(){}'` → then click | `browser_evaluate {setTimeout(..., 300)}` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` |
+| Recovery from deadlock | `pkill -f vibium && sleep 2 && vibium daemon start && sleep 2` | `browser_stop` + `browser_start` |
 
-**Verdict:** MCP wins — direct click + dialog_accept now works cleanly (MB3 fixed). CLI still deadlocks on direct click (B3 open) — pre-stub before any alert-triggering click is still required.
+**Verdict:** MCP has dedicated dialog tools; CLI must pre-stub via eval. Both deadlock if the click fires before the dialog handler is in place — same root constraint, different mitigation syntax. (#146, #151, #128 deferred to follow-up release.)
 
 ---
 
