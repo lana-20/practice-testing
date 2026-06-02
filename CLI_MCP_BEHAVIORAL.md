@@ -1,6 +1,6 @@
 # CLI vs MCP — Behavioral Comparison
 
-Compiled from practice-testing exercise across 99 sites (2026-04-22 → 2026-05-19).
+Compiled from practice-testing exercise across 99 sites (2026-04-22 → 2026-05-19). Updated for v26.5.31 (2026-06-01).
 Organized by command/tool pair. Confirmed differences come from observed cross-site behavior, not docs.
 
 ---
@@ -38,10 +38,10 @@ Organized by command/tool pair. Confirmed differences come from observed cross-s
 | | CLI | MCP |
 |---|---|---|
 | Normal pages | Returns visible text | Same |
-| Empty/blank/invisible pages | Works (returns empty string) | Throws `invalid_union` (MB9) — use `browser_evaluate {expression: "document.body.innerText \|\| null"}` |
+| Empty/blank/invisible pages | Works (returns empty string) | Works (returns empty string) — MB9 fixed in v26.5.31 |
 | Very large text bodies (e.g. 5000 API results) | Crashes BiDi session | Returns oversized-output error (no crash) |
 
-**Verdict:** Different failure modes — CLI crashes on huge pages, MCP schema-errors on empty pages.
+**Verdict:** Same on normal and empty pages. Different failure modes only on very large text — CLI crashes, MCP returns oversized error.
 
 ---
 
@@ -50,11 +50,11 @@ Organized by command/tool pair. Confirmed differences come from observed cross-s
 | | CLI | MCP |
 |---|---|---|
 | Multi-statement with semicolons | Fails due to shell quoting — split into separate calls | No shell quoting issue; all in one call |
-| Expression returning `""` | Works | Throws `invalid_union` (MB6) — use `\|\| null`, never `\|\| ''` |
+| Expression returning `""` | Works | Works — MB6 fixed in v26.5.31 |
 | Expression returning `null` | Works | Works |
 | Parallel/async (`Promise.all`) | Limited | Works cleanly |
 
-**Verdict:** CLI has shell quoting constraint. MCP has MB6 bug on empty-string return. Use `|| null` in MCP always.
+**Verdict:** CLI has shell quoting constraint only. Empty-string return now works in both.
 
 ---
 
@@ -63,11 +63,11 @@ Organized by command/tool pair. Confirmed differences come from observed cross-s
 | | CLI | MCP |
 |---|---|---|
 | Text inputs | Works | Same |
-| `<textarea>` | Fails — use `vibium type` | Fails (MB7) — use `browser_type` |
-| Fill with empty string to clear | Works | Throws "value is required" — use eval to clear |
+| `<textarea>` | Works — B7 fixed in v26.5.31 | Works — MB7 fixed in v26.5.31 |
+| Fill with empty string to clear | Rejects `""` — use eval to clear (B20 open) | Throws "value is required" — use eval to clear |
 | Framework-driven inputs (React, Angular) | May not trigger state update | Same; use `browser_type` for key-event-driven components |
 
-**Verdict:** Same on standard inputs and same textarea failure. MCP can't clear with empty string.
+**Verdict:** Same on standard inputs and textarea (both fixed). Neither can clear a field with empty string — use eval.
 
 ---
 
@@ -88,12 +88,11 @@ Organized by command/tool pair. Confirmed differences come from observed cross-s
 
 | | CLI | MCP |
 |---|---|---|
-| Matching by option value | Matches by `value` attribute, not display text | Same |
-| Non-existent value | Silently sets `selectedIndex=-1` (B5); returns success | Same behavior confirmed — B5 applies to both |
+| Matching | Matches by visible label OR value attribute (B5 fixed v26.5.31) | Same (shared engine fix) |
+| Non-existent value | Errors: `no <option> matches "..."` exit 1 (B5 fixed) | Same |
 | Angular ng-model select | Fails — model not updated | Same failure — use `eval .value= + dispatchEvent(change)` |
-| Colors dropdown duplicate values | Behaves unpredictably | Same |
 
-**Verdict:** Identical behavior. Both match by value attribute. B5 and Angular limitations apply to both.
+**Verdict:** Identical behavior. Both now match by visible label OR value attribute; both error on no match. Angular ng-model limitation applies to both.
 
 ---
 
@@ -137,9 +136,11 @@ Organized by command/tool pair. Confirmed differences come from observed cross-s
 | | CLI | MCP |
 |---|---|---|
 | Interactive elements | Works | Same |
-| Non-interactive elements | Fails — use `vibium mouse move x y` | Use `browser_mouse_move` to computed coords + `getComputedStyle()` |
+| Non-interactive `<div>` elements | Works — B30 partial fix v26.5.31 | Same |
+| Non-interactive `<img>` with external src | Fails: `visible check failed — zero size` (B30 still open) | Use `browser_mouse_move` to computed coords |
+| Other non-interactive elements | Use `vibium mouse move x y` | Use `browser_mouse_move` to computed coords |
 
-**Verdict:** Same — both need coordinate mouse_move for non-interactive hover targets.
+**Verdict:** CLI partial improvement — hover on `<div>` now works. Both still need coordinate mouse_move for `<img>` with external src (zero-size race) and other non-interactive elements.
 
 ---
 
@@ -276,11 +277,11 @@ MCP: `browser_mouse_move {x,y}` / `browser_mouse_click {x,y}` / `browser_mouse_d
 | | CLI | MCP |
 |---|---|---|
 | Native alert/confirm/prompt | Pre-stub BEFORE clicking: `eval 'window.alert=function(){}'` — clicking first deadlocks daemon permanently | Has native `browser_dialog_accept` / `browser_dialog_dismiss` tools |
-| Direct click on alert trigger | Deadlocks daemon — requires `vibium stop && sleep 2 && vibium start` to recover | Also deadlocks (MB3) if `browser_click` fires before dialog intercept is ready |
-| Safe pattern | `eval 'window.alert=function(){}'` → then click | `browser_evaluate {setTimeout(..., 300)}` + `browser_sleep {ms: 350}` + `browser_dialog_accept {}` |
-| Recovery from deadlock | `vibium stop && sleep 2 && vibium start && sleep 2` | `browser_stop` + `browser_start` |
+| Direct click on alert trigger | Deadlocks daemon (B3 still open) — requires `pkill -f vibium && sleep 2 && vibium daemon start` | Works — direct `browser_click` + `browser_dialog_accept` no longer deadlocks (MB3 fixed v26.5.31) |
+| Safe CLI pattern | `eval 'window.alert=function(){}'` → then click | Direct: `browser_click {selector}` then `browser_dialog_accept {}` |
+| CLI recovery from deadlock | `pkill -f vibium && sleep 2 && vibium daemon start && sleep 2` | N/A — no deadlock |
 
-**Verdict:** MCP has dedicated dialog tools; CLI must pre-stub via eval. BUT both deadlock if the click fires before the dialog handler is in place — same root constraint, different mitigation syntax.
+**Verdict:** MCP wins — direct click + dialog_accept now works cleanly (MB3 fixed). CLI still deadlocks on direct click (B3 open) — pre-stub before any alert-triggering click is still required.
 
 ---
 
@@ -289,7 +290,7 @@ MCP: `browser_mouse_move {x,y}` / `browser_mouse_click {x,y}` / `browser_mouse_d
 | MCP Tool | Purpose | Notes |
 |---|---|---|
 | `browser_a11y_tree` | Accessibility tree dump | No CLI equivalent |
-| `browser_count {selector}` | Count matching elements | MB1 bug; no CLI equivalent |
+| `browser_count {selector}` | Count matching elements | No CLI equivalent — MB1 fixed in v26.5.31 |
 | `browser_delete_cookies` | Delete cookies | No CLI equivalent |
 | `browser_dialog_accept` / `browser_dialog_dismiss` | Native dialog interception | CLI must pre-stub via eval |
 | `browser_download_set_dir` | Set download directory | No CLI equivalent |
@@ -334,8 +335,8 @@ MCP: `browser_mouse_move {x,y}` / `browser_mouse_click {x,y}` / `browser_mouse_d
 
 These behave identically across both interfaces:
 
-- **select by value**: both match option `value` attribute, not display text; both have B5 silent failure on non-existent value
-- **textarea failure**: both fail with `fill`; both need `type` instead
+- **select**: both match by visible label OR value attribute (B5/engine fixed v26.5.31); both error on non-existent option
+- **textarea fill**: both work with `fill` (B7/MB7 fixed v26.5.31); `type` still works as alternative
 - **obscured checkbox**: both fail with `check`; both need coordinate click
 - **shadow DOM**: both return nothing from map; both need `eval shadowRoot`
 - **Angular ng-model select**: both fail to trigger model update; both need eval + dispatchEvent

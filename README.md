@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Per-section token stats added 2026-06-01 -->
+<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Per-section token stats added 2026-06-01 · Behavioral notes updated for v26.5.31 (2026-06-01): B5 select now by label+value; B7/MB7 textarea fill fixed; MB3 dialog deadlock fixed in MCP; MB6/MB9 fixed in MCP -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -13,7 +13,7 @@
 
   OS:        macOS 26.3.1 (Build 25D771280a)
   Node:      v25.8.0
-  vibium:    v26.3.18
+  vibium:    v26.5.31 (timing data from v26.3.18 original run)
   Chrome:    148.0.7778.168
   Model:     claude-sonnet-4-6
   Network:   Wi-Fi · Router 10.0.0.1
@@ -55,9 +55,9 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
-| AcademyBugs | https://academybugs.com/ | 8,130 | 31,787 | 3.9× | Narrowest GP ratio — cookie banner + tutorial modal overhead equalizes both interfaces; dismiss before interacting; 25 planted bugs; sort works via value-based select |
+| AcademyBugs | https://academybugs.com/ | 8,130 | 31,787 | 3.9× | Narrowest GP ratio — cookie banner + tutorial modal overhead equalizes both interfaces; dismiss before interacting; 25 planted bugs; sort select works by label or value (B5 fixed v26.5.31) |
 | A11y Coffee | https://a11y.coffee/ | 2,477 | 7,322 | 3.0× | Accessibility learning resource; 13 nav links; dark/light toggle; static site; no mandatory waits |
-| Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | 1,793 | 33,255 | 18.5× | Select operation by value ("0"–"4"), not label text; 9 prototype builds selectable; minimal form with no mandatory waits → high MCP overhead ratio |
+| Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | 1,793 | 33,255 | 18.5× | Select operation by label ("Add", "Subtract", etc.) or value ("0"–"4") (B5 fixed v26.5.31); 9 prototype builds selectable; minimal form with no mandatory waits → high MCP overhead ratio |
 | Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | 1,565 | 19,275 | 12.3× | Most puzzles require Flash — only 7 work (22, 24, 26b, 29, 31, 33, 34); use `mouse click x y`, not map refs; no sleep floors so MCP overhead fully exposed |
 | BookCart | https://bookcart.azurewebsites.net/ | 5,863 | 35,356 | 6.0× | Azure backend frequently hibernated — only 1 mat-card visible after 3s wait in both interfaces; 3s mandatory sleep floor compresses ratio |
 | Candy Mapper | https://www.candymapper.net/ | 5,720 | 10,979 | 1.9× | UK testing sandbox; 54 MCP elements — county selector, contact form, social links, reCAPTCHA challenge; heavy page content compresses ratio to one of the narrowest in GP |
@@ -65,7 +65,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Evil Tester | https://testpages.eviltester.com/styled/index.html | 7,429 | 19,491 | 2.6× | **Narrowest ratio in dataset** — alert pre-stub via eval nearly equalizes both interfaces; pre-stub window.alert/confirm/prompt BEFORE clicking any alert button |
 | Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | 1,288 | 18,556 | 14.4× | Intentionally inaccessible site for accessibility testing; contact form needs `input[name=x]` selectors; fast nav → high MCP overhead ratio |
 | Parabank | https://parabank.parasoft.com/parabank/admin.htm | 4,825 | 84,782³ | 17.6×³ | CLI `input[name=customer.firstName]` fails (dot in name); MCP ID-based selectors work fine; run DB Initialize from admin panel before testing |
-| Parking Cost Calculator | https://www.shino.de/parkcalc/ | 4,171 | 29,675 | 7.1× | Returns $0.00 consistently in both interfaces — AM/PM radio default or date parse bug on the site itself; use option values not text for lot dropdown; invalid dates cause blank page |
+| Parking Cost Calculator | https://www.shino.de/parkcalc/ | 4,171 | 29,675 | 7.1× | Returns $0.00 consistently in both interfaces — AM/PM radio default or date parse bug on the site itself; select lot by visible label or value (B5 fixed v26.5.31); invalid dates → inline error |
 | PHP Travels | http://phptravels.com/demo/ | 1,711 | 43,164 | 25.2× | Submit button deadlocks daemon — pre-stub dialogs first; Login nav link broken (redirects same page); 25.2× — minimal DOM, no mandatory waits |
 | Polymer Shop | https://shop.polymer-project.org/ | 8,619 | 49,408 | 5.7× | All UI in Web Components shadow DOM — map returns nothing in both; eval+shadowRoot traversal required; mandatory 3–5s sleeps compress ratio to 5.7× |
 | Potion Shop | https://qe-at-cgi-fi.github.io/potion-shop/ | 577 | 8,874 | 15.4× | Medieval order form; 32 form controls (radio for potion type/size/potency, ingredient checkboxes, delivery options, textarea); browser_fill works on all inputs |
@@ -78,7 +78,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | testers.ai | https://testers.ai/testing/ | 1,704 | 7,939 | 4.7× | 59-link checklist index covering WCAG A/AA/AAA, screen reader, keyboard, color, ARIA, forms, security, privacy, code quality, i18n, GenAI, DevOps, and more |
 | Test Track | https://testtrack.org/ | 2,251 | 4,732 | 2.1× | Structured training site; 15 practice modules Basic→Intermediate→Advanced→Expert (buttons, inputs, login, dropdowns, checkboxes, tables, modals, alerts, drag & drop, frames, canvas, 3D chess); used as vibium reference site |
 | The Boozang Test Lab | https://thelab.boozang.com/ | 2,565 | 45,367 | 17.7× | React SPA; 16 challenges; Form Fill saves to shared DB at api.boozang.com; vibium fill works on all inputs; vibium click works on all buttons |
-| The iframe Search Engine | https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html | 5,257 | 37,780 | 7.2× | Use vibium fill (not type) for search input; select by full URL value; "Go search" link opens in a new tab; vibium select with non-existent value silently sets selectedIndex=-1 |
+| The iframe Search Engine | https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html | 5,257 | 37,780 | 7.2× | Use vibium fill for search input; select by visible label or full URL value; "Go search" link opens in a new tab; non-existent select value now errors (B5 fixed v26.5.31) |
 | The Internet | http://the-internet.herokuapp.com/ | 2,514 | 50,177 | 20.0× | 44 examples; hover fails on non-interactive elements; vibium frame context resets per CLI call; TinyMCE iframe via contentDocument; input[type=range] needs eval+dispatchEvent |
 | The Random Number Service | https://www.random.org/ | 1,875 | 27,220 | 14.5× | Cookie banner on load; generator forms not in map — use URL params or eval form.submit(); validation: min>max and num>10000 both trigger errors |
 | ToDo List | https://todolist.james.am/#/ | 1,729 | 37,502 | 21.7× | AngularJS; **counter off-by-1 bug** (shows N-1 active items); dblclick label to enter edit mode; checkbox check "obscured" — use mouse click by coords; no localStorage persistence |
@@ -106,7 +106,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Automation Bookstore | https://automationbookstore.dev/ | 491 | 17,664 | 36.0× | **Widest ratio in Automation Testing** (36×); filter-only SPA; all 8 book hrefs="#" (no detail pages); CLI 491ms is the **fastest time in the entire dataset** |
 | Automation Camp | https://play2.automationcamp.ir/ | 1,080 | 21,262 | 19.7× | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
 | Automation Exercise | https://www.automationexercise.com/ | 6,995 | 28,363 | 4.1× | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
-| Automation in Testing | https://automationintesting.online/#/ | 2,755 | 31,544 | 11.5× | Full B&B booking site; Check Availability button obscured by calendar — use eval click; contact form #description textarea not fillable via fill — use eval+dispatchEvent(input) |
+| Automation in Testing | https://automationintesting.online/#/ | 2,755 | 31,544 | 11.5× | Full B&B booking site; Check Availability button obscured by calendar — use eval click; contact form #description is framework-driven textarea — use eval+dispatchEvent or browser_type for component state (B7/MB7 fill fix applies to plain textareas) |
 | Automation Test Store | https://automationteststore.com/ | 8,175 | 42,741 | 5.2× | AbanteCart e-commerce; full flow: search → detail → cart → checkout; guest checkout available via accountFrm_accountguest radio; vibium select for product variants |
 | Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 1,565 | 28,244 | 18.1× | Blogger single long page; **CLI map returns nothing** — eval-only; **MCP map returns 82 elements**; date input needs eval; alert buttons deadlock — pre-stub; Colors dropdown has duplicate option values (red×2, green×2) |
 | Coffee Cart | https://coffee-cart.app/ | 27,696⁴ | 35,598 | 1.3×⁴ | Vue SPA; product cards via data-test attribute (not class name); full checkout flow works; name+email required; CLI anomaly: cold server hit (27,696ms); **warm CLI ratio ~18×** |
@@ -118,7 +118,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | GitHub Users Search | https://gh-users-search.netlify.app/ | 2,286 | 7,505 | 3.3× | React GitHub user search; default user pre-loaded; 34 elements (search input + submit + follower links); clean minimal SPA |
 | Global SQA Demo | http://www.globalsqa.com/demo-site/ | 3,097 | 20,876 | 6.7× | **Key behavioral difference:** CLI gets BiDi error on http:// URL; **MCP silently follows HTTP→HTTPS redirect** and loads site successfully; MCP maps 49 interactive elements |
 | GreenKart | https://rahulshettyacademy.com/seleniumPractise/#/ | 8,134 | 22,470 | 2.8× | Angular; 31 products; **MCP browser_map returns 126 elements** (31 products × 4 controls); large map call compresses ratio to 2.8× — one of the narrowest Automation ratios |
-| Hands-On Selenium WebDriver | https://bonigarcia.dev/selenium-webdriver-java/ | 2,615 | 28,412 | 10.9× | Static site; 30 practice sub-pages at clean URLs; fill fails on textarea — use type instead; calculator buttons are span.btn not button (use eval) |
+| Hands-On Selenium WebDriver | https://bonigarcia.dev/selenium-webdriver-java/ | 2,615 | 28,412 | 10.9× | Static site; 30 practice sub-pages at clean URLs; fill works on textarea (B7/MB7 fixed v26.5.31); calculator buttons are span.btn not button (use eval) |
 | Lambdatest Playground | https://ecommerce-playground.lambdatest.io/ | 8,095 | 34,057 | 4.2× | OpenCart-based e-commerce; category nav obscured by sticky header — use direct URLs; **Add to Cart silently fails for guests** (no error); size select has no values (impossible to add Canon EOS 5D) |
 | Let Code | https://letcode.in/test | 14,962 | 211,405⁶ | 14.1×⁶ | Angular; 22 practice sections; **MCP BiDi SSL/privacy error failures** inflated to 211s; clean MCP ratio ~4×; MCP map captures iframe ads, CLI map filters them |
 | Locator Game | https://testsmith-io.github.io/locator-game/ | 2,897 | 20,819 | 7.2× | GitHub Pages static locator challenge; clean, no anomalies or mandatory waits |
@@ -223,5 +223,5 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Site | URL | CLI (ms) | MCP (ms) | Ratio | Key Finding |
 |------|-----|----------|----------|-------|-------------|
 | Blaze Demo | http://blazedemo.com/index.php | 5,039 | 20,418 | 4× | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
-| Demoblaze | https://demoblaze.com/ | 4,996 | 21,626 | 4× | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces; Demoblaze API available at api.demoblaze.com |
+| Demoblaze | https://demoblaze.com/ | 4,996 | 21,626 | 4× | Categories via #itemc (3s async load); **add-to-cart deadlocks CLI daemon** — pre-stub window.alert before clicking (B3 still open); MCP: direct browser_click + browser_dialog_accept works (MB3 fixed v26.5.31); Demoblaze API at api.demoblaze.com |
 | Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 4,144 | 16,049 | 4× | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |
