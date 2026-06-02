@@ -1,6 +1,6 @@
 # CLI vs MCP — Behavioral Comparison
 
-Compiled from practice-testing exercise across 99 sites (2026-04-22 → 2026-05-19). Updated for v26.5.31 (2026-06-01).
+Compiled from practice-testing exercise across 99 sites (2026-04-22 → 2026-05-19). Updated for v26.5.31 (2026-06-01). Targeted rerun confirmed June 2, 2026: B5 select (8 sites), B7/MB7 textarea (5 sites) — all PASS. MB3 dialog deadlock confirmed still open (#151 deferred).
 Organized by command/tool pair. Confirmed differences come from observed cross-site behavior, not docs.
 
 ---
