@@ -1,6 +1,6 @@
 # Practice Testing Rerun — Scope & Estimate
 
-Last updated: June 1, 2026 · vibium v26.5.31
+Last updated: June 2, 2026 · vibium v26.5.31 · Targeted rerun completed
 
 ---
 
@@ -78,3 +78,38 @@ Dialog deadlock confirmed on The Internet and Evil Tester. setTimeout+sleep+dial
 | Sessions needed | ~3–4 |
 | Time per session | ~30–40 min |
 | **Total wall-clock** | **~1.5–2.5 hours** |
+
+---
+
+## Rerun results (June 2, 2026)
+
+### Select (B5) — 8 of 15 sites tested
+
+| Site | CLI | MCP |
+|---|---|---|
+| AcademyBugs | PASS | PASS |
+| Basic Calculator | PASS | PASS |
+| Parking Cost Calculator | PASS | PASS |
+| iframe Search Engine | PASS | PASS |
+| Swag Labs | PASS | PASS |
+| Let Code | PASS | PASS |
+| Lambdatest Playground | PASS | PASS |
+| Blaze Demo | PASS | PASS |
+
+All confirmed: label-based selection works; value-attribute selection still works; nonexistent option errors on both interfaces.
+
+### Dialog (MB3) — confirmed still open
+
+`browser_click` on alert trigger deadlocked on both Evil Tester and The Internet. setTimeout+sleep+dialog_accept pattern remains required for MCP. CLI pre-stub still required. (#151 deferred.)
+
+### Textarea fill (B7/MB7) — 5 of 8 sites tested
+
+| Site | CLI | MCP |
+|---|---|---|
+| Automation in Testing | PASS | PASS |
+| Automate Now Sandbox / Practice Automation | PASS | PASS |
+| DemoQA | PASS | PASS |
+| Automation Camp | PASS | PASS |
+| Potion Shop | PASS | PASS |
+
+All confirmed: `vibium fill` and `browser_fill` work directly on textarea elements. No type/eval workaround needed.
