@@ -163,7 +163,16 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 When given a site to test, run this structured protocol. Skip steps that are not applicable (e.g. login for sites without auth).
 
-Before Step 1, record the token baseline from `~/.claude/projects/**/*.jsonl` (deduplicated by message ID, sonnet-4-6 only) so you can compute cost delta in the report.
+Before Step 1, take a bracket snapshot for per-site token/time tracking:
+```sh
+BASE=$(python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time)
+```
+After completing the site test, compute the delta:
+```sh
+python3 ~/.claude/skills/practice-testing/token_bracket.py --diff "$BASE"
+# → time:12847ms  input:142  write:1204  read:89241  output:318  total:90905  cost:$0.0087
+```
+Take a fresh snapshot before each site (CLI and MCP are separate brackets). Use `--json` for machine-readable output.
 
 ### Step 1 — Reachability
 
