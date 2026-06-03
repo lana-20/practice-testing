@@ -150,3 +150,8 @@ The Internet,General Practice,22388,0.019014,2,59245,0.104447,16,clean-two-phase
 The Random Number Service,General Practice,12173,0.023915,2,46765,0.094044,14,clean-two-phase;l3
 ToDo List,General Practice,11844,0.015422,2,59299,0.084199,13,clean-two-phase;l3
 UI5 Demo Kit,General Practice,13832,0.018717,2,57399,0.114297,15,clean-two-phase;l3
+PromptQA Playground,General Practice,8197,0.022558,2,64915,0.09601,14,clean-two-phase;l3;new-site
+Req|Res,API Testing,20095,0.021715,2,58131,0.1373,19,clean-two-phase;l3;new-site;api-key-required
+API Challenges,API Testing,21141,0.020058,2,47283,0.090543,14,clean-two-phase;l3;new-site
+QuickPizza,API Testing,15330,0.017451,2,43165,0.065433,11,clean-two-phase;l3;new-site;websocket-live-visitor-count
+Bill Payment API,General Practice,19411,0.035921,2,45997,0.145228,12,clean-two-phase;l3;new-site
