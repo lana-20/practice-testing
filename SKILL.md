@@ -424,6 +424,7 @@ Output the appended CSV row, then stop.
 Level 2 complete (2026-06-03). Level 3 in progress (2026-06-03+): fixed CLI bracket, turns tracking, fresh subagents.
 L3 ✓✓ = measured in both L2 and L3. L3 ✓ = L3 only (new sites). L2 ✓ = L2 only (pending L3).
 Batch 9 complete (2026-06-03): Automation Testing 7/41 done.
+Batch 10 complete (2026-06-03): Automation Testing 14/41 done.
 
 **General Practice (29/29 L2; 29/29 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
 BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
@@ -435,11 +436,11 @@ QA Training Simulator L3✓✓, Random User Generator L3✓✓, Real World Examp
 testers.ai L3✓✓, Test Track L3✓✓, The Boozang Test Lab L3✓✓, The iframe Search Engine L3✓✓,
 The Internet L3✓✓, The Random Number Service L3✓✓, ToDo List L3✓✓, UI5 Demo Kit L3✓✓
 
-**Automation Testing (41/41 L2; 7/41 L3 — in progress):** Applitools Demo L2✓, ATM Practice App L2✓,
-Automate Now Sandbox L2✓, Automation Bookstore L2✓, Automation Camp L2✓,
+**Automation Testing (41/41 L2; 14/41 L3 — in progress):** Applitools Demo L3✓✓, ATM Practice App L3✓✓,
+Automate Now Sandbox L3✓✓, Automation Bookstore L3✓✓, Automation Camp L3✓✓,
 Automation Exercise L3✓✓, Automation in Testing L3✓✓, Automation Test Store L3✓✓,
 Automation Testing Practice L3✓✓, Coffee Cart L3✓✓, Commit Quality L3✓✓,
-Contact List App L3✓✓, Demo SaaS L2✓, DemoQA L2✓, Expand Testing L2✓,
+Contact List App L3✓✓, Demo SaaS L3✓✓, DemoQA L3✓✓, Expand Testing L2✓,
 GitHub Users Search L2✓, Global SQA Demo L2✓, GreenKart L2✓,
 Hands-On Selenium WebDriver L2✓, Lambdatest Playground L2✓, Let Code L2✓,
 Locator Game L2✓, NearForm Testing Playground L2✓, OrangeHRM L2✓,
