@@ -25,8 +25,8 @@
 
 ## Summary
 
-| Category | Sites | CLI (ms) | CLI turns | CLI ($) | MCP (ms) | MCP turns | MCP ($) | Speed | Turns× | Cost× |
-|----------|-------|----------|-----------|---------|----------|-----------|---------|-------|--------|-------|
+| Category | Sites | CLI (ms) | CLI turns (v26.3.18) | CLI ($) | MCP (ms) | MCP turns (v26.3.18) | MCP ($) | Speed | Turns× | Cost× |
+|----------|-------|----------|----------------------|---------|----------|----------------------|---------|-------|--------|-------|
 | General Practice | 28 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
 | Automation Testing | 41 | 215,251 | ~46 | $0.035 | 1,661,488 | ~317 | $21.783 | CLI **7.7×** faster¹ | **6.9×** fewer | N/A |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
@@ -39,9 +39,9 @@
 
 **Key insight:** MCP time per site is fairly uniform (~18–221s regardless of site complexity). CLI time tracks actual site complexity (1.6–25s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) or large DOM maps absorb MCP's per-tool-call overhead.
 
-**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). LLM turns are from the original v26.3.18 run; ms and $ are from the Level 2 v26.5.31 rerun (2026-06-03).
+**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; Level 2 rerun used batch bash scripts so turn counts are not comparable. ms and $ are from the Level 2 v26.5.31 rerun (2026-06-03).
 
-Each section below includes an aggregate token/cost table — LLM turn counts from original run; ms and $ from Level 2 rerun.
+Each section below includes an aggregate token/cost table — turn counts from v26.3.18; ms and $ from Level 2 rerun.
 
 ---
 
@@ -50,7 +50,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 | | CLI | MCP | Ratio |
 |---|---|---|---|
 | Time (Level 2) | 198,144ms | 2,186,552ms | **11.0×** faster |
-| LLM turns (orig.) | ~39 | ~301 | ~7.7× fewer |
+| LLM turns (v26.3.18) | ~39 | ~301 | ~7.7× fewer |
 | Cost (Level 2) | $0.851 | $15.818 | **18.6×** cheaper |
 
 *Level 2 rerun (v26.5.31, 2026-06-03) — all 28 sites measured.*
@@ -95,7 +95,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 | | CLI | MCP | Ratio |
 |---|---|---|---|
 | Time (Level 2) | 215,251ms | 1,661,488ms | **7.7×** faster |
-| LLM turns (orig.) | ~46 | ~317 | ~6.9× fewer |
+| LLM turns (v26.3.18) | ~46 | ~317 | ~6.9× fewer |
 | Cost (Level 2) | $0.035 | $21.783 | N/A |
 
 *Level 2 rerun (v26.5.31, 2026-06-03) — all 41 sites measured.*
@@ -153,7 +153,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 | | CLI | MCP | Ratio |
 |---|---|---|---|
 | Time (Level 2) | 21,170ms | 187,318ms | **8.8×** faster |
-| LLM turns (orig.) | 19 | 48 | 2.5× fewer |
+| LLM turns (v26.3.18) | 19 | 48 | 2.5× fewer |
 | Cost (Level 2) | $0.000 | $3.114 | N/A |
 
 *Level 2 rerun (v26.5.31, 2026-06-03) — 7 of 11 sites measured. 4 require local Docker setup (bWAPP, DVGA, VAmPI, LabEx Cybersecurity) — permanent —.*
@@ -179,7 +179,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 | | CLI | MCP | Ratio |
 |---|---|---|---|
 | Time (Level 2) | 76,055ms | 334,781ms | **4.4×** faster |
-| LLM turns (orig.) | 3 | 37 | 12× fewer |
+| LLM turns (v26.3.18) | 3 | 37 | 12× fewer |
 | Cost (Level 2) | $0.000 | $6.947 | N/A |
 
 *Level 2 rerun (v26.5.31, 2026-06-03) — all 16 sites measured.*
@@ -213,7 +213,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 | | CLI | MCP | Ratio |
 |---|---|---|---|
 | Time (Level 2) | 12,550ms | 81,798ms | **6.5×** faster |
-| LLM turns (orig.) | 4 | 30 | 7.5× fewer |
+| LLM turns (v26.3.18) | 4 | 30 | 7.5× fewer |
 | Cost (Level 2) | $0.000 | $1.858 | N/A |
 
 *Level 2 rerun (v26.5.31, 2026-06-03) — all 3 sites measured.*
