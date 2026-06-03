@@ -1,3 +1,47 @@
 site,category,cli_ms,cli_usd,mcp_ms,mcp_usd,notes
 AcademyBugs,General Practice,4874,0.140038,18766,0.393286,
 A11y Coffee,General Practice,2831,0.000000,17986,0.352185,
+Basic Calculator,General Practice,8395,0.000,98501,0.706473,combined-bracket-long-session-inflation
+Black Box Puzzles,General Practice,3791,0.235733,24821,0.230414,session-inflated-separate-brackets
+BookCart,General Practice,15820,0.192904,31838,0.266609,session-inflated-separate-brackets
+Candy Mapper,General Practice,10410,0.171469,35875,0.312023,session-inflated-separate-brackets
+Cnarios,General Practice,7396,0.125027,29305,0.304204,session-inflated-separate-brackets;/concepts/* now 404 not blank
+Evil Tester,General Practice,4151,0.036722,81791,0.577941,fresh-subagent
+Gefälscht CompuTech,General Practice,8596,0.19045,35949,0.315455,fresh-subagent
+Parabank,General Practice,6329,0.047447,130422,0.841313,fresh-subagent
+Basic Calculator,General Practice,4416,0.02533,153533,1.919837,fresh-subagent
+A11y Coffee,General Practice,2944,0.00948,7430,0.426794,fresh-subagent-rerun
+AcademyBugs,General Practice,6333,0.0,8802,0.630317,fresh-subagent-rerun
+BookCart,General Practice,17109,0.245487,9956,0.520582,fresh-subagent-rerun
+Black Box Puzzles,General Practice,10285,0.073184,17026,0.546535,fresh-subagent-rerun
+Cnarios,General Practice,11019,0.084681,173083,1.226297,fresh-subagent-rerun
+Candy Mapper,General Practice,9155,0.07689,193151,1.008976,fresh-subagent-rerun
+AcademyBugs,General Practice,17318,0.055629,121737,0.231881,clean-two-phase
+A11y Coffee,General Practice,7864,0.024651,104888,0.300021,clean-two-phase
+Basic Calculator,General Practice,14384,0.074453,136991,0.416361,clean-two-phase
+Candy Mapper,General Practice,11367,0.111896,221227,0.49308,clean-two-phase
+Cnarios,General Practice,9859,0.193329,170408,0.549185,clean-two-phase
+Evil Tester,General Practice,8528,0.193329,109603,0.286971,clean-two-phase
+Gefälscht CompuTech,General Practice,3310,0.052926,42087,0.085234,clean-two-phase
+Parabank,General Practice,8975,0.0,64745,0.128433,clean-two-phase
+Parking Cost Calculator,General Practice,5540,0.075898,53313,0.416378,clean-two-phase
+PHP Travels,General Practice,5111,0.0,N/A,N/A,clean-two-phase;submit-crashes-cli-and-mcp-skip-submit
+Polymer Shop,General Practice,2463,0.0,58708,0.445741,clean-two-phase
+Potion Shop,General Practice,2645,0.0,67655,0.558792,clean-two-phase
+Practice Software Testing,General Practice,12386,0.069224,72014,0.640261,clean-two-phase
+PrestaShop,General Practice,14854,0.0,107277,0.442287,clean-two-phase
+QA Practice,General Practice,4331,0.0,80698,0.95462,clean-two-phase
+QA Training Simulator,General Practice,5626,0.0,60147,0.551648,clean-two-phase
+Random User Generator,General Practice,5984,0.0,44359,0.425406,clean-two-phase
+Real World Example Apps,General Practice,6351,0.0,54924,0.488594,clean-two-phase
+testers.ai,General Practice,2536,0.0,46662,0.495112,clean-two-phase
+Test Track,General Practice,4845,0.0,67995,0.953188,clean-two-phase
+The Boozang Test Lab,General Practice,3873,0.0,45876,0.554965,clean-two-phase
+The iframe Search Engine,General Practice,2459,0.0,53985,0.606934,clean-two-phase
+The Internet,General Practice,9110,0.0,79572,1.007144,clean-two-phase
+The Random Number Service,General Practice,4118,0.0,52957,0.685221,clean-two-phase
+ToDo List,General Practice,4254,0.0,68317,0.796051,clean-two-phase
+UI5 Demo Kit,General Practice,4324,0.0,114150,1.318522,clean-two-phase;shopping-cart-opens-new-tab-tab-switch-unreliable
+Applitools Demo,Automation Testing,4059,0.0,492223,1.555416,clean-two-phase;mcp-inflated-session-reset-after-ui5
+ATM Practice App,Automation Testing,3181,0.0,61111,0.944406,clean-two-phase
+Applitools Demo,Automation Testing,4059,0.0,53709,0.745993,clean-two-phase
