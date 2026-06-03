@@ -37,6 +37,7 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 | Name | URL | CLI Notes | MCP Notes |
 |------|-----|-----------|-----------|
+| BearQ | https://angryweasel.com/bearq/ | Weasel Warren — 5 challenge sections: Form Validation, Input Types, Alerts & Dialogs, Basic Elements, Images & Media; 9 nav refs on homepage; form validation: email/username/password/confirm + Register btn; fill and click work cleanly on all challenge pages | same as CLI; all 5 challenge pages accessible via direct URL (`/formFill` pattern not applicable — use nav links); `browser_fill` + `browser_click` work cleanly |
 | A11y Coffee | https://a11y.coffee/ | Static accessibility learning resource; 13 nav links; dark/light toggle; no mandatory waits | same as CLI |
 | AcademyBugs | https://academybugs.com/ | 25 bugs planted; dismiss tutorial modal + cookie banner; sort dropdown non-functional (intentional app bug) — select by visible label ("Relevance", "Highest Price", etc.) or numeric value ("0"–"4"); view filter (10/25/50) broken; cart total bug: $152.99 for $45 item + $7.99 shipping (expected $52.99); Russian text bug at /account/ | sort IS functional in MCP; `browser_select` by label or value works; map refs for dismiss; same bugs |
 | Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | Prototype + builds 1–9; select operation by visible label ("Add", "Subtract", etc.) or value ("0"–"4") | same as CLI |
@@ -416,41 +417,43 @@ Output the appended CSV row, then stop.
 
 ### Site List for Rerun
 
-Sites already measured (Level 2, 2026-06-03) — all ✓ unless noted:
+Level 2 complete (2026-06-03). Level 3 in progress (2026-06-03+): fixed CLI bracket, turns tracking, fresh subagents.
+L3 ✓✓ = measured in both L2 and L3. L3 ✓ = L3 only (new sites). L2 ✓ = L2 only (pending L3).
 
-**General Practice (28/28):** AcademyBugs ✓, A11y Coffee ✓, Basic Calculator ✓,
-Black Box Puzzles ✓ (restored 2026-06-03), BookCart ✓ (restored 2026-06-03),
-Candy Mapper ✓, Cnarios ✓, Evil Tester ✓, Gefälscht CompuTech ✓, Parabank ✓,
-Parking Cost Calculator ✓, PHP Travels ✓ (redesigned 2026-06-03), Polymer Shop ✓,
-Potion Shop ✓, Practice Software Testing ✓, PrestaShop ✓, QA Practice ✓,
-QA Training Simulator ✓, Random User Generator ✓, Real World Example Apps ✓,
-testers.ai ✓, Test Track ✓, The Boozang Test Lab ✓, The iframe Search Engine ✓,
-The Internet ✓, The Random Number Service ✓, ToDo List ✓, UI5 Demo Kit ✓
+**General Practice (29/29 L2; 29/29 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
+BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
+BookCart L3✓✓ (restored 2026-06-03), Candy Mapper L3✓✓, Cnarios L3✓✓,
+Evil Tester L3✓✓, Gefälscht CompuTech L3✓✓, Parabank L3✓✓,
+Parking Cost Calculator L3✓✓, PHP Travels L3✓✓ (redesigned 2026-06-03), Polymer Shop L3✓✓,
+Potion Shop L3✓✓, Practice Software Testing L3✓✓, PrestaShop L3✓✓, QA Practice L3✓✓,
+QA Training Simulator L3✓✓, Random User Generator L3✓✓, Real World Example Apps L3✓✓,
+testers.ai L3✓✓, Test Track L3✓✓, The Boozang Test Lab L3✓✓, The iframe Search Engine L3✓✓,
+The Internet L3✓✓, The Random Number Service L3✓✓, ToDo List L3✓✓, UI5 Demo Kit L3✓✓
 
-**Automation Testing (41/41):** Applitools Demo ✓, ATM Practice App ✓,
-Automate Now Sandbox ✓, Automation Bookstore ✓, Automation Camp ✓,
-Automation Exercise ✓, Automation in Testing ✓, Automation Test Store ✓,
-Automation Testing Practice ✓, Coffee Cart ✓, Commit Quality ✓,
-Contact List App ✓, Demo SaaS ✓, DemoQA ✓, Expand Testing ✓,
-GitHub Users Search ✓, Global SQA Demo ✓, GreenKart ✓,
-Hands-On Selenium WebDriver ✓, Lambdatest Playground ✓, Let Code ✓,
-Locator Game ✓, NearForm Testing Playground ✓, OrangeHRM ✓,
-Practice Automation ✓, Practice Test Automation ✓, QA Cloud ✓,
-QA Playground ✓, QE Buggy Todo ✓, React Shopping Cart ✓, SeleniumBase ✓,
-Selectors Hub ✓, Selenium Playground ✓, Swag Labs ✓, Sweet Shop ✓,
-TestDino ✓, Travel Agileway ✓, Tricentis Obstacle Course ✓, var.parts ✓,
-Weather Shopper ✓, XYZ Bank ✓
+**Automation Testing (41/41 L2; 0/41 L3 — next):** Applitools Demo L2✓, ATM Practice App L2✓,
+Automate Now Sandbox L2✓, Automation Bookstore L2✓, Automation Camp L2✓,
+Automation Exercise L2✓, Automation in Testing L2✓, Automation Test Store L2✓,
+Automation Testing Practice L2✓, Coffee Cart L2✓, Commit Quality L2✓,
+Contact List App L2✓, Demo SaaS L2✓, DemoQA L2✓, Expand Testing L2✓,
+GitHub Users Search L2✓, Global SQA Demo L2✓, GreenKart L2✓,
+Hands-On Selenium WebDriver L2✓, Lambdatest Playground L2✓, Let Code L2✓,
+Locator Game L2✓, NearForm Testing Playground L2✓, OrangeHRM L2✓,
+Practice Automation L2✓, Practice Test Automation L2✓, QA Cloud L2✓,
+QA Playground L2✓, QE Buggy Todo L2✓, React Shopping Cart L2✓, SeleniumBase L2✓,
+Selectors Hub L2✓, Selenium Playground L2✓, Swag Labs L2✓, Sweet Shop L2✓,
+TestDino L2✓, Travel Agileway L2✓, Tricentis Obstacle Course L2✓, var.parts L2✓,
+Weather Shopper L2✓, XYZ Bank L2✓
 
-**Security Testing (7/11):** Firing Range ✓, Gin & Juice Shop ✓, Google Gruyere ✓,
-OWASP Juice Shop ✓, OWASP VWAD ✓, Try Hack Me ✓, Zero Bank ✓
+**Security Testing (7/11 L2; 0/11 L3):** Firing Range L2✓, Gin & Juice Shop L2✓, Google Gruyere L2✓,
+OWASP Juice Shop L2✓, OWASP VWAD L2✓, Try Hack Me L2✓, Zero Bank L2✓
 — bWAPP, DVGA, VAmPI, LabEx Cybersecurity: local Docker only — permanent —
 
-**API Testing (16/16):** Airport Gap ✓, AP+ Developers ✓, Automation Exercise API ✓,
-Chuck Norris API ✓, Countries GraphQL ✓, FakeRestAPI ✓, Go REST ✓, httpbin ✓,
-JSON Placeholder ✓, Poké API ✓, Restful Booker ✓, Rick and Morty API ✓,
-ServeRest ✓, SpaceTraders ✓, Swagger Petstore ✓, The Cat API ✓
+**API Testing (16/16 L2; 0/16 L3):** Airport Gap L2✓, AP+ Developers L2✓, Automation Exercise API L2✓,
+Chuck Norris API L2✓, Countries GraphQL L2✓, FakeRestAPI L2✓, Go REST L2✓, httpbin L2✓,
+JSON Placeholder L2✓, Poké API L2✓, Restful Booker L2✓, Rick and Morty API L2✓,
+ServeRest L2✓, SpaceTraders L2✓, Swagger Petstore L2✓, The Cat API L2✓
 
-**Performance Testing (3/3):** Blaze Demo ✓, Demoblaze ✓, Pet Store Web ✓
+**Performance Testing (3/3 L2; 0/3 L3):** Blaze Demo L2✓, Demoblaze L2✓, Pet Store Web L2✓
 
 Per-site test steps for each site are documented in the Site Directory section above.
 

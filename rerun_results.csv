@@ -1,125 +1,125 @@
 site,category,cli_ms,cli_usd,turns_cli,mcp_ms,mcp_usd,turns_mcp,notes
-AcademyBugs,General Practice,4874,0.140038,18766,0.393286,
-A11y Coffee,General Practice,2831,0.000000,17986,0.352185,
-Basic Calculator,General Practice,8395,0.000,98501,0.706473,combined-bracket-long-session-inflation
-Black Box Puzzles,General Practice,3791,0.235733,24821,0.230414,session-inflated-separate-brackets
-BookCart,General Practice,15820,0.192904,31838,0.266609,session-inflated-separate-brackets
-Candy Mapper,General Practice,10410,0.171469,35875,0.312023,session-inflated-separate-brackets
-Cnarios,General Practice,7396,0.125027,29305,0.304204,session-inflated-separate-brackets;/concepts/* now 404 not blank
-Evil Tester,General Practice,4151,0.036722,81791,0.577941,fresh-subagent
-Gefälscht CompuTech,General Practice,8596,0.19045,35949,0.315455,fresh-subagent
-Parabank,General Practice,6329,0.047447,130422,0.841313,fresh-subagent
-Basic Calculator,General Practice,4416,0.02533,153533,1.919837,fresh-subagent
-A11y Coffee,General Practice,2944,0.00948,7430,0.426794,fresh-subagent-rerun
-AcademyBugs,General Practice,6333,0.0,8802,0.630317,fresh-subagent-rerun
-BookCart,General Practice,17109,0.245487,9956,0.520582,fresh-subagent-rerun
-Black Box Puzzles,General Practice,10285,0.073184,17026,0.546535,fresh-subagent-rerun
-Cnarios,General Practice,11019,0.084681,173083,1.226297,fresh-subagent-rerun
-Candy Mapper,General Practice,9155,0.07689,193151,1.008976,fresh-subagent-rerun
-AcademyBugs,General Practice,17318,0.055629,121737,0.231881,clean-two-phase
-A11y Coffee,General Practice,7864,0.024651,104888,0.300021,clean-two-phase
-Basic Calculator,General Practice,14384,0.074453,136991,0.416361,clean-two-phase
-Candy Mapper,General Practice,11367,0.111896,221227,0.49308,clean-two-phase
-Cnarios,General Practice,9859,0.193329,170408,0.549185,clean-two-phase
-Evil Tester,General Practice,8528,0.193329,109603,0.286971,clean-two-phase
-Gefälscht CompuTech,General Practice,3310,0.052926,42087,0.085234,clean-two-phase
-Parabank,General Practice,8975,0.0,64745,0.128433,clean-two-phase
-Parking Cost Calculator,General Practice,5540,0.075898,53313,0.416378,clean-two-phase
-PHP Travels,General Practice,5111,0.0,N/A,N/A,clean-two-phase;submit-crashes-cli-and-mcp-skip-submit
-Polymer Shop,General Practice,2463,0.0,58708,0.445741,clean-two-phase
-Potion Shop,General Practice,2645,0.0,67655,0.558792,clean-two-phase
-Practice Software Testing,General Practice,12386,0.069224,72014,0.640261,clean-two-phase
-PrestaShop,General Practice,14854,0.0,107277,0.442287,clean-two-phase
-QA Practice,General Practice,4331,0.0,80698,0.95462,clean-two-phase
-QA Training Simulator,General Practice,5626,0.0,60147,0.551648,clean-two-phase
-Random User Generator,General Practice,5984,0.0,44359,0.425406,clean-two-phase
-Real World Example Apps,General Practice,6351,0.0,54924,0.488594,clean-two-phase
-testers.ai,General Practice,2536,0.0,46662,0.495112,clean-two-phase
-Test Track,General Practice,4845,0.0,67995,0.953188,clean-two-phase
-The Boozang Test Lab,General Practice,3873,0.0,45876,0.554965,clean-two-phase
-The iframe Search Engine,General Practice,2459,0.0,53985,0.606934,clean-two-phase
-The Internet,General Practice,9110,0.0,79572,1.007144,clean-two-phase
-The Random Number Service,General Practice,4118,0.0,52957,0.685221,clean-two-phase
-ToDo List,General Practice,4254,0.0,68317,0.796051,clean-two-phase
-UI5 Demo Kit,General Practice,4324,0.0,114150,1.318522,clean-two-phase;shopping-cart-opens-new-tab-tab-switch-unreliable
-Applitools Demo,Automation Testing,4059,0.0,492223,1.555416,clean-two-phase;mcp-inflated-session-reset-after-ui5
-ATM Practice App,Automation Testing,3181,0.0,61111,0.944406,clean-two-phase
-Applitools Demo,Automation Testing,4059,0.0,53709,0.745993,clean-two-phase
-Automate Now Sandbox,Automation Testing,7819,0.0,65191,0.510276,clean-two-phase
-Automation Bookstore,Automation Testing,3423,0.0,34130,0.30442,clean-two-phase
-Automation Camp,Automation Testing,4086,0.0,55109,0.375471,clean-two-phase
-Automation Exercise,Automation Testing,6301,0.0,104327,0.791488,clean-two-phase
-Automation in Testing,Automation Testing,4178,0.0,121953,1.335237,clean-two-phase;mcp-inflated-bidi-recovery
-Automation Test Store,Automation Testing,5741,0.0,48482,0.539288,clean-two-phase
-Automation Testing Practice,Automation Testing,3215,0.0,39710,0.415457,clean-two-phase
-Coffee Cart,Automation Testing,3138,0.0,55061,0.693193,clean-two-phase
-Automation in Testing,Automation Testing,3901,0.0,59422,0.744968,clean-two-phase
-Commit Quality,Automation Testing,2954,0.0,41571,0.473036,clean-two-phase
-Contact List App,Automation Testing,2993,0.0,60554,0.686069,clean-two-phase
-Demo SaaS,Automation Testing,3519,0.0,47499,0.590761,clean-two-phase
-DemoQA,Automation Testing,8549,0.0,42296,0.487735,clean-two-phase
-Expand Testing,Automation Testing,10407,0.0,101214,1.588288,clean-two-phase
-GitHub Users Search,Automation Testing,3550,0.0,34797,0.498172,clean-two-phase
-Global SQA Demo,Automation Testing,6171,0.0,33769,0.375234,clean-two-phase
-GreenKart,Automation Testing,8351,0.0,29658,0.446219,clean-two-phase
-Hands-On Selenium WebDriver,Automation Testing,3274,0.0,27098,0.396225,clean-two-phase
-Selenium Playground,Automation Testing,7181,0.0,32016,0.462567,clean-two-phase;lambdatest-rebranded-testmuai-cloudflare-blocks-subpages-both-cli-mcp
-Let Code,Automation Testing,5531,0.0,41792,0.802926,clean-two-phase
-Locator Game,Automation Testing,2688,0.0,29364,0.404819,clean-two-phase
-NearForm Testing Playground,Automation Testing,2424,0.0,34847,0.430228,clean-two-phase
-OrangeHRM,Automation Testing,4614,0.0,327680,0.946178,clean-two-phase;mcp-inflated-vue-login-retries
-Practice Automation,Automation Testing,6976,0.0,35702,0.661576,clean-two-phase
-Practice Test Automation,Automation Testing,3538,0.0,33858,0.460403,clean-two-phase
-OrangeHRM,Automation Testing,7406,0.0,240839,0.950871,clean-two-phase;mcp-ms-inflated-conversation-pauses
-Expand Testing,Automation Testing,13143,0.0,29170,0.485285,clean-two-phase
-QA Cloud,Automation Testing,2268,0.0,23263,0.334078,clean-two-phase
-QA Playground,Automation Testing,2331,0.0,22371,0.329801,clean-two-phase
-QE Buggy Todo,Automation Testing,2453,0.0,22854,0.415464,clean-two-phase
-React Shopping Cart,Automation Testing,2012,0.0,27200,0.50208,clean-two-phase
-SeleniumBase,Automation Testing,3545,0.0,26215,0.352708,clean-two-phase
-Selectors Hub,Automation Testing,4914,0.0,24751,0.354156,clean-two-phase
-Swag Labs,Automation Testing,3271,0.0,246335,0.981073,clean-two-phase;mcp-ms-inflated-conversation-pauses
-Sweet Shop,Automation Testing,3444,0.0,43252,0.80591,clean-two-phase
-Swag Labs,Automation Testing,2894,0.0,33173,0.451839,clean-two-phase
-TestDino,Automation Testing,2649,0.0,29272,0.475862,clean-two-phase
-Travel Agileway,Automation Testing,4205,0.0,29234,0.574101,clean-two-phase
-Tricentis Obstacle Course,Automation Testing,8210,0.0,32854,0.481549,clean-two-phase
-var.parts,Automation Testing,3251,0.0,52735,0.482314,clean-two-phase
-Weather Shopper,Automation Testing,2699,0.0,26494,0.687639,clean-two-phase
-XYZ Bank,Automation Testing,2863,0.0,20551,0.389105,clean-two-phase
-Firing Range,Security Testing,1663,0.0,26402,0.591211,clean-two-phase
-Gin & Juice Shop,Security Testing,4052,0.0,25193,0.396906,clean-two-phase
-Google Gruyere,Security Testing,1741,0.0,40519,0.499278,clean-two-phase
-OWASP Juice Shop,Security Testing,4567,0.0,22760,0.404947,clean-two-phase
-OWASP VWAD,Security Testing,2599,0.0,20456,0.406987,clean-two-phase
-Try Hack Me,Security Testing,2903,0.0,23945,0.407153,clean-two-phase
-Zero Bank,Security Testing,3645,0.0,28043,0.408005,clean-two-phase;http-blocked-both-cli-mcp
-Airport Gap,API Testing,2433,0.0,89938,0.411272,clean-two-phase
-AP+ Developers,API Testing,3854,0.0,107693,0.41441,clean-two-phase
-Automation Exercise API,API Testing,5734,0.0,23232,0.415407,clean-two-phase
-Chuck Norris API,API Testing,3489,0.0,24366,0.523695,clean-two-phase
-Countries GraphQL,API Testing,2285,0.0,21401,0.417855,clean-two-phase
-FakeRestAPI,API Testing,5550,0.0,22848,0.419812,clean-two-phase
-Go REST,API Testing,4543,0.0,18924,0.421347,clean-two-phase
-httpbin,API Testing,25008,0.0,24094,0.421786,clean-two-phase
-JSON Placeholder,API Testing,2400,0.0,20272,0.423321,clean-two-phase
-Poké API,API Testing,3964,0.0,24014,0.426128,clean-two-phase
-Restful Booker,API Testing,2185,0.0,19457,0.539259,clean-two-phase
-Rick and Morty API,API Testing,3473,0.0,18800,0.317674,clean-two-phase
-ServeRest,API Testing,2598,0.0,18713,0.42921,clean-two-phase
-SpaceTraders,API Testing,3827,0.0,18587,0.430302,clean-two-phase
-Swagger Petstore,API Testing,3349,0.0,19685,0.5432,clean-two-phase
-The Cat API,API Testing,2206,0.0,20726,0.320665,clean-two-phase
-Blaze Demo,Performance Testing,7179,0.0,27049,0.652763,clean-two-phase
-Demoblaze,Performance Testing,2344,0.0,28002,0.547205,clean-two-phase
-Pet Store Web,Performance Testing,3027,0.0,26747,0.658453,clean-two-phase
-Airport Gap,API Testing,2428,0.0,18691,0.446372,clean-two-phase
-AP+ Developers,API Testing,3016,0.0,20971,0.450834,clean-two-phase
-OrangeHRM,Automation Testing,5096,0.0,28046,0.675508,clean-two-phase
-Black Box Puzzles,General Practice,3355,0.0,28265,0.699099,clean-two-phase;site-restored-2026-06-03
-BookCart,General Practice,5041,0.0,21177,0.584431,clean-two-phase;site-restored-2026-06-03
-PHP Travels,General Practice,12444,0.0,36815,0.702801,clean-two-phase;site-redesigned-submit-no-longer-crashes
-Lambdatest Playground,Automation Testing,36711,0.034946,88980,0.745375,clean-two-phase;mcp-navigate-dead-frame-use-eval-location-href;308-refs-homepage-search-ajax-stays-on-homepage
+AcademyBugs,General Practice,4874,0.140038,,18766,0.393286,,
+A11y Coffee,General Practice,2831,0.000000,,17986,0.352185,,
+Basic Calculator,General Practice,8395,0.000,,98501,0.706473,,combined-bracket-long-session-inflation
+Black Box Puzzles,General Practice,3791,0.235733,,24821,0.230414,,session-inflated-separate-brackets
+BookCart,General Practice,15820,0.192904,,31838,0.266609,,session-inflated-separate-brackets
+Candy Mapper,General Practice,10410,0.171469,,35875,0.312023,,session-inflated-separate-brackets
+Cnarios,General Practice,7396,0.125027,,29305,0.304204,,session-inflated-separate-brackets;/concepts/* now 404 not blank
+Evil Tester,General Practice,4151,0.036722,,81791,0.577941,,fresh-subagent
+Gefälscht CompuTech,General Practice,8596,0.19045,,35949,0.315455,,fresh-subagent
+Parabank,General Practice,6329,0.047447,,130422,0.841313,,fresh-subagent
+Basic Calculator,General Practice,4416,0.02533,,153533,1.919837,,fresh-subagent
+A11y Coffee,General Practice,2944,0.00948,,7430,0.426794,,fresh-subagent-rerun
+AcademyBugs,General Practice,6333,0.0,,8802,0.630317,,fresh-subagent-rerun
+BookCart,General Practice,17109,0.245487,,9956,0.520582,,fresh-subagent-rerun
+Black Box Puzzles,General Practice,10285,0.073184,,17026,0.546535,,fresh-subagent-rerun
+Cnarios,General Practice,11019,0.084681,,173083,1.226297,,fresh-subagent-rerun
+Candy Mapper,General Practice,9155,0.07689,,193151,1.008976,,fresh-subagent-rerun
+AcademyBugs,General Practice,17318,0.055629,,121737,0.231881,,clean-two-phase
+A11y Coffee,General Practice,7864,0.024651,,104888,0.300021,,clean-two-phase
+Basic Calculator,General Practice,14384,0.074453,,136991,0.416361,,clean-two-phase
+Candy Mapper,General Practice,11367,0.111896,,221227,0.49308,,clean-two-phase
+Cnarios,General Practice,9859,0.193329,,170408,0.549185,,clean-two-phase
+Evil Tester,General Practice,8528,0.193329,,109603,0.286971,,clean-two-phase
+Gefälscht CompuTech,General Practice,3310,0.052926,,42087,0.085234,,clean-two-phase
+Parabank,General Practice,8975,0.0,,64745,0.128433,,clean-two-phase
+Parking Cost Calculator,General Practice,5540,0.075898,,53313,0.416378,,clean-two-phase
+PHP Travels,General Practice,5111,0.0,,N/A,N/A,,clean-two-phase;submit-crashes-cli-and-mcp-skip-submit
+Polymer Shop,General Practice,2463,0.0,,58708,0.445741,,clean-two-phase
+Potion Shop,General Practice,2645,0.0,,67655,0.558792,,clean-two-phase
+Practice Software Testing,General Practice,12386,0.069224,,72014,0.640261,,clean-two-phase
+PrestaShop,General Practice,14854,0.0,,107277,0.442287,,clean-two-phase
+QA Practice,General Practice,4331,0.0,,80698,0.95462,,clean-two-phase
+QA Training Simulator,General Practice,5626,0.0,,60147,0.551648,,clean-two-phase
+Random User Generator,General Practice,5984,0.0,,44359,0.425406,,clean-two-phase
+Real World Example Apps,General Practice,6351,0.0,,54924,0.488594,,clean-two-phase
+testers.ai,General Practice,2536,0.0,,46662,0.495112,,clean-two-phase
+Test Track,General Practice,4845,0.0,,67995,0.953188,,clean-two-phase
+The Boozang Test Lab,General Practice,3873,0.0,,45876,0.554965,,clean-two-phase
+The iframe Search Engine,General Practice,2459,0.0,,53985,0.606934,,clean-two-phase
+The Internet,General Practice,9110,0.0,,79572,1.007144,,clean-two-phase
+The Random Number Service,General Practice,4118,0.0,,52957,0.685221,,clean-two-phase
+ToDo List,General Practice,4254,0.0,,68317,0.796051,,clean-two-phase
+UI5 Demo Kit,General Practice,4324,0.0,,114150,1.318522,,clean-two-phase;shopping-cart-opens-new-tab-tab-switch-unreliable
+Applitools Demo,Automation Testing,4059,0.0,,492223,1.555416,,clean-two-phase;mcp-inflated-session-reset-after-ui5
+ATM Practice App,Automation Testing,3181,0.0,,61111,0.944406,,clean-two-phase
+Applitools Demo,Automation Testing,4059,0.0,,53709,0.745993,,clean-two-phase
+Automate Now Sandbox,Automation Testing,7819,0.0,,65191,0.510276,,clean-two-phase
+Automation Bookstore,Automation Testing,3423,0.0,,34130,0.30442,,clean-two-phase
+Automation Camp,Automation Testing,4086,0.0,,55109,0.375471,,clean-two-phase
+Automation Exercise,Automation Testing,6301,0.0,,104327,0.791488,,clean-two-phase
+Automation in Testing,Automation Testing,4178,0.0,,121953,1.335237,,clean-two-phase;mcp-inflated-bidi-recovery
+Automation Test Store,Automation Testing,5741,0.0,,48482,0.539288,,clean-two-phase
+Automation Testing Practice,Automation Testing,3215,0.0,,39710,0.415457,,clean-two-phase
+Coffee Cart,Automation Testing,3138,0.0,,55061,0.693193,,clean-two-phase
+Automation in Testing,Automation Testing,3901,0.0,,59422,0.744968,,clean-two-phase
+Commit Quality,Automation Testing,2954,0.0,,41571,0.473036,,clean-two-phase
+Contact List App,Automation Testing,2993,0.0,,60554,0.686069,,clean-two-phase
+Demo SaaS,Automation Testing,3519,0.0,,47499,0.590761,,clean-two-phase
+DemoQA,Automation Testing,8549,0.0,,42296,0.487735,,clean-two-phase
+Expand Testing,Automation Testing,10407,0.0,,101214,1.588288,,clean-two-phase
+GitHub Users Search,Automation Testing,3550,0.0,,34797,0.498172,,clean-two-phase
+Global SQA Demo,Automation Testing,6171,0.0,,33769,0.375234,,clean-two-phase
+GreenKart,Automation Testing,8351,0.0,,29658,0.446219,,clean-two-phase
+Hands-On Selenium WebDriver,Automation Testing,3274,0.0,,27098,0.396225,,clean-two-phase
+Selenium Playground,Automation Testing,7181,0.0,,32016,0.462567,,clean-two-phase;lambdatest-rebranded-testmuai-cloudflare-blocks-subpages-both-cli-mcp
+Let Code,Automation Testing,5531,0.0,,41792,0.802926,,clean-two-phase
+Locator Game,Automation Testing,2688,0.0,,29364,0.404819,,clean-two-phase
+NearForm Testing Playground,Automation Testing,2424,0.0,,34847,0.430228,,clean-two-phase
+OrangeHRM,Automation Testing,4614,0.0,,327680,0.946178,,clean-two-phase;mcp-inflated-vue-login-retries
+Practice Automation,Automation Testing,6976,0.0,,35702,0.661576,,clean-two-phase
+Practice Test Automation,Automation Testing,3538,0.0,,33858,0.460403,,clean-two-phase
+OrangeHRM,Automation Testing,7406,0.0,,240839,0.950871,,clean-two-phase;mcp-ms-inflated-conversation-pauses
+Expand Testing,Automation Testing,13143,0.0,,29170,0.485285,,clean-two-phase
+QA Cloud,Automation Testing,2268,0.0,,23263,0.334078,,clean-two-phase
+QA Playground,Automation Testing,2331,0.0,,22371,0.329801,,clean-two-phase
+QE Buggy Todo,Automation Testing,2453,0.0,,22854,0.415464,,clean-two-phase
+React Shopping Cart,Automation Testing,2012,0.0,,27200,0.50208,,clean-two-phase
+SeleniumBase,Automation Testing,3545,0.0,,26215,0.352708,,clean-two-phase
+Selectors Hub,Automation Testing,4914,0.0,,24751,0.354156,,clean-two-phase
+Swag Labs,Automation Testing,3271,0.0,,246335,0.981073,,clean-two-phase;mcp-ms-inflated-conversation-pauses
+Sweet Shop,Automation Testing,3444,0.0,,43252,0.80591,,clean-two-phase
+Swag Labs,Automation Testing,2894,0.0,,33173,0.451839,,clean-two-phase
+TestDino,Automation Testing,2649,0.0,,29272,0.475862,,clean-two-phase
+Travel Agileway,Automation Testing,4205,0.0,,29234,0.574101,,clean-two-phase
+Tricentis Obstacle Course,Automation Testing,8210,0.0,,32854,0.481549,,clean-two-phase
+var.parts,Automation Testing,3251,0.0,,52735,0.482314,,clean-two-phase
+Weather Shopper,Automation Testing,2699,0.0,,26494,0.687639,,clean-two-phase
+XYZ Bank,Automation Testing,2863,0.0,,20551,0.389105,,clean-two-phase
+Firing Range,Security Testing,1663,0.0,,26402,0.591211,,clean-two-phase
+Gin & Juice Shop,Security Testing,4052,0.0,,25193,0.396906,,clean-two-phase
+Google Gruyere,Security Testing,1741,0.0,,40519,0.499278,,clean-two-phase
+OWASP Juice Shop,Security Testing,4567,0.0,,22760,0.404947,,clean-two-phase
+OWASP VWAD,Security Testing,2599,0.0,,20456,0.406987,,clean-two-phase
+Try Hack Me,Security Testing,2903,0.0,,23945,0.407153,,clean-two-phase
+Zero Bank,Security Testing,3645,0.0,,28043,0.408005,,clean-two-phase;http-blocked-both-cli-mcp
+Airport Gap,API Testing,2433,0.0,,89938,0.411272,,clean-two-phase
+AP+ Developers,API Testing,3854,0.0,,107693,0.41441,,clean-two-phase
+Automation Exercise API,API Testing,5734,0.0,,23232,0.415407,,clean-two-phase
+Chuck Norris API,API Testing,3489,0.0,,24366,0.523695,,clean-two-phase
+Countries GraphQL,API Testing,2285,0.0,,21401,0.417855,,clean-two-phase
+FakeRestAPI,API Testing,5550,0.0,,22848,0.419812,,clean-two-phase
+Go REST,API Testing,4543,0.0,,18924,0.421347,,clean-two-phase
+httpbin,API Testing,25008,0.0,,24094,0.421786,,clean-two-phase
+JSON Placeholder,API Testing,2400,0.0,,20272,0.423321,,clean-two-phase
+Poké API,API Testing,3964,0.0,,24014,0.426128,,clean-two-phase
+Restful Booker,API Testing,2185,0.0,,19457,0.539259,,clean-two-phase
+Rick and Morty API,API Testing,3473,0.0,,18800,0.317674,,clean-two-phase
+ServeRest,API Testing,2598,0.0,,18713,0.42921,,clean-two-phase
+SpaceTraders,API Testing,3827,0.0,,18587,0.430302,,clean-two-phase
+Swagger Petstore,API Testing,3349,0.0,,19685,0.5432,,clean-two-phase
+The Cat API,API Testing,2206,0.0,,20726,0.320665,,clean-two-phase
+Blaze Demo,Performance Testing,7179,0.0,,27049,0.652763,,clean-two-phase
+Demoblaze,Performance Testing,2344,0.0,,28002,0.547205,,clean-two-phase
+Pet Store Web,Performance Testing,3027,0.0,,26747,0.658453,,clean-two-phase
+Airport Gap,API Testing,2428,0.0,,18691,0.446372,,clean-two-phase
+AP+ Developers,API Testing,3016,0.0,,20971,0.450834,,clean-two-phase
+OrangeHRM,Automation Testing,5096,0.0,,28046,0.675508,,clean-two-phase
+Black Box Puzzles,General Practice,3355,0.0,,28265,0.699099,,clean-two-phase;site-restored-2026-06-03
+BookCart,General Practice,5041,0.0,,21177,0.584431,,clean-two-phase;site-restored-2026-06-03
+PHP Travels,General Practice,12444,0.0,,36815,0.702801,,clean-two-phase;site-redesigned-submit-no-longer-crashes
+Lambdatest Playground,Automation Testing,36711,0.034946,,88980,0.745375,,clean-two-phase;mcp-navigate-dead-frame-use-eval-location-href;308-refs-homepage-search-ajax-stays-on-homepage
 AcademyBugs,General Practice,76820,0.222255,3,76752,1.133237,16,clean-two-phase;l3
 AcademyBugs,General Practice,10356,0.018487,2,61013,0.108617,17,clean-two-phase;l3
 A11y Coffee,General Practice,6620,0.013383,2,34973,0.063507,10,clean-two-phase;l3

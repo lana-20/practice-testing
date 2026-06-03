@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 94/99 sites measured with per-site CLI ($) / MCP ($) costs via token_bracket.py; 4 local-only security sites permanent —; 1 AT site (Lambdatest Playground) timing-only from original run -->
+<!-- 100 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking via token_bracket.py; fresh subagents per site; 29 GP sites done -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -27,12 +27,12 @@
 
 | Category | Sites | CLI (ms) | CLI turns (v26.3.18) | CLI ($) | MCP (ms) | MCP turns (v26.3.18) | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|----------------------|---------|----------|----------------------|---------|-------|--------|-------|
-| General Practice | 28 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
+| General Practice | 29 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
 | Automation Testing | 41 | 215,251 | ~46 | $0.035 | 1,661,488 | ~317 | $21.783 | CLI **7.7×** faster¹ | **6.9×** fewer | N/A |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
 | API Testing | 16 | 76,055 | 3 | $0.000 | 334,781 | 37 | $6.947 | CLI **4.4×** faster² | **12×** fewer | N/A |
 | Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
-| **All sites** | **95 / 99** | **523,170** | **~111** | **$0.886** | **4,451,937** | **~733** | **$49.521** | **CLI 8.5× faster** | **6.6× fewer** | **55.9× cheaper** |
+| **All sites** | **96 / 100** | **523,170** | **~111** | **$0.886** | **4,451,937** | **~733** | **$49.521** | **CLI 8.5× faster** | **6.6× fewer** | **55.9× cheaper** |
 
 ¹ Automation Testing now complete (41/41). Lambdatest Playground MCP requires `eval window.location.href` — `browser_navigate` fails with dead-frame after `browser_stop`/`browser_start`. Expand Testing CLI (13,143ms) elevated due to ad-overlay retries.  
 ² API ratio narrows due to httpbin serving locally-cached responses (CLI 25,008ms cold-start — warm ratio ~10×). Excluding httpbin: CLI 5.7× faster.
@@ -45,7 +45,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 ---
 
-## General Practice (28 sites)
+## General Practice (29 sites)
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
@@ -85,6 +85,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | The Random Number Service | https://www.random.org/ | 4,118 | $0.000 | 52,957 | $0.685 | 12.9× | N/A | Cookie banner on load; generator forms not in map — use URL params or eval form.submit(); validation: min>max and num>10000 both trigger errors |
 | ToDo List | https://todolist.james.am/#/ | 4,254 | $0.000 | 68,317 | $0.796 | 16.1× | N/A | AngularJS; **counter off-by-1 bug** (shows N-1 active items); dblclick label to enter edit mode; checkbox check "obscured" — use mouse click by coords; no localStorage persistence |
 | UI5 Demo Kit | https://ui5.sap.com/#/demoapps | 4,324 | $0.000 | 114,150 | $1.319 | 26.4× | N/A | **v26.5.31 update:** CLI vibium map now returns 137 refs (was nothing in older versions); MCP browser_map returns 128 refs; Shopping Cart "Open App" opens new tab — use browser_new_page for next site to avoid BiDi dead-frame |
+| BearQ | https://angryweasel.com/bearq/ | 6,820 | $0.017 | 43,902 | $0.069 | 6.4× | 4.1× | **New site (added 2026-06-03):** Weasel Warren — 5 challenge sections (Form Validation, Input Types, Alerts & Dialogs, Basic Elements, Images & Media); 9 CLI/MCP nav refs on homepage; form validation page has email/username/password/confirm + Register button |
 
 ³ Parabank MCP inflated by 30s browser_find timeout on non-existent "Register" role. Without timeout: ~54,782ms (11.4×).
 

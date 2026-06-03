@@ -8,13 +8,19 @@ from pathlib import Path
 BASE = Path(__file__).parent
 
 def load_clean_results(csv_path):
-    results = {}
+    """L3 rows take priority over L2 rows for same site. Last occurrence wins within each level."""
+    l2, l3 = {}, {}
     with open(csv_path, newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if "clean-two-phase" in row.get("notes", ""):
-                results[row["site"]] = row
-    return results
+            notes = row.get("notes", "")
+            if "clean-two-phase" not in notes:
+                continue
+            if "l3" in notes:
+                l3[row["site"]] = row
+            else:
+                l2[row["site"]] = row
+    return {**l2, **l3}
 
 def fmt_ms(ms_str):
     try:

@@ -3,9 +3,13 @@
 populate_readme.py — Fill CLI ($), MCP ($), Cost× columns in README.md
 from clean-two-phase rows in rerun_results.csv.
 
+L3 rows (notes contains 'l3') take priority over L2 rows for the same site.
+Within each level, last occurrence wins.
+
 Usage:
   python3 populate_readme.py            # update README.md in place
   python3 populate_readme.py --dry-run  # preview only
+  python3 populate_readme.py --force    # overwrite already-filled cells
 """
 
 import csv
@@ -15,17 +19,23 @@ from pathlib import Path
 BASE = Path(__file__).parent
 
 # Sites where MCP cost is N/A (submit crashes session or site gone)
-# Note: PHP Travels, Black Box Puzzles, BookCart were here but are now restored/fixed (2026-06-03)
 MCP_NA: set = set()
 
 def load_clean_results(csv_path):
-    """Return dict of site → latest clean-two-phase row."""
-    results = {}
+    """Return dict of site → best clean-two-phase row (L3 > L2, last wins)."""
+    l2, l3 = {}, {}
     with open(csv_path, newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if "clean-two-phase" in row.get("notes", ""):
-                results[row["site"]] = row  # last occurrence wins
+            notes = row.get("notes", "")
+            if "clean-two-phase" not in notes:
+                continue
+            if "l3" in notes:
+                l3[row["site"]] = row
+            else:
+                l2[row["site"]] = row
+    # Merge: L3 takes priority
+    results = {**l2, **l3}
     return results
 
 def fmt_cost(usd_str):
@@ -70,8 +80,9 @@ def update_readme(readme_path, results, dry_run=False):
             new_lines.append(line)
             continue
 
-        # Only update if placeholders are still present
-        if parts[4].strip() not in ("—", "") and parts[6].strip() not in ("—", ""):
+        # Only update if placeholders are still present (skip if --force not set)
+        force = "--force" in sys.argv
+        if not force and parts[4].strip() not in ("—", "") and parts[6].strip() not in ("—", ""):
             new_lines.append(line)
             continue
 
