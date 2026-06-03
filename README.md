@@ -28,13 +28,13 @@
 | Category | Sites | CLI (ms) | CLI turns | CLI ($) | MCP (ms) | MCP turns | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|-----------|---------|----------|-----------|---------|-------|--------|-------|
 | General Practice | 28 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
-| Automation Testing | 40 / 41 | 178,540 | ~46 | $0.000 | 1,572,508 | ~317 | $21.038 | CLI **8.8×** faster¹ | **6.9×** fewer | N/A |
+| Automation Testing | 41 | 215,251 | ~46 | $0.035 | 1,661,488 | ~317 | $21.783 | CLI **7.7×** faster¹ | **6.9×** fewer | N/A |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
 | API Testing | 16 | 76,055 | 3 | $0.000 | 334,781 | 37 | $6.947 | CLI **4.4×** faster² | **12×** fewer | N/A |
 | Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
-| **All sites** | **94 / 99** | **486,459** | **~111** | **$0.851** | **4,362,957** | **~733** | **$48.776** | **CLI 9.0× faster** | **6.6× fewer** | **57.3× cheaper** |
+| **All sites** | **95 / 99** | **523,170** | **~111** | **$0.886** | **4,451,937** | **~733** | **$49.521** | **CLI 8.5× faster** | **6.6× fewer** | **55.9× cheaper** |
 
-¹ Automation Testing excludes Lambdatest Playground (timing-only from original run, cost not measured). Expand Testing CLI (13,143ms) slightly elevated due to ad-overlay retries.  
+¹ Automation Testing now complete (41/41). Lambdatest Playground MCP requires `eval window.location.href` — `browser_navigate` fails with dead-frame after `browser_stop`/`browser_start`. Expand Testing CLI (13,143ms) elevated due to ad-overlay retries.  
 ² API ratio narrows due to httpbin serving locally-cached responses (CLI 25,008ms cold-start — warm ratio ~10×). Excluding httpbin: CLI 5.7× faster.
 
 **Key insight:** MCP time per site is fairly uniform (~18–221s regardless of site complexity). CLI time tracks actual site complexity (1.6–25s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) or large DOM maps absorb MCP's per-tool-call overhead.
@@ -94,11 +94,11 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (Level 2) | 178,540ms | 1,572,508ms | **8.8×** faster |
+| Time (Level 2) | 215,251ms | 1,661,488ms | **7.7×** faster |
 | LLM turns (orig.) | ~46 | ~317 | ~6.9× fewer |
-| Cost (Level 2) | $0.000 | $21.038 | N/A |
+| Cost (Level 2) | $0.035 | $21.783 | N/A |
 
-*Level 2 rerun (v26.5.31, 2026-06-03) — 40 of 41 sites measured. Lambdatest Playground: timing from original run only; cost not measured (Cloudflare blocks CLI agent from sub-pages).*
+*Level 2 rerun (v26.5.31, 2026-06-03) — all 41 sites measured.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -121,7 +121,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts fr
 | Global SQA Demo | http://www.globalsqa.com/demo-site/ | 6,171 | $0.000 | 33,769 | $0.375 | 5.5× | N/A | **Key behavioral difference:** CLI gets BiDi error on http:// URL; **MCP silently follows HTTP→HTTPS redirect** and loads site successfully; MCP maps 49 interactive elements |
 | GreenKart | https://rahulshettyacademy.com/seleniumPractise/#/ | 8,351 | $0.000 | 29,658 | $0.446 | 3.6× | N/A | Angular; 31 products; **MCP browser_map returns 126 elements** (31 products × 4 controls); large map call compresses ratio to 2.8× — one of the narrowest Automation ratios |
 | Hands-On Selenium WebDriver | https://bonigarcia.dev/selenium-webdriver-java/ | 3,274 | $0.000 | 27,098 | $0.396 | 8.3× | N/A | Static site; 30 practice sub-pages at clean URLs; fill works on textarea (B7/MB7 fixed v26.5.31); calculator buttons are span.btn not button (use eval) |
-| Lambdatest Playground | https://ecommerce-playground.lambdatest.io/ | 8,095 | — | 34,057 | — | 4.2× | — | OpenCart-based e-commerce; category nav obscured by sticky header — use direct URLs; **Add to Cart silently fails for guests** (no error); size select has no values (impossible to add Canon EOS 5D) |
+| Lambdatest Playground | https://ecommerce-playground.lambdatest.io/ | 36,711 | $0.035 | 88,980 | $0.745 | 2.4× | 21.3× | OpenCart-based e-commerce; **MCP browser_navigate dead-frame after stop/start — use eval `window.location.href`**; CLI map and MCP map both return 308 refs; search is AJAX and stays on homepage; Add to Cart silently fails for guests |
 | Let Code | https://letcode.in/test | 5,531 | $0.000 | 41,792 | $0.803 | 7.6× | N/A | Angular; 22 practice sections; **MCP BiDi SSL/privacy error failures** inflated to 211s; clean MCP ratio ~4×; MCP map captures iframe ads, CLI map filters them |
 | Locator Game | https://testsmith-io.github.io/locator-game/ | 2,688 | $0.000 | 29,364 | $0.405 | 10.9× | N/A | GitHub Pages static locator challenge; clean, no anomalies or mandatory waits |
 | NearForm Testing Playground | https://nearform.github.io/testing-playground/ | 2,424 | $0.000 | 34,847 | $0.430 | 14.4× | N/A | 18 challenge cards (Add/Remove, Checkbox, Drag & Drop, Dynamic Table, File Up/Download, Login Form, Notifications, Radio Buttons, Sliders, Tooltips, Various Inputs); language switcher + difficulty filter |
