@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking via token_bracket.py; fresh subagents per site; 29 GP sites done -->
+<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking; fresh subagents per site; GP 31/31 done, AT 14/41 done; per-site data updated to L3 where available -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -27,21 +27,21 @@
 
 | Category | Sites | CLI (ms) | CLI turns (v26.3.18) | CLI ($) | MCP (ms) | MCP turns (v26.3.18) | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|----------------------|---------|----------|----------------------|---------|-------|--------|-------|
-| General Practice | 31 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
-| Automation Testing | 41 | 215,251 | ~46 | $0.035 | 1,661,488 | ~317 | $21.783 | CLI **7.7×** faster¹ | **6.9×** fewer | N/A |
+| General Practice | 31 | 427,101 | ~39 | $0.633 | 1,463,102 | ~301 | $2.752 | CLI **3.4×** faster | **7.7×** fewer | **4.3×** cheaper |
+| Automation Testing | 41 | 370,784 | ~46 | $0.951 | 1,301,744 | ~317 | $13.911 | CLI **3.5×** faster¹ | **6.9×** fewer | **14.6×** cheaper |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
-| API Testing | 18 | 76,055 | 3 | $0.000 | 334,781 | 37 | $6.947 | CLI **4.4×** faster² | **12×** fewer | N/A |
+| API Testing | 18 | 112,526 | 3 | $0.038 | 425,229 | 37 | $7.103 | CLI **3.8×** faster² | **12×** fewer | **189.4×** cheaper |
 | Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
-| **All sites** | **100 / 104** | **523,170** | **~111** | **$0.886** | **4,451,937** | **~733** | **$49.521** | **CLI 8.5× faster** | **6.6× fewer** | **55.9× cheaper** |
+| **All sites** | **100 / 104** | **944,131** | **~111** | **$1.622** | **3,459,191** | **~733** | **$28.738** | **CLI 3.7× faster** | **6.6× fewer** | **17.7× cheaper** |
 
-¹ Automation Testing now complete (41/41). Lambdatest Playground MCP requires `eval window.location.href` — `browser_navigate` fails with dead-frame after `browser_stop`/`browser_start`. Expand Testing CLI (13,143ms) elevated due to ad-overlay retries.  
-² API ratio narrows due to httpbin serving locally-cached responses (CLI 25,008ms cold-start — warm ratio ~10×). Excluding httpbin: CLI 5.7× faster.
+¹ Automation Testing L3 CLI costs now captured (sonnet-4-6 bracket); batch 9 (7 sites, run under Haiku 4.5) shows $0.000 CLI — not captured by the sonnet-4-6 filter. Lambdatest Playground MCP requires `eval window.location.href` — dead-frame after stop/start.  
+² API Testing L3 CLI ms elevated by httpbin (25,008ms cold-start); excluding httpbin: CLI 4.8× faster. API Challenges and QuickPizza are new sites with L3-only data.
 
-**Key insight:** MCP time per site is fairly uniform (~18–221s regardless of site complexity). CLI time tracks actual site complexity (1.6–25s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) or large DOM maps absorb MCP's per-tool-call overhead.
+**Key insight:** With L3 bracket fix (script-generation cost now inside the bracket), CLI costs are real and non-trivial for complex sites. MCP time per site is fairly uniform; CLI time tracks site complexity. Security and Performance Testing retain wide speed ratios; GP, AT, and API ratios narrowed in L3 due to longer CLI generation times captured.
 
-**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; Level 2 rerun used batch bash scripts so turn counts are not comparable. ms and $ are from the Level 2 v26.5.31 rerun (2026-06-03).
+**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; L3 rerun turn counts are subagent-level and tracked separately. ms and $ are best-available: L3 where measured (GP all 31, AT 14/41, API 2/18 new sites), L2 elsewhere.
 
-Each section below includes an aggregate token/cost table — turn counts from v26.3.18; ms and $ from Level 2 rerun.
+Each section below includes an aggregate token/cost table — turn counts from v26.3.18; ms and $ from best-available (L3 > L2).
 
 ---
 
@@ -49,44 +49,44 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (Level 2) | 198,144ms | 2,186,552ms | **11.0×** faster |
+| Time (best-available) | 427,101ms | 1,463,102ms | **3.4×** faster |
 | LLM turns (v26.3.18) | ~39 | ~301 | ~7.7× fewer |
-| Cost (Level 2) | $0.851 | $15.818 | **18.6×** cheaper |
+| Cost (best-available) | $0.633 | $2.752 | **4.3×** cheaper |
 
-*Level 2 rerun (v26.5.31, 2026-06-03) — all 28 sites measured.*
+*Best-available data: L3 for all 31 sites (29 original L3✓✓ + BearQ, PromptQA, Bill Payment API L3-only).*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
-| AcademyBugs | https://academybugs.com/ | 17,318 | $0.056 | 121,737 | $0.232 | 7.0× | 4.2× | 25 planted bugs; dismiss cookie banner + tutorial modal before interacting; sort select works by label or value (B5 fixed v26.5.31) |
-| A11y Coffee | https://a11y.coffee/ | 7,864 | $0.025 | 104,888 | $0.300 | 13.3× | 12.2× | Accessibility learning resource; 13 nav links; dark/light toggle; static site; no mandatory waits |
-| Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | 14,384 | $0.074 | 136,991 | $0.416 | 9.5× | 5.6× | Select operation by label ("Add", "Subtract", etc.) or value ("0"–"4") (B5 fixed v26.5.31); 9 prototype builds selectable; minimal form with no mandatory waits → high MCP overhead ratio |
-| Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | 3,355 | $0.000 | 28,265 | $0.699 | 8.4× | N/A | **Site restored** (was redirecting to cnarios.com, back as of 2026-06-03); 44 CLI refs; puzzle interactions require coordinate clicks; Flash puzzles still non-functional |
-| BookCart | https://bookcart.azurewebsites.net/ | 5,041 | $0.000 | 21,177 | $0.584 | 4.2× | N/A | **Site restored** (was redirecting to cnarios.com, back as of 2026-06-03); Angular Material; 13 CLI refs; search via `input[type=search]` + dispatchEvent |
-| Candy Mapper | https://www.candymapper.net/ | 11,367 | $0.112 | 221,227 | $0.493 | 19.5× | 4.4× | UK testing sandbox; 54 MCP elements — county selector, contact form, social links, reCAPTCHA challenge; heavy page content compresses ratio to one of the narrowest in GP |
-| Cnarios | https://www.cnarios.com/ | 9,859 | $0.193 | 170,408 | $0.549 | 17.3× | 2.8× | React SPA; homepage nav maps fine in both; challenge cards at /challenges/ not rendered (React routing bug — heading only) |
-| Evil Tester | https://testpages.eviltester.com/styled/index.html | 8,528 | $0.193 | 109,603 | $0.287 | 12.9× | 1.5× | Pre-stub window.alert/confirm/prompt via eval BEFORE clicking any alert button (B3/MB3 deadlock still open); CLI eval pre-stub nearly equalizes costs (Cost× 1.5×) |
-| Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | 3,310 | $0.053 | 42,087 | $0.085 | 12.7× | 1.6× | Intentionally inaccessible site for accessibility testing; contact form needs `input[name=x]` selectors; fast nav → high MCP overhead ratio |
-| Parabank | https://parabank.parasoft.com/parabank/admin.htm | 8,975 | $0.000 | 64,745 | $0.128 | 7.2× | N/A | CLI `input[name=customer.firstName]` fails (dot in name); MCP ID-based selectors work fine; run DB Initialize from admin panel before testing |
-| Parking Cost Calculator | https://www.shino.de/parkcalc/ | 5,540 | $0.076 | 53,313 | $0.416 | 9.6× | 5.5× | Returns $0.00 consistently in both interfaces — AM/PM radio default or date parse bug on the site itself; select lot by visible label or value (B5 fixed v26.5.31); invalid dates → inline error |
-| PHP Travels | http://phptravels.com/demo/ | 12,444 | $0.000 | 36,815 | $0.703 | 3.0× | N/A | **Site redesigned** (2026-06-03): submit no longer crashes — pre-stub `window.alert` then click `#demo`; 71 CLI refs; math captcha field `@e21` still present; fill first/last/email then click @e20 |
-| Polymer Shop | https://shop.polymer-project.org/ | 2,463 | $0.000 | 58,708 | $0.446 | 23.8× | N/A | All UI in Web Components shadow DOM — map returns nothing in both; eval+shadowRoot traversal required; Polymer events need mouse_click at bounding-box coords — eval .click() does not fire component events |
-| Potion Shop | https://qe-at-cgi-fi.github.io/potion-shop/ | 2,645 | $0.000 | 67,655 | $0.559 | 25.6× | N/A | Medieval order form; 32 form controls (radio for potion type/size/potency, ingredient checkboxes, delivery options, textarea); browser_fill works on all inputs |
-| Practice Software Testing | https://practicesoftwaretesting.com/ | 12,386 | $0.069 | 72,014 | $0.640 | 5.8× | 9.2× | Angular; Login is `input[type=submit]` not button — use eval.click(); test login: customer@practicesoftwaretesting.com / welcome01; add to cart works without login |
-| PrestaShop | https://demo.prestashop.com/ | 14,854 | $0.000 | 107,277 | $0.442 | 7.2× | N/A | Store in iframe — get inner URL via eval after 5s; subdomain expires in ~2min; use eval location.href for all navigation (vibium go deadlocks daemon); mandatory sleeps compress ratio |
-| PromptQA Playground | https://playground.promptqa.dev/ | 8,197 | $0.023 | 64,915 | $0.096 | 7.9× | 4.2× | **New site (added 2026-06-03):** Shop + Clinic + Widgets + API + Locator Game; 69 refs on homepage, 76 in Shop; stable `data-testid` on all elements; tour overlay on first load — dismiss "Skip tour" before interacting |
-| QA Practice | https://qa-practice.razvanvancea.ro/ | 4,331 | $0.000 | 80,698 | $0.955 | 18.6× | N/A | ADD TO CART uses CSS uppercase — use map refs not text; login at homepage #auth-shop anchor (not /ecommerce/ — 404); pre-stub alert/confirm; login: admin@admin.com / admin123 |
-| QA Training Simulator | https://bugeater.web.app/ | 5,626 | $0.000 | 60,147 | $0.552 | 10.7× | N/A | BugEater 2.0 (renumbered #1.1–#7.6 as of 04.2026); two cookie banners (homepage + /app/list); dismiss react-joyride tutorial; direct URL to challenge routes now works — navigate from /app/list for the list |
-| Random User Generator | https://randomuser.me/ | 5,984 | $0.000 | 44,359 | $0.425 | 7.4× | N/A | URL-param API calls are the fastest pattern; ?format=csv triggers download and crashes BiDi session (restart required); use eval for large JSON (vibium text overflows at 5000 results) |
-| Real World Example Apps | https://codebase.show/projects/realworld | 6,351 | $0.000 | 54,924 | $0.489 | 8.6× | N/A | SvelteKit SPA needs 3s sleep after wait load before content renders; GitHub OAuth required for Sign In; mandatory 3s sleep floor narrows the ratio relative to similar-sized sites |
-| testers.ai | https://testers.ai/testing/ | 2,536 | $0.000 | 46,662 | $0.495 | 18.4× | N/A | 59-link checklist index covering WCAG A/AA/AAA, screen reader, keyboard, color, ARIA, forms, security, privacy, code quality, i18n, GenAI, DevOps, and more |
-| Test Track | https://testtrack.org/ | 4,845 | $0.000 | 67,995 | $0.953 | 14.0× | N/A | Structured training site; 15 practice modules Basic→Intermediate→Advanced→Expert (buttons, inputs, login, dropdowns, checkboxes, tables, modals, alerts, drag & drop, frames, canvas, 3D chess); used as vibium reference site |
-| The Boozang Test Lab | https://thelab.boozang.com/ | 3,873 | $0.000 | 45,876 | $0.555 | 11.8× | N/A | React SPA; 16 challenges; Form Fill saves to shared DB at api.boozang.com; vibium fill works on all inputs; vibium click works on all buttons |
-| The iframe Search Engine | https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html | 2,459 | $0.000 | 53,985 | $0.607 | 22.0× | N/A | Use vibium fill for search input; select by visible label or full URL value; "Go search" link opens in a new tab; non-existent select value now errors (B5 fixed v26.5.31) |
-| The Internet | http://the-internet.herokuapp.com/ | 9,110 | $0.000 | 79,572 | $1.007 | 8.7× | N/A | 44 examples; hover fails on non-interactive elements; vibium frame context resets per CLI call; TinyMCE iframe via contentDocument; input[type=range] needs eval+dispatchEvent |
-| The Random Number Service | https://www.random.org/ | 4,118 | $0.000 | 52,957 | $0.685 | 12.9× | N/A | Cookie banner on load; generator forms not in map — use URL params or eval form.submit(); validation: min>max and num>10000 both trigger errors |
-| ToDo List | https://todolist.james.am/#/ | 4,254 | $0.000 | 68,317 | $0.796 | 16.1× | N/A | AngularJS; **counter off-by-1 bug** (shows N-1 active items); dblclick label to enter edit mode; checkbox check "obscured" — use mouse click by coords; no localStorage persistence |
-| UI5 Demo Kit | https://ui5.sap.com/#/demoapps | 4,324 | $0.000 | 114,150 | $1.319 | 26.4× | N/A | **v26.5.31 update:** CLI vibium map now returns 137 refs (was nothing in older versions); MCP browser_map returns 128 refs; Shopping Cart "Open App" opens new tab — use browser_new_page for next site to avoid BiDi dead-frame |
-| BearQ | https://angryweasel.com/bearq/ | 6,820 | $0.017 | 43,902 | $0.069 | 6.4× | 4.1× | **New site (added 2026-06-03):** Weasel Warren — 5 challenge sections (Form Validation, Input Types, Alerts & Dialogs, Basic Elements, Images & Media); 9 CLI/MCP nav refs on homepage; form validation page has email/username/password/confirm + Register button |
+| AcademyBugs | https://academybugs.com/ | 10,356 | $0.018 | 61,013 | $0.109 | 5.9× | 5.9× | 25 planted bugs; dismiss cookie banner + tutorial modal before interacting; sort select works by label or value (B5 fixed v26.5.31) |
+| A11y Coffee | https://a11y.coffee/ | 6,620 | $0.013 | 34,973 | $0.064 | 5.3× | 4.7× | Accessibility learning resource; 13 nav links; dark/light toggle; static site; no mandatory waits |
+| Basic Calculator | https://testsheepnz.github.io/BasicCalculator.html | 9,469 | $0.018 | 44,934 | $0.069 | 4.7× | 3.8× | Select operation by label ("Add", "Subtract", etc.) or value ("0"–"4") (B5 fixed v26.5.31); 9 prototype builds selectable; minimal form with no mandatory waits → high MCP overhead ratio |
+| Black Box Puzzles | https://blackboxpuzzles.workroomprds.com/ | 7,164 | $0.017 | 35,509 | $0.058 | 5.0× | 3.4× | **Site restored** (was redirecting to cnarios.com, back as of 2026-06-03); 44 CLI refs; puzzle interactions require coordinate clicks; Flash puzzles still non-functional |
+| BookCart | https://bookcart.azurewebsites.net/ | 17,514 | $0.019 | 38,433 | $0.071 | 2.2× | 3.8× | **Site restored** (was redirecting to cnarios.com, back as of 2026-06-03); Angular Material; 13 CLI refs; search via `input[type=search]` + dispatchEvent |
+| Candy Mapper | https://www.candymapper.net/ | 13,320 | $0.019 | 37,853 | $0.069 | 2.8× | 3.6× | UK testing sandbox; 54 MCP elements — county selector, contact form, social links, reCAPTCHA challenge; heavy page content compresses ratio to one of the narrowest in GP |
+| Cnarios | https://www.cnarios.com/ | 45,098 | $0.018 | 41,276 | $0.064 | 0.9× | 3.6× | React SPA; homepage nav maps fine in both; challenge cards at /challenges/ not rendered (React routing bug — heading only) |
+| Evil Tester | https://testpages.eviltester.com/styled/index.html | 10,515 | $0.022 | 44,361 | $0.140 | 4.2× | 6.4× | Pre-stub window.alert/confirm/prompt via eval BEFORE clicking any alert button (B3/MB3 deadlock still open); CLI eval pre-stub nearly equalizes costs (Cost× 1.5×) |
+| Gefälscht CompuTech | https://webtestingcourse.dequecloud.com/ | 8,821 | $0.020 | 44,533 | $0.085 | 5.0× | 4.3× | Intentionally inaccessible site for accessibility testing; contact form needs `input[name=x]` selectors; fast nav → high MCP overhead ratio |
+| Parabank | https://parabank.parasoft.com/parabank/admin.htm | 9,196 | $0.020 | 34,389 | $0.057 | 3.7× | 2.9× | CLI `input[name=customer.firstName]` fails (dot in name); MCP ID-based selectors work fine; run DB Initialize from admin panel before testing |
+| Parking Cost Calculator | https://www.shino.de/parkcalc/ | 11,649 | $0.021 | 50,486 | $0.098 | 4.3× | 4.7× | Returns $0.00 consistently in both interfaces — AM/PM radio default or date parse bug on the site itself; select lot by visible label or value (B5 fixed v26.5.31); invalid dates → inline error |
+| PHP Travels | http://phptravels.com/demo/ | 11,142 | $0.023 | 53,688 | $0.101 | 4.8× | 4.3× | **Site redesigned** (2026-06-03): submit no longer crashes — pre-stub `window.alert` then click `#demo`; 71 CLI refs; math captcha field `@e21` still present; fill first/last/email then click @e20 |
+| Polymer Shop | https://shop.polymer-project.org/ | 8,928 | $0.014 | 31,033 | $0.058 | 3.5× | 4.1× | All UI in Web Components shadow DOM — map returns nothing in both; eval+shadowRoot traversal required; Polymer events need mouse_click at bounding-box coords — eval .click() does not fire component events |
+| Potion Shop | https://qe-at-cgi-fi.github.io/potion-shop/ | 8,226 | $0.020 | 42,220 | $0.075 | 5.1× | 3.8× | Medieval order form; 32 form controls (radio for potion type/size/potency, ingredient checkboxes, delivery options, textarea); browser_fill works on all inputs |
+| Practice Software Testing | https://practicesoftwaretesting.com/ | 15,241 | $0.020 | 61,556 | $0.129 | 4.0× | 6.4× | Angular; Login is `input[type=submit]` not button — use eval.click(); test login: customer@practicesoftwaretesting.com / welcome01; add to cart works without login |
+| PrestaShop | https://demo.prestashop.com/ | 15,545 | $0.017 | 47,687 | $0.077 | 3.1× | 4.6× | Store in iframe — get inner URL via eval after 5s; subdomain expires in ~2min; use eval location.href for all navigation (vibium go deadlocks daemon); mandatory sleeps compress ratio |
+| PromptQA Playground | https://playground.promptqa.dev/ | 8,197 | $0.023 | 64,915 | $0.096 | 7.9× | 4.3× | **New site (added 2026-06-03):** Shop + Clinic + Widgets + API + Locator Game; 69 refs on homepage, 76 in Shop; stable `data-testid` on all elements; tour overlay on first load — dismiss "Skip tour" before interacting |
+| QA Practice | https://qa-practice.razvanvancea.ro/ | 11,520 | $0.016 | 52,303 | $0.109 | 4.5× | 6.9× | ADD TO CART uses CSS uppercase — use map refs not text; login at homepage #auth-shop anchor (not /ecommerce/ — 404); pre-stub alert/confirm; login: admin@admin.com / admin123 |
+| QA Training Simulator | https://bugeater.web.app/ | 10,855 | $0.022 | 50,566 | $0.081 | 4.7× | 3.7× | BugEater 2.0 (renumbered #1.1–#7.6 as of 04.2026); two cookie banners (homepage + /app/list); dismiss react-joyride tutorial; direct URL to challenge routes now works — navigate from /app/list for the list |
+| Random User Generator | https://randomuser.me/ | 11,859 | $0.017 | 43,690 | $0.083 | 3.7× | 4.9× | URL-param API calls are the fastest pattern; ?format=csv triggers download and crashes BiDi session (restart required); use eval for large JSON (vibium text overflows at 5000 results) |
+| Real World Example Apps | https://codebase.show/projects/realworld | 13,480 | $0.043 | 42,298 | $0.089 | 3.1× | 2.1× | SvelteKit SPA needs 3s sleep after wait load before content renders; GitHub OAuth required for Sign In; mandatory 3s sleep floor narrows the ratio relative to similar-sized sites |
+| testers.ai | https://testers.ai/testing/ | 9,442 | $0.025 | 41,875 | $0.067 | 4.4× | 2.7× | 59-link checklist index covering WCAG A/AA/AAA, screen reader, keyboard, color, ARIA, forms, security, privacy, code quality, i18n, GenAI, DevOps, and more |
+| Test Track | https://testtrack.org/ | 27,166 | $0.020 | 57,440 | $0.111 | 2.1× | 5.7× | Structured training site; 15 practice modules Basic→Intermediate→Advanced→Expert (buttons, inputs, login, dropdowns, checkboxes, tables, modals, alerts, drag & drop, frames, canvas, 3D chess); used as vibium reference site |
+| The Boozang Test Lab | https://thelab.boozang.com/ | 9,409 | $0.021 | 50,224 | $0.081 | 5.3× | 3.9× | React SPA; 16 challenges; Form Fill saves to shared DB at api.boozang.com; vibium fill works on all inputs; vibium click works on all buttons |
+| The iframe Search Engine | https://eviltester.github.io/TestingApp/apps/iframe-search/iframe-search.html | 29,901 | $0.018 | 43,240 | $0.100 | 1.4× | 5.5× | Use vibium fill for search input; select by visible label or full URL value; "Go search" link opens in a new tab; non-existent select value now errors (B5 fixed v26.5.31) |
+| The Internet | http://the-internet.herokuapp.com/ | 22,388 | $0.019 | 59,245 | $0.104 | 2.6× | 5.5× | 44 examples; hover fails on non-interactive elements; vibium frame context resets per CLI call; TinyMCE iframe via contentDocument; input[type=range] needs eval+dispatchEvent |
+| The Random Number Service | https://www.random.org/ | 12,173 | $0.024 | 46,765 | $0.094 | 3.8× | 3.9× | Cookie banner on load; generator forms not in map — use URL params or eval form.submit(); validation: min>max and num>10000 both trigger errors |
+| ToDo List | https://todolist.james.am/#/ | 11,844 | $0.015 | 59,299 | $0.084 | 5.0× | 5.5× | AngularJS; **counter off-by-1 bug** (shows N-1 active items); dblclick label to enter edit mode; checkbox check "obscured" — use mouse click by coords; no localStorage persistence |
+| UI5 Demo Kit | https://ui5.sap.com/#/demoapps | 13,832 | $0.019 | 57,399 | $0.114 | 4.1× | 6.1× | **v26.5.31 update:** CLI vibium map now returns 137 refs (was nothing in older versions); MCP browser_map returns 128 refs; Shopping Cart "Open App" opens new tab — use browser_new_page for next site to avoid BiDi dead-frame |
+| BearQ | https://angryweasel.com/bearq/ | 6,820 | $0.017 | 43,902 | $0.069 | 6.4× | 4.0× | **New site (added 2026-06-03):** Weasel Warren — 5 challenge sections (Form Validation, Input Types, Alerts & Dialogs, Basic Elements, Images & Media); 9 CLI/MCP nav refs on homepage; form validation page has email/username/password/confirm + Register button |
 | Bill Payment API | https://gauravkhurana.in/practise-api/ | 19,411 | $0.036 | 45,997 | $0.145 | 2.4× | 4.0× | **New site (added 2026-06-03):** Docs page → "Launch the Practice UI" → full BillPay CRUD app at `/practise-api/ui`; 33 refs; Dashboard / Bills / Payments / Users / Billers / Settings / Practice Components sections; dark-mode toggle |
 
 ³ Parabank MCP inflated by 30s browser_find timeout on non-existent "Register" role. Without timeout: ~54,782ms (11.4×).
@@ -97,28 +97,28 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (Level 2) | 215,251ms | 1,661,488ms | **7.7×** faster |
+| Time (best-available) | 370,784ms | 1,301,744ms | **3.5×** faster |
 | LLM turns (v26.3.18) | ~46 | ~317 | ~6.9× fewer |
-| Cost (Level 2) | $0.035 | $21.783 | N/A |
+| Cost (best-available) | $0.951 | $13.911 | **14.6×** cheaper |
 
-*Level 2 rerun (v26.5.31, 2026-06-03) — all 41 sites measured.*
+*Best-available data: L3 for 14/41 sites (batches 9–10); L2 for remaining 27. Batch 9 CLI costs are $0.000 (ran under Haiku 4.5, not captured by sonnet-4-6 filter).*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
-| Applitools Demo | https://demo.applitools.com/ | 4,059 | $0.000 | 53,709 | $0.746 | 13.2× | N/A | Intentional visual testing site; any credentials accepted including empty; **dashboard shows $350%7** corrupted total (intentional bug); search non-functional; all action links dead (href="#") |
-| ATM Practice App | https://qe-at-cgi-fi.github.io/atm/ | 3,181 | $0.000 | 61,111 | $0.944 | 19.2× | N/A | Minimal ATM simulator; 4 elements (DEBUG, ADMIN, number input, WITHDRAW); pure overhead exposure — one of the widest ratios for minimal-DOM sites |
-| Automate Now Sandbox | https://automatenow.io/sandbox-automation-testing-practice-website/ | 7,819 | $0.000 | 65,191 | $0.510 | 8.3× | N/A | Submit fires window.alert — pre-stub required; slider needs eval+dispatchEvent; **MCP submit button obscured** (receivesEvents check failed) — use browser_evaluate fallback; name input needs click before fill |
-| Automation Bookstore | https://automationbookstore.dev/ | 3,423 | $0.000 | 34,130 | $0.304 | 10.0× | N/A | Filter-only SPA; all 8 book hrefs="#" (no detail pages); case-insensitive real-time filter hides via CSS class — screenshot needed to verify filter state |
-| Automation Camp | https://play2.automationcamp.ir/ | 4,086 | $0.000 | 55,109 | $0.375 | 13.5× | N/A | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
-| Automation Exercise | https://www.automationexercise.com/ | 6,301 | $0.000 | 104,327 | $0.791 | 16.6× | N/A | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
-| Automation in Testing | https://automationintesting.online/#/ | 3,901 | $0.000 | 59,422 | $0.745 | 15.2× | N/A | Full B&B booking site; 33 MCP refs; contact form at @e17–@e22; #description textarea needs eval+dispatchEvent; Submit @e22 browser_click works directly |
-| Automation Test Store | https://automationteststore.com/ | 5,741 | $0.000 | 48,482 | $0.539 | 8.4× | N/A | AbanteCart; search by keyword URL param; get product_id from search result href; Add to Cart via `eval document.querySelector('a.cart').click()` (browser_click fails — zero-size); full cart confirmed |
-| Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 3,215 | $0.000 | 39,710 | $0.415 | 12.4× | N/A | Blogger single long page; **both CLI and MCP map return 82 elements** (old "CLI returns nothing" note outdated); date input needs eval; radio/checkbox browser_click fails — use eval; alert buttons deadlock — pre-stub |
-| Coffee Cart | https://coffee-cart.app/ | 3,138 | $0.000 | 55,061 | $0.693 | 17.5× | N/A | Vue SPA; 4 map refs only — product cards not in map; data-test attrs exist but `browser_click '[data-test=X]'` fails — use `eval querySelector.click()`; checkout Submit also needs eval click; checkout modal: name + email required |
-| Commit Quality | https://commitquality.com/ | 2,954 | $0.000 | 41,571 | $0.473 | 14.1× | N/A | Clean React app; map correctly identifies nav + filter + product elements in both interfaces |
-| Contact List App | https://thinking-tester-contact-list.herokuapp.com/ | 2,993 | $0.000 | 60,554 | $0.686 | 20.2× | N/A | Heroku app; login required for all operations; full CRUD contact management flow works |
-| Demo SaaS | https://demo-saas.bugbug.io/ | 3,519 | $0.000 | 47,499 | $0.591 | 13.5× | N/A | Clean SPA; minimal interaction; MCP 13.5s is among the fastest MCP times in dataset; 12.7× pure overhead ratio |
-| DemoQA | https://demoqa.com/ | 8,549 | $0.000 | 42,296 | $0.488 | 4.9× | N/A | Component library; 7 practice sections (Elements, Forms, Alerts/Frames/Windows, Widgets, Interactions, Book Store); many sub-pages; clean map in both interfaces |
+| Applitools Demo | https://demo.applitools.com/ | 10,842 | $0.243 | 41,396 | $0.064 | 3.8× | 0.3× | Intentional visual testing site; any credentials accepted including empty; **dashboard shows $350%7** corrupted total (intentional bug); search non-functional; all action links dead (href="#") |
+| ATM Practice App | https://qe-at-cgi-fi.github.io/atm/ | 6,200 | $0.112 | 37,400 | $0.077 | 6.0× | 0.7× | Minimal ATM simulator; 4 elements (DEBUG, ADMIN, number input, WITHDRAW); pure overhead exposure — one of the widest ratios for minimal-DOM sites |
+| Automate Now Sandbox | https://automatenow.io/sandbox-automation-testing-practice-website/ | 33,486 | $0.301 | 30,727 | $0.053 | 0.9× | 0.2× | Submit fires window.alert — pre-stub required; slider needs eval+dispatchEvent; **MCP submit button obscured** (receivesEvents check failed) — use browser_evaluate fallback; name input needs click before fill |
+| Automation Bookstore | https://automationbookstore.dev/ | 19,629 | $0.075 | 33,758 | $0.065 | 1.7× | 0.9× | Filter-only SPA; all 8 book hrefs="#" (no detail pages); case-insensitive real-time filter hides via CSS class — screenshot needed to verify filter state |
+| Automation Camp | https://play2.automationcamp.ir/ | 11,173 | $0.057 | 43,601 | $0.066 | 3.9× | 1.2× | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
+| Automation Exercise | https://www.automationexercise.com/ | 16,041 | $0.000 | 25,108 | $0.000 | 1.6× | N/A | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
+| Automation in Testing | https://automationintesting.online/#/ | 5,406 | $0.000 | 23,793 | $0.000 | 4.4× | N/A | Full B&B booking site; 33 MCP refs; contact form at @e17–@e22; #description textarea needs eval+dispatchEvent; Submit @e22 browser_click works directly |
+| Automation Test Store | https://automationteststore.com/ | 28,976 | $0.000 | 27,171 | $0.000 | 0.9× | N/A | AbanteCart; search by keyword URL param; get product_id from search result href; Add to Cart via `eval document.querySelector('a.cart').click()` (browser_click fails — zero-size); full cart confirmed |
+| Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 6,859 | $0.000 | 32,690 | $0.000 | 4.8× | N/A | Blogger single long page; **both CLI and MCP map return 82 elements** (old "CLI returns nothing" note outdated); date input needs eval; radio/checkbox browser_click fails — use eval; alert buttons deadlock — pre-stub |
+| Coffee Cart | https://coffee-cart.app/ | 17,957 | $0.000 | 25,425 | $0.000 | 1.4× | N/A | Vue SPA; 4 map refs only — product cards not in map; data-test attrs exist but `browser_click '[data-test=X]'` fails — use `eval querySelector.click()`; checkout Submit also needs eval click; checkout modal: name + email required |
+| Commit Quality | https://commitquality.com/ | 17,543 | $0.000 | 20,014 | $0.000 | 1.1× | N/A | Clean React app; map correctly identifies nav + filter + product elements in both interfaces |
+| Contact List App | https://thinking-tester-contact-list.herokuapp.com/ | 9,954 | $0.000 | 10,811 | $0.000 | 1.1× | N/A | Heroku app; login required for all operations; full CRUD contact management flow works |
+| Demo SaaS | https://demo-saas.bugbug.io/ | 16,267 | $0.064 | 29,383 | $0.053 | 1.8× | 0.8× | Clean SPA; minimal interaction; MCP 13.5s is among the fastest MCP times in dataset; 12.7× pure overhead ratio |
+| DemoQA | https://demoqa.com/ | 18,079 | $0.064 | 27,151 | $0.052 | 1.5× | 0.8× | Component library; 7 practice sections (Elements, Forms, Alerts/Frames/Windows, Widgets, Interactions, Book Store); many sub-pages; clean map in both interfaces |
 | Expand Testing | https://practice.expandtesting.com/ | 13,143 | $0.000 | 29,170 | $0.485 | 2.2× | N/A | Login button obscured by ad — use `dispatchEvent(MouseEvent)` on submit; valid login: practice / SuperSecretPassword!; navigate directly to /login (not homepage) |
 | GitHub Users Search | https://gh-users-search.netlify.app/ | 3,550 | $0.000 | 34,797 | $0.498 | 9.8× | N/A | React GitHub user search; default user pre-loaded; 34 elements (search input + submit + follower links); clean minimal SPA |
 | Global SQA Demo | http://www.globalsqa.com/demo-site/ | 6,171 | $0.000 | 33,769 | $0.375 | 5.5× | N/A | **Key behavioral difference:** CLI gets BiDi error on http:// URL; **MCP silently follows HTTP→HTTPS redirect** and loads site successfully; MCP maps 49 interactive elements |
@@ -155,11 +155,11 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (Level 2) | 21,170ms | 187,318ms | **8.8×** faster |
+| Time (L2) | 21,170ms | 187,318ms | **8.8×** faster |
 | LLM turns (v26.3.18) | 19 | 48 | 2.5× fewer |
-| Cost (Level 2) | $0.000 | $3.114 | N/A |
+| Cost (L2) | $0.000 | $3.114 | N/A |
 
-*Level 2 rerun (v26.5.31, 2026-06-03) — 7 of 11 sites measured. 4 require local Docker setup (bWAPP, DVGA, VAmPI, LabEx Cybersecurity) — permanent —.*
+*L2 data (no L3 rerun yet). 7 of 11 sites measured; 4 require local Docker (bWAPP, DVGA, VAmPI, LabEx Cybersecurity) — permanent —.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -181,16 +181,16 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (Level 2) | 76,055ms | 334,781ms | **4.4×** faster |
+| Time (best-available) | 112,526ms | 425,229ms | **3.8×** faster |
 | LLM turns (v26.3.18) | 3 | 37 | 12× fewer |
-| Cost (Level 2) | $0.000 | $6.947 | N/A |
+| Cost (best-available) | $0.038 | $7.103 | **189.4×** cheaper |
 
-*Level 2 rerun (v26.5.31, 2026-06-03) — all 16 sites measured.*
+*Best-available data: L3 for 2 new sites (API Challenges, QuickPizza); L2 for 16 original sites. CLI cost non-zero due to API Challenges and QuickPizza L3 brackets.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
 | Airport Gap | https://airportgap.com/ | 2,428 | $0.000 | 18,691 | $0.446 | 7.7× | N/A | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
-| API Challenges | https://apichallenges.eviltester.com | 21,141 | $0.020 | 47,283 | $0.091 | 2.2× | 4.6× | **New site (added 2026-06-03):** Evil Tester; 4 sections: Simple API, API Challenges, API Simulator, HTTP Mirror; 15 refs on homepage; structured challenge format with auth, verb practice, payload manipulation |
+| API Challenges | https://apichallenges.eviltester.com | 21,141 | $0.020 | 47,283 | $0.091 | 2.2× | 4.5× | **New site (added 2026-06-03):** Evil Tester; 4 sections: Simple API, API Challenges, API Simulator, HTTP Mirror; 15 refs on homepage; structured challenge format with auth, verb practice, payload manipulation |
 | AP+ Developers | https://developer.bpaygroup.com.au/ | 3,016 | $0.000 | 20,971 | $0.451 | 7.0× | N/A | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
 | Automation Exercise API | https://www.automationexercise.com/api_list | 5,734 | $0.000 | 23,232 | $0.415 | 4.1× | N/A | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
 | Chuck Norris API | https://api.chucknorris.io/ | 3,489 | $0.000 | 24,366 | $0.524 | 7.0× | N/A | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
@@ -200,7 +200,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | httpbin | https://httpbin.org/ | 25,008 | $0.000 | 24,094 | $0.422 | 1.0× | N/A | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
 | JSON Placeholder | https://jsonplaceholder.typicode.com/ | 2,400 | $0.000 | 20,272 | $0.423 | 8.4× | N/A | Full CRUD works; writes return 201 but don't persist (shared mock state); no auth; one of the fastest API sites in the dataset |
 | Poké API | https://pokeapi.co/ | 3,964 | $0.000 | 24,014 | $0.426 | 6.1× | N/A | Read-only; 1,350 Pokémon; aggressive caching; no auth |
-| QuickPizza | https://test-api.k6.io/ | 15,330 | $0.017 | 43,165 | $0.065 | 2.8× | 3.8× | **New site (added 2026-06-03):** Grafana k6 demo; **first WebSocket site in dataset** — live visitor count via WS; "Pizza, Please!" button returns pizza recommendation via REST; Login at `/my/login` (JWT); 6 refs; use eval click on button |
+| QuickPizza | https://test-api.k6.io/ | 15,330 | $0.017 | 43,165 | $0.065 | 2.8× | 3.7× | **New site (added 2026-06-03):** Grafana k6 demo; **first WebSocket site in dataset** — live visitor count via WS; "Pizza, Please!" button returns pizza recommendation via REST; Login at `/my/login` (JWT); 6 refs; use eval click on button |
 | Restful Booker | https://restful-booker.herokuapp.com/ | 2,185 | $0.000 | 19,457 | $0.539 | 8.9× | N/A | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
 | Rick and Morty API | https://rickandmortyapi.com/graphql | 3,473 | $0.000 | 18,800 | $0.318 | 5.4× | N/A | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
 | ServeRest | https://serverest.dev/ | 2,598 | $0.000 | 18,713 | $0.429 | 7.2× | N/A | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
@@ -217,11 +217,11 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (Level 2) | 12,550ms | 81,798ms | **6.5×** faster |
+| Time (L2) | 12,550ms | 81,798ms | **6.5×** faster |
 | LLM turns (v26.3.18) | 4 | 30 | 7.5× fewer |
-| Cost (Level 2) | $0.000 | $1.858 | N/A |
+| Cost (L2) | $0.000 | $1.858 | N/A |
 
-*Level 2 rerun (v26.5.31, 2026-06-03) — all 3 sites measured.*
+*L2 data (no L3 rerun yet) — all 3 sites measured.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|

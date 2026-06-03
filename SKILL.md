@@ -426,7 +426,7 @@ L3 ✓✓ = measured in both L2 and L3. L3 ✓ = L3 only (new sites). L2 ✓ = L
 Batch 9 complete (2026-06-03): Automation Testing 7/41 done.
 Batch 10 complete (2026-06-03): Automation Testing 14/41 done.
 
-**General Practice (29/29 L2; 29/29 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
+**General Practice (28/28 L2; 31/31 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
 BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
 BookCart L3✓✓ (restored 2026-06-03), Candy Mapper L3✓✓, Cnarios L3✓✓,
 Evil Tester L3✓✓, Gefälscht CompuTech L3✓✓, Parabank L3✓✓,
