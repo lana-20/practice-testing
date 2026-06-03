@@ -15,7 +15,8 @@ from pathlib import Path
 BASE = Path(__file__).parent
 
 # Sites where MCP cost is N/A (submit crashes session or site gone)
-MCP_NA = {"PHP Travels", "Black Box Puzzles", "BookCart"}
+# Note: PHP Travels, Black Box Puzzles, BookCart were here but are now restored/fixed (2026-06-03)
+MCP_NA: set = set()
 
 def load_clean_results(csv_path):
     """Return dict of site → latest clean-two-phase row."""
