@@ -1,20 +1,29 @@
 #!/usr/bin/env python3
 """
-Per-site token/cost + time bracket tool for practice-testing runs.
+Per-site token/cost + time + turns bracket tool for practice-testing runs.
 
 Usage:
     python3 token_bracket.py --snapshot               # token baseline only
-    python3 token_bracket.py --snapshot --time        # token baseline + timestamp
-    python3 token_bracket.py --diff "BASE"            # delta (time shown if BASE has timestamp)
+    python3 token_bracket.py --snapshot --time        # token baseline + timestamp + turn count
+    python3 token_bracket.py --diff "BASE"            # delta (time + turns shown if BASE has them)
     python3 token_bracket.py --diff "BASE" --json     # machine-readable delta
 
-Workflow (time + tokens together):
+Snapshot string format (comma-separated):
+    4 values:  input,write,read,output                        (legacy — no ts, no turns)
+    5 values:  ts,input,write,read,output                     (legacy — no turns)
+    6 values:  ts,input,write,read,output,msg_count           (current — includes turns)
+
+Workflow (CLI phase — snapshot MUST be a separate preliminary bash call):
     BASE=$(python3 token_bracket.py --snapshot --time)
-    # ... run CLI test for one site ...
-    python3 token_bracket.py --diff "$BASE"
+    # next bash call: generate + execute CLI test (cost now inside bracket)
+    vibium stop; vibium go URL && vibium map && ...
+    # then diff:
+    python3 token_bracket.py --diff "$BASE" --json
+
+Workflow (MCP phase — snapshot already correct as separate call):
     BASE=$(python3 token_bracket.py --snapshot --time)
-    # ... run MCP test for the same site ...
-    python3 token_bracket.py --diff "$BASE"
+    # MCP tool calls follow in next Claude turn
+    python3 token_bracket.py --diff "$BASE" --json
 
 claude-sonnet-4-6 pricing (per 1M tokens):
     Input (non-cached):          $3.00
@@ -41,8 +50,8 @@ MODEL = "sonnet-4-6"
 def read_totals():
     """
     Read all jsonl files, deduplicate by message.id (last occurrence wins),
-    filter to claude-sonnet-4-6, and return summed token counts.
-    Returns (input, cache_write, cache_read, output).
+    filter to claude-sonnet-4-6, and return summed token counts + message count.
+    Returns (input, cache_write, cache_read, output, msg_count).
     """
     seen = {}  # message_id → usage dict (last occurrence wins)
 
@@ -79,18 +88,14 @@ def read_totals():
         except (OSError, IOError):
             pass
 
-    total_input = 0
-    total_write = 0
-    total_read  = 0
-    total_output = 0
-
+    total_input = total_write = total_read = total_output = 0
     for usage in seen.values():
         total_input  += usage.get("input_tokens", 0)
         total_write  += usage.get("cache_creation_input_tokens", 0)
         total_read   += usage.get("cache_read_input_tokens", 0)
         total_output += usage.get("output_tokens", 0)
 
-    return total_input, total_write, total_read, total_output
+    return total_input, total_write, total_read, total_output, len(seen)
 
 
 def cost(inp, write, read, out):
@@ -98,21 +103,41 @@ def cost(inp, write, read, out):
 
 
 def snapshot_str(totals, include_time=False):
-    parts = list(totals)
+    """
+    totals: (input, write, read, output, msg_count)
+    Emits: ts,input,write,read,output,msg_count  (with --time)
+           input,write,read,output,msg_count      (without --time)
+    """
+    inp, write, read, out, msg_count = totals
+    parts = [inp, write, read, out, msg_count]
     if include_time:
         parts = [int(time.time() * 1000)] + parts
-    return ",".join(str(t) for t in parts)
+    return ",".join(str(p) for p in parts)
 
 
 def parse_snapshot(s):
+    """
+    Returns (ts_ms_or_None, (input, write, read, output), msg_count_or_None).
+
+    Handles all three formats:
+      4 values: input,write,read,output              (legacy)
+      5 values: ts,input,write,read,output           (legacy with timestamp)
+      6 values: ts,input,write,read,output,msg_count (current)
+    """
     parts = s.strip().split(",")
-    if len(parts) == 5:
+    n = len(parts)
+    if n == 4:
+        return None, tuple(int(p) for p in parts), None
+    elif n == 5:
         ts = int(parts[0])
         tokens = tuple(int(p) for p in parts[1:])
-        return ts, tokens
-    elif len(parts) == 4:
-        return None, tuple(int(p) for p in parts)
-    raise ValueError(f"Expected 4 or 5 comma-separated values, got: {s!r}")
+        return ts, tokens, None
+    elif n == 6:
+        ts = int(parts[0])
+        tokens = tuple(int(p) for p in parts[1:5])
+        msg_count = int(parts[5])
+        return ts, tokens, msg_count
+    raise ValueError(f"Expected 4, 5, or 6 comma-separated values, got {n}: {s!r}")
 
 
 def main():
@@ -130,15 +155,16 @@ def main():
         return
 
     # --diff mode
-    base_ts, base_tok = parse_snapshot(args.diff)
-    cur_tok = read_totals()
+    base_ts, base_tok, base_msg_count = parse_snapshot(args.diff)
+    cur = read_totals()  # (input, write, read, output, msg_count)
 
-    d_input  = cur_tok[0] - base_tok[0]
-    d_write  = cur_tok[1] - base_tok[1]
-    d_read   = cur_tok[2] - base_tok[2]
-    d_output = cur_tok[3] - base_tok[3]
+    d_input  = cur[0] - base_tok[0]
+    d_write  = cur[1] - base_tok[1]
+    d_read   = cur[2] - base_tok[2]
+    d_output = cur[3] - base_tok[3]
     d_cost   = cost(d_input, d_write, d_read, d_output)
     elapsed  = int(time.time() * 1000) - base_ts if base_ts else None
+    d_turns  = cur[4] - base_msg_count if base_msg_count is not None else None
 
     if args.json:
         result = {
@@ -148,14 +174,17 @@ def main():
             "output":      d_output,
             "cost_usd":    round(d_cost, 6),
         }
+        if d_turns is not None:
+            result["turns"] = d_turns
         if elapsed is not None:
             result["elapsed_ms"] = elapsed
         print(json.dumps(result))
     else:
         total_tok = d_input + d_write + d_read + d_output
-        time_str = f"time:{elapsed:>7}ms  " if elapsed is not None else ""
+        time_str  = f"time:{elapsed:>7}ms  " if elapsed is not None else ""
+        turns_str = f"  turns:{d_turns:>4}" if d_turns is not None else ""
         print(f"{time_str}input:{d_input:>8}  write:{d_write:>8}  read:{d_read:>9}  "
-              f"output:{d_output:>7}  total:{total_tok:>9}  cost:${d_cost:.4f}")
+              f"output:{d_output:>7}  total:{total_tok:>9}  cost:${d_cost:.4f}{turns_str}")
 
 
 if __name__ == "__main__":
