@@ -141,8 +141,8 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Travel Agileway | http://travel.agileway.net/login | 4,205 | $0.000 | 29,234 | $0.574 | 7.0× | N/A | HTTP-only app; MCP silently loads the page (no BiDi error, unlike CLI); 6-element login form (username, password, remember_me, submit); credentials untested |
 | Tricentis Obstacle Course | https://obstaclecourse.tricentis.com/Obstacles | 8,210 | $0.000 | 32,854 | $0.482 | 4.0× | N/A | Scroll-heavy; eval for next-link navigation; moderate interaction overhead |
 | var.parts | https://var.parts/ | 3,251 | $0.000 | 52,735 | $0.482 | 16.2× | N/A | Vibium-branded robot parts shop; 41 elements (nav + 12 products with Add to Cart); clean e-commerce; used as vibium MCP test reference site |
-| Weather Shopper | https://weathershopper.pythonanywhere.com/ | 2,834 | — | 36,811 | — | 13.0× | — | 3-page e-commerce flow (temperature check → product selection → checkout); no mandatory sleeps; 13.0× |
-| XYZ Bank | https://www.globalsqa.com/angularJs-protractor/BankingProject/ | 3,788 | — | 42,695 | — | 11.3× | — | AngularJS; ng-model select needs eval+dispatchEvent; Login/Deposit buttons need eval click in MCP; 11.3× |
+| Weather Shopper | https://weathershopper.pythonanywhere.com/ | 2,699 | $0.000 | 26,494 | $0.688 | 9.8× | N/A | 3-page e-commerce flow (temperature check → product selection → checkout); no mandatory sleeps; 13.0× |
+| XYZ Bank | https://www.globalsqa.com/angularJs-protractor/BankingProject/ | 2,863 | $0.000 | 20,551 | $0.389 | 7.2× | N/A | AngularJS; ng-model select needs eval+dispatchEvent; Login/Deposit buttons need eval click in MCP; 11.3× |
 
 ⁴ Coffee Cart CLI anomaly: cold server hit (27,696ms); MCP hit warmer server; warm CLI ratio ~18×.  
 ⁵ Expand Testing CLI anomaly: daemon i/o timeout on first navigate; MCP ran cleanly at 44,906ms. Normal CLI ratio ~5.7×.  
@@ -165,8 +165,8 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
 | bWAPP | local only | — | — | — | — | — | — | 100+ web vulnerabilities; requires local Docker/Apache setup; no public demo; info at itsecgames.com |
 | DVGA | local only | — | — | — | — | — | — | Damn Vulnerable GraphQL Application; GraphQL-specific vulnerabilities; requires local Docker; no public hosted demo |
-| Firing Range | https://public-firing-range.appspot.com/ | 959 | — | 11,346 | — | 11.8× | — | Google's XSS/CORS/Clickjacking test bed; **MCP map returns 44 DOM XSS entries** on sub-page vs CLI's 10 — MCP more comprehensive on categorized listing pages |
-| Gin & Juice Shop | https://ginandjuice.shop/ | 3,137 | — | 22,635 | — | 7.2× | — | PortSwigger's vulnerable e-commerce; home → 500 server error — use /catalog; search + 17 products accessible; MCP found search form + category filters |
+| Firing Range | https://public-firing-range.appspot.com/ | 1,663 | $0.000 | 26,402 | $0.591 | 15.9× | N/A | Google's XSS/CORS/Clickjacking test bed; **MCP map returns 44 DOM XSS entries** on sub-page vs CLI's 10 — MCP more comprehensive on categorized listing pages |
+| Gin & Juice Shop | https://ginandjuice.shop/ | 4,052 | $0.000 | 25,193 | $0.397 | 6.2× | N/A | PortSwigger's vulnerable e-commerce; home → 500 server error — use /catalog; search + 17 products accessible; MCP found search form + category filters |
 | Google Gruyere | https://google-gruyere.appspot.com/ | 1,103 | — | 11,006 | — | 10.0× | — | Google security codelab; 60 topic links covering XSS, XSRF, path traversal, code exec; use /start for an isolated session instance |
 | LabEx Cybersecurity | https://labex.io/ | — | — | — | — | — | — | Account required; 403 on course pages without login; interactive cybersecurity learning paths |
 | OWASP Juice Shop | https://demo.owasp-juice.shop/ | 5,116 | — | 33,161 | — | 6.5× | — | **Critical behavioral difference:** CLI receives Application Error (Angular SSR crash); **MCP fully loads the app** with 15 products — most significant cross-interface divergence in the dataset |
