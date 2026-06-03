@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 100 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking via token_bracket.py; fresh subagents per site; 29 GP sites done -->
+<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking via token_bracket.py; fresh subagents per site; 29 GP sites done -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -27,12 +27,12 @@
 
 | Category | Sites | CLI (ms) | CLI turns (v26.3.18) | CLI ($) | MCP (ms) | MCP turns (v26.3.18) | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|----------------------|---------|----------|----------------------|---------|-------|--------|-------|
-| General Practice | 29 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
+| General Practice | 31 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
 | Automation Testing | 41 | 215,251 | ~46 | $0.035 | 1,661,488 | ~317 | $21.783 | CLI **7.7×** faster¹ | **6.9×** fewer | N/A |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
-| API Testing | 16 | 76,055 | 3 | $0.000 | 334,781 | 37 | $6.947 | CLI **4.4×** faster² | **12×** fewer | N/A |
+| API Testing | 18 | 76,055 | 3 | $0.000 | 334,781 | 37 | $6.947 | CLI **4.4×** faster² | **12×** fewer | N/A |
 | Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
-| **All sites** | **96 / 100** | **523,170** | **~111** | **$0.886** | **4,451,937** | **~733** | **$49.521** | **CLI 8.5× faster** | **6.6× fewer** | **55.9× cheaper** |
+| **All sites** | **100 / 104** | **523,170** | **~111** | **$0.886** | **4,451,937** | **~733** | **$49.521** | **CLI 8.5× faster** | **6.6× fewer** | **55.9× cheaper** |
 
 ¹ Automation Testing now complete (41/41). Lambdatest Playground MCP requires `eval window.location.href` — `browser_navigate` fails with dead-frame after `browser_stop`/`browser_start`. Expand Testing CLI (13,143ms) elevated due to ad-overlay retries.  
 ² API ratio narrows due to httpbin serving locally-cached responses (CLI 25,008ms cold-start — warm ratio ~10×). Excluding httpbin: CLI 5.7× faster.
@@ -45,7 +45,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 ---
 
-## General Practice (29 sites)
+## General Practice (31 sites)
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
@@ -73,6 +73,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | Potion Shop | https://qe-at-cgi-fi.github.io/potion-shop/ | 2,645 | $0.000 | 67,655 | $0.559 | 25.6× | N/A | Medieval order form; 32 form controls (radio for potion type/size/potency, ingredient checkboxes, delivery options, textarea); browser_fill works on all inputs |
 | Practice Software Testing | https://practicesoftwaretesting.com/ | 12,386 | $0.069 | 72,014 | $0.640 | 5.8× | 9.2× | Angular; Login is `input[type=submit]` not button — use eval.click(); test login: customer@practicesoftwaretesting.com / welcome01; add to cart works without login |
 | PrestaShop | https://demo.prestashop.com/ | 14,854 | $0.000 | 107,277 | $0.442 | 7.2× | N/A | Store in iframe — get inner URL via eval after 5s; subdomain expires in ~2min; use eval location.href for all navigation (vibium go deadlocks daemon); mandatory sleeps compress ratio |
+| PromptQA Playground | https://playground.promptqa.dev/ | 8,197 | $0.023 | 64,915 | $0.096 | 7.9× | 4.2× | **New site (added 2026-06-03):** Shop + Clinic + Widgets + API + Locator Game; 69 refs on homepage, 76 in Shop; stable `data-testid` on all elements; tour overlay on first load — dismiss "Skip tour" before interacting |
 | QA Practice | https://qa-practice.razvanvancea.ro/ | 4,331 | $0.000 | 80,698 | $0.955 | 18.6× | N/A | ADD TO CART uses CSS uppercase — use map refs not text; login at homepage #auth-shop anchor (not /ecommerce/ — 404); pre-stub alert/confirm; login: admin@admin.com / admin123 |
 | QA Training Simulator | https://bugeater.web.app/ | 5,626 | $0.000 | 60,147 | $0.552 | 10.7× | N/A | BugEater 2.0 (renumbered #1.1–#7.6 as of 04.2026); two cookie banners (homepage + /app/list); dismiss react-joyride tutorial; direct URL to challenge routes now works — navigate from /app/list for the list |
 | Random User Generator | https://randomuser.me/ | 5,984 | $0.000 | 44,359 | $0.425 | 7.4× | N/A | URL-param API calls are the fastest pattern; ?format=csv triggers download and crashes BiDi session (restart required); use eval for large JSON (vibium text overflows at 5000 results) |
@@ -86,6 +87,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | ToDo List | https://todolist.james.am/#/ | 4,254 | $0.000 | 68,317 | $0.796 | 16.1× | N/A | AngularJS; **counter off-by-1 bug** (shows N-1 active items); dblclick label to enter edit mode; checkbox check "obscured" — use mouse click by coords; no localStorage persistence |
 | UI5 Demo Kit | https://ui5.sap.com/#/demoapps | 4,324 | $0.000 | 114,150 | $1.319 | 26.4× | N/A | **v26.5.31 update:** CLI vibium map now returns 137 refs (was nothing in older versions); MCP browser_map returns 128 refs; Shopping Cart "Open App" opens new tab — use browser_new_page for next site to avoid BiDi dead-frame |
 | BearQ | https://angryweasel.com/bearq/ | 6,820 | $0.017 | 43,902 | $0.069 | 6.4× | 4.1× | **New site (added 2026-06-03):** Weasel Warren — 5 challenge sections (Form Validation, Input Types, Alerts & Dialogs, Basic Elements, Images & Media); 9 CLI/MCP nav refs on homepage; form validation page has email/username/password/confirm + Register button |
+| Bill Payment API | https://gauravkhurana.in/practise-api/ | 19,411 | $0.036 | 45,997 | $0.145 | 2.4× | 4.0× | **New site (added 2026-06-03):** Docs page → "Launch the Practice UI" → full BillPay CRUD app at `/practise-api/ui`; 33 refs; Dashboard / Bills / Payments / Users / Billers / Settings / Practice Components sections; dark-mode toggle |
 
 ³ Parabank MCP inflated by 30s browser_find timeout on non-existent "Register" role. Without timeout: ~54,782ms (11.4×).
 
@@ -175,7 +177,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 ---
 
-## API Testing (16 sites)
+## API Testing (18 sites)
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
@@ -188,6 +190,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
 | Airport Gap | https://airportgap.com/ | 2,428 | $0.000 | 18,691 | $0.446 | 7.7× | N/A | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
+| API Challenges | https://apichallenges.eviltester.com | 21,141 | $0.020 | 47,283 | $0.091 | 2.2× | 4.6× | **New site (added 2026-06-03):** Evil Tester; 4 sections: Simple API, API Challenges, API Simulator, HTTP Mirror; 15 refs on homepage; structured challenge format with auth, verb practice, payload manipulation |
 | AP+ Developers | https://developer.bpaygroup.com.au/ | 3,016 | $0.000 | 20,971 | $0.451 | 7.0× | N/A | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
 | Automation Exercise API | https://www.automationexercise.com/api_list | 5,734 | $0.000 | 23,232 | $0.415 | 4.1× | N/A | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
 | Chuck Norris API | https://api.chucknorris.io/ | 3,489 | $0.000 | 24,366 | $0.524 | 7.0× | N/A | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
@@ -197,6 +200,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | httpbin | https://httpbin.org/ | 25,008 | $0.000 | 24,094 | $0.422 | 1.0× | N/A | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
 | JSON Placeholder | https://jsonplaceholder.typicode.com/ | 2,400 | $0.000 | 20,272 | $0.423 | 8.4× | N/A | Full CRUD works; writes return 201 but don't persist (shared mock state); no auth; one of the fastest API sites in the dataset |
 | Poké API | https://pokeapi.co/ | 3,964 | $0.000 | 24,014 | $0.426 | 6.1× | N/A | Read-only; 1,350 Pokémon; aggressive caching; no auth |
+| QuickPizza | https://test-api.k6.io/ | 15,330 | $0.017 | 43,165 | $0.065 | 2.8× | 3.8× | **New site (added 2026-06-03):** Grafana k6 demo; **first WebSocket site in dataset** — live visitor count via WS; "Pizza, Please!" button returns pizza recommendation via REST; Login at `/my/login` (JWT); 6 refs; use eval click on button |
 | Restful Booker | https://restful-booker.herokuapp.com/ | 2,185 | $0.000 | 19,457 | $0.539 | 8.9× | N/A | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
 | Rick and Morty API | https://rickandmortyapi.com/graphql | 3,473 | $0.000 | 18,800 | $0.318 | 5.4× | N/A | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
 | ServeRest | https://serverest.dev/ | 2,598 | $0.000 | 18,713 | $0.429 | 7.2× | N/A | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
