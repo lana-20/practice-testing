@@ -281,6 +281,181 @@ browser_screenshot {filename: "final.png", fullPage: true}
 
 ---
 
+## Level N Rerun Protocol
+
+Measures per-site CLI ($), CLI turns, MCP ($), MCP turns for all 99 sites.
+Run when methodology changes (e.g. new bracket placement, updated token_bracket.py).
+Appends results to `rerun_results.csv`; last `clean-two-phase` row per site wins.
+
+### Infrastructure
+
+- `token_bracket.py` — `~/.claude/skills/practice-testing/token_bracket.py`
+- `rerun_results.csv` — `~/.claude/skills/practice-testing/rerun_results.csv`
+- CSV columns: `site,category,cli_ms,cli_usd,turns_cli,mcp_ms,mcp_usd,turns_mcp,notes`
+- Repo: github.com/lana-20/practice-testing
+
+### Orchestration
+
+MCP shares a single browser daemon — parallel MCP agents cause session conflicts.
+CLI agents are serialized to avoid daemon collisions from concurrent `vibium stop/start`.
+**Two-phase approach: parallel CLI → sequential MCP.**
+
+1. Read CSV to find already-done sites:
+   `cat ~/.claude/skills/practice-testing/rerun_results.csv`
+2. Cross-reference against the Site List below. Find next N unfinished sites in order.
+   Sites marked `↺` need a redo even if they appear in the CSV.
+3. **Phase 1 — CLI (parallel):** Spawn all N CLI-only agents IN A SINGLE MESSAGE.
+   Use `subagent_type: "general-purpose"`. Each saves results to `/tmp/rerun_{SLUG}_cli.json`.
+   Wait for all to complete.
+4. **Phase 2 — MCP (sequential):** Spawn MCP agents ONE AT A TIME — send one Agent call,
+   wait for it to return, then send the next.
+5. After all MCP agents complete, print results table and offer to continue.
+
+**BiDi dead-frame fix:** If a site opens new tabs (e.g. UI5 Demo Kit), the MCP daemon
+gets stuck on stale frame IDs for subsequent sites. Fix: use `browser_new_page {url}`
+instead of `browser_navigate`, then immediately `browser_close_page {index:0}`.
+
+### CLI-Only Agent Prompt Template
+
+Fill in NAME, URL, SLUG (lowercase-hyphenated, e.g. `evil-tester`), CLI_TEST_STEPS.
+
+```
+You are a QA cost-measurement agent — CLI phase only.
+Run the CLI test across THREE separate bash calls (never combine them), then stop.
+Do NOT use any MCP browser tools.
+
+Site: {NAME}
+URL: {URL}
+Slug: {SLUG}
+
+## Protocol
+
+### Bash call A — snapshot only (preliminary — must be its own call)
+  export PATH="/usr/local/bin:$PATH"
+  vibium stop 2>/dev/null; sleep 1
+  python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time > /tmp/rerun_{SLUG}_base.txt
+  python3 -c "import time; print(int(time.time()*1000))" > /tmp/rerun_{SLUG}_t0.txt
+  echo "snapshot done"
+
+### Bash call B — CLI test (Claude generates this script here; cost falls inside bracket)
+  export PATH="/usr/local/bin:$PATH"
+  vibium go {URL}
+  vibium wait load --timeout 10000
+  vibium title
+  vibium map
+  {CLI_TEST_STEPS}
+  python3 -c "import time; print(int(time.time()*1000))" > /tmp/rerun_{SLUG}_t1.txt
+
+### Bash call C — diff + save
+  BASE=$(cat /tmp/rerun_{SLUG}_base.txt)
+  DIFF=$(python3 ~/.claude/skills/practice-testing/token_bracket.py --diff "$BASE" --json)
+  CLI_MS=$(( $(cat /tmp/rerun_{SLUG}_t1.txt) - $(cat /tmp/rerun_{SLUG}_t0.txt) ))
+  CLI_USD=$(echo "$DIFF" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['cost_usd'])")
+  CLI_TURNS=$(echo "$DIFF" | python3 -c "import sys,json; print(json.load(sys.stdin).get('turns',''))")
+  echo "{\"cli_ms\":$CLI_MS,\"cli_usd\":$CLI_USD,\"cli_turns\":$CLI_TURNS}" > /tmp/rerun_{SLUG}_cli.json
+  cat /tmp/rerun_{SLUG}_cli.json
+
+Output the JSON content, then stop.
+```
+
+### MCP-Only Agent Prompt Template
+
+Fill in NAME, URL, SLUG, CATEGORY, MCP_TEST_STEPS.
+
+```
+You are a QA cost-measurement agent — MCP phase only.
+Read saved CLI data, run the MCP test, append the CSV row, then stop.
+Do NOT use vibium CLI commands. Do NOT run parallel work.
+
+Site: {NAME}
+URL: {URL}
+Slug: {SLUG}
+Category: {CATEGORY}
+
+## Protocol
+
+### Step 1 — Read CLI results
+Run via Bash:
+  cat /tmp/rerun_{SLUG}_cli.json
+
+Parse cli_ms, cli_usd, cli_turns from the JSON.
+
+### Step 2 — MCP snapshot (own bash call — MCP tool calls follow in the next turn)
+Run via Bash:
+  python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time > /tmp/rerun_{SLUG}_mcp_base.txt
+  python3 -c "import time; print(int(time.time()*1000))" > /tmp/rerun_{SLUG}_mcp_t0.txt
+  echo "MCP snapshot done"
+
+### Step 3 — MCP test
+Call these MCP tools in sequence:
+  browser_stop   (ignore errors — clears any leftover session)
+  browser_start
+  browser_navigate url="{URL}"
+  browser_wait_for_load timeout=10000
+  browser_map
+  {MCP_TEST_STEPS}
+
+### Step 4 — Diff + record
+Run via Bash:
+  python3 -c "import time; print(int(time.time()*1000))" > /tmp/rerun_{SLUG}_mcp_t1.txt
+  BASE_MCP=$(cat /tmp/rerun_{SLUG}_mcp_base.txt)
+  DIFF=$(python3 ~/.claude/skills/practice-testing/token_bracket.py --diff "$BASE_MCP" --json)
+  MCP_MS=$(( $(cat /tmp/rerun_{SLUG}_mcp_t1.txt) - $(cat /tmp/rerun_{SLUG}_mcp_t0.txt) ))
+  MCP_USD=$(echo "$DIFF" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['cost_usd'])")
+  MCP_TURNS=$(echo "$DIFF" | python3 -c "import sys,json; print(json.load(sys.stdin).get('turns',''))")
+  CLI_DATA=$(cat /tmp/rerun_{SLUG}_cli.json)
+  CLI_MS=$(echo "$CLI_DATA" | python3 -c "import sys,json; print(json.load(sys.stdin)['cli_ms'])")
+  CLI_USD=$(echo "$CLI_DATA" | python3 -c "import sys,json; print(json.load(sys.stdin)['cli_usd'])")
+  CLI_TURNS=$(echo "$CLI_DATA" | python3 -c "import sys,json; print(json.load(sys.stdin).get('cli_turns',''))")
+  echo "{NAME},{CATEGORY},$CLI_MS,$CLI_USD,$CLI_TURNS,$MCP_MS,$MCP_USD,$MCP_TURNS,clean-two-phase" \
+    >> ~/.claude/skills/practice-testing/rerun_results.csv
+  tail -1 ~/.claude/skills/practice-testing/rerun_results.csv
+
+Output the appended CSV row, then stop.
+```
+
+### Site List for Rerun
+
+Sites already measured (Level 2, 2026-06-03) — all ✓ unless noted:
+
+**General Practice (28/28):** AcademyBugs ✓, A11y Coffee ✓, Basic Calculator ✓,
+Black Box Puzzles ✓ (restored 2026-06-03), BookCart ✓ (restored 2026-06-03),
+Candy Mapper ✓, Cnarios ✓, Evil Tester ✓, Gefälscht CompuTech ✓, Parabank ✓,
+Parking Cost Calculator ✓, PHP Travels ✓ (redesigned 2026-06-03), Polymer Shop ✓,
+Potion Shop ✓, Practice Software Testing ✓, PrestaShop ✓, QA Practice ✓,
+QA Training Simulator ✓, Random User Generator ✓, Real World Example Apps ✓,
+testers.ai ✓, Test Track ✓, The Boozang Test Lab ✓, The iframe Search Engine ✓,
+The Internet ✓, The Random Number Service ✓, ToDo List ✓, UI5 Demo Kit ✓
+
+**Automation Testing (41/41):** Applitools Demo ✓, ATM Practice App ✓,
+Automate Now Sandbox ✓, Automation Bookstore ✓, Automation Camp ✓,
+Automation Exercise ✓, Automation in Testing ✓, Automation Test Store ✓,
+Automation Testing Practice ✓, Coffee Cart ✓, Commit Quality ✓,
+Contact List App ✓, Demo SaaS ✓, DemoQA ✓, Expand Testing ✓,
+GitHub Users Search ✓, Global SQA Demo ✓, GreenKart ✓,
+Hands-On Selenium WebDriver ✓, Lambdatest Playground ✓, Let Code ✓,
+Locator Game ✓, NearForm Testing Playground ✓, OrangeHRM ✓,
+Practice Automation ✓, Practice Test Automation ✓, QA Cloud ✓,
+QA Playground ✓, QE Buggy Todo ✓, React Shopping Cart ✓, SeleniumBase ✓,
+Selectors Hub ✓, Selenium Playground ✓, Swag Labs ✓, Sweet Shop ✓,
+TestDino ✓, Travel Agileway ✓, Tricentis Obstacle Course ✓, var.parts ✓,
+Weather Shopper ✓, XYZ Bank ✓
+
+**Security Testing (7/11):** Firing Range ✓, Gin & Juice Shop ✓, Google Gruyere ✓,
+OWASP Juice Shop ✓, OWASP VWAD ✓, Try Hack Me ✓, Zero Bank ✓
+— bWAPP, DVGA, VAmPI, LabEx Cybersecurity: local Docker only — permanent —
+
+**API Testing (16/16):** Airport Gap ✓, AP+ Developers ✓, Automation Exercise API ✓,
+Chuck Norris API ✓, Countries GraphQL ✓, FakeRestAPI ✓, Go REST ✓, httpbin ✓,
+JSON Placeholder ✓, Poké API ✓, Restful Booker ✓, Rick and Morty API ✓,
+ServeRest ✓, SpaceTraders ✓, Swagger Petstore ✓, The Cat API ✓
+
+**Performance Testing (3/3):** Blaze Demo ✓, Demoblaze ✓, Pet Store Web ✓
+
+Per-site test steps for each site are documented in the Site Directory section above.
+
+---
+
 ## Reporting format
 
 After testing, output a structured report:
