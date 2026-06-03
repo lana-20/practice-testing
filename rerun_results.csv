@@ -120,3 +120,8 @@ Black Box Puzzles,General Practice,3355,0.0,28265,0.699099,clean-two-phase;site-
 BookCart,General Practice,5041,0.0,21177,0.584431,clean-two-phase;site-restored-2026-06-03
 PHP Travels,General Practice,12444,0.0,36815,0.702801,clean-two-phase;site-redesigned-submit-no-longer-crashes
 Lambdatest Playground,Automation Testing,36711,0.034946,88980,0.745375,clean-two-phase;mcp-navigate-dead-frame-use-eval-location-href;308-refs-homepage-search-ajax-stays-on-homepage
+AcademyBugs,General Practice,76820,0.222255,3,76752,1.133237,16,clean-two-phase;l3
+AcademyBugs,General Practice,10356,0.018487,2,61013,0.108617,17,clean-two-phase;l3
+A11y Coffee,General Practice,6620,0.013383,2,34973,0.063507,10,clean-two-phase;l3
+Basic Calculator,General Practice,9469,0.018288,2,44934,0.068643,12,clean-two-phase;l3
+Black Box Puzzles,General Practice,7164,0.017106,2,35509,0.057553,10,clean-two-phase;l3
