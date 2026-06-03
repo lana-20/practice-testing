@@ -32,14 +32,14 @@ Practice Software Testing,General Practice,12386,0.069224,,72014,0.640261,,clean
 PrestaShop,General Practice,14854,0.0,,107277,0.442287,,clean-two-phase
 QA Practice,General Practice,4331,0.0,,80698,0.95462,,clean-two-phase
 QA Training Simulator,General Practice,5626,0.0,,60147,0.551648,,clean-two-phase
-Random User Generator,General Practice,5984,0.0,,44359,0.425406,,clean-two-phase
+Random User Generator,API Testing,5984,0.0,,44359,0.425406,,clean-two-phase
 Real World Example Apps,General Practice,6351,0.0,,54924,0.488594,,clean-two-phase
 testers.ai,General Practice,2536,0.0,,46662,0.495112,,clean-two-phase
 Test Track,General Practice,4845,0.0,,67995,0.953188,,clean-two-phase
 The Boozang Test Lab,General Practice,3873,0.0,,45876,0.554965,,clean-two-phase
 The iframe Search Engine,General Practice,2459,0.0,,53985,0.606934,,clean-two-phase
-The Internet,General Practice,9110,0.0,,79572,1.007144,,clean-two-phase
-The Random Number Service,General Practice,4118,0.0,,52957,0.685221,,clean-two-phase
+The Internet,Automation Testing,9110,0.0,,79572,1.007144,,clean-two-phase
+The Random Number Service,API Testing,4118,0.0,,52957,0.685221,,clean-two-phase
 ToDo List,General Practice,4254,0.0,,68317,0.796051,,clean-two-phase
 UI5 Demo Kit,General Practice,4324,0.0,,114150,1.318522,,clean-two-phase;shopping-cart-opens-new-tab-tab-switch-unreliable
 Applitools Demo,Automation Testing,4059,0.0,,492223,1.555416,,clean-two-phase;mcp-inflated-session-reset-after-ui5
@@ -140,14 +140,14 @@ PrestaShop,General Practice,15545,0.016829,2,47687,0.076632,11,clean-two-phase;l
 BearQ,General Practice,6820,0.017269,2,43902,0.069399,11,clean-two-phase;l3;new-site
 QA Practice,General Practice,11520,0.015787,2,52303,0.108796,17,clean-two-phase;l3
 QA Training Simulator,General Practice,10855,0.022125,2,50566,0.080904,13,clean-two-phase;l3
-Random User Generator,General Practice,11859,0.017143,2,43690,0.083337,13,clean-two-phase;l3
+Random User Generator,API Testing,11859,0.017143,2,43690,0.083337,13,clean-two-phase;l3
 Real World Example Apps,General Practice,13480,0.042993,2,42298,0.089305,11,clean-two-phase;l3
 testers.ai,General Practice,9442,0.02498,2,41875,0.067227,11,clean-two-phase;l3
 Test Track,General Practice,27166,0.019512,2,57440,0.110937,19,clean-two-phase;l3
 The Boozang Test Lab,General Practice,9409,0.020543,2,50224,0.0808,14,clean-two-phase;l3
 The iframe Search Engine,General Practice,29901,0.018101,2,43240,0.099711,15,clean-two-phase;l3
-The Internet,General Practice,22388,0.019014,2,59245,0.104447,16,clean-two-phase;l3
-The Random Number Service,General Practice,12173,0.023915,2,46765,0.094044,14,clean-two-phase;l3
+The Internet,Automation Testing,22388,0.019014,2,59245,0.104447,16,clean-two-phase;l3
+The Random Number Service,API Testing,12173,0.023915,2,46765,0.094044,14,clean-two-phase;l3
 ToDo List,General Practice,11844,0.015422,2,59299,0.084199,13,clean-two-phase;l3
 UI5 Demo Kit,General Practice,13832,0.018717,2,57399,0.114297,15,clean-two-phase;l3
 PromptQA Playground,General Practice,8197,0.022558,2,64915,0.09601,14,clean-two-phase;l3;new-site
@@ -168,3 +168,10 @@ Automation Bookstore,Automation Testing,19629,0.07463,10,33758,0.065068,10,clean
 Automation Camp,Automation Testing,11173,0.057139,8,43601,0.065921,10,clean-two-phase;l3
 Demo SaaS,Automation Testing,16267,0.064381,9,29383,0.052707,8,clean-two-phase;l3
 DemoQA,Automation Testing,18079,0.064381,9,27151,0.052034,8,clean-two-phase;l3
+Automation Exercise,Automation Testing,23004,0.024767,2,54692,0.094056,14,clean-two-phase;l3
+Automation in Testing,Automation Testing,11012,0.014456,2,45691,0.08188,13,clean-two-phase;l3
+Automation Test Store,Automation Testing,14071,0.027657,2,53344,0.101249,15,clean-two-phase;l3
+Automation Testing Practice,Automation Testing,9892,0.019522,2,53389,0.083856,13,clean-two-phase;l3
+Coffee Cart,Automation Testing,21244,0.015894,2,60082,0.115202,19,clean-two-phase;l3
+Commit Quality,Automation Testing,9202,0.017974,2,49518,0.133942,14,clean-two-phase;l3;mcp-date-filter-not-found-on-practice-get
+Contact List App,Automation Testing,9628,0.02007,2,53999,0.09017,16,clean-two-phase;l3
