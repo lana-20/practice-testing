@@ -94,3 +94,7 @@ OWASP Juice Shop,Security Testing,4567,0.0,22760,0.404947,clean-two-phase
 OWASP VWAD,Security Testing,2599,0.0,20456,0.406987,clean-two-phase
 Try Hack Me,Security Testing,2903,0.0,23945,0.407153,clean-two-phase
 Zero Bank,Security Testing,3645,0.0,28043,0.408005,clean-two-phase;http-blocked-both-cli-mcp
+Airport Gap,API Testing,2433,0.0,89938,0.411272,clean-two-phase
+AP+ Developers,API Testing,3854,0.0,107693,0.41441,clean-two-phase
+Automation Exercise API,API Testing,5734,0.0,23232,0.415407,clean-two-phase
+Chuck Norris API,API Testing,3489,0.0,24366,0.523695,clean-two-phase

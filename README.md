@@ -189,10 +189,10 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
-| Airport Gap | https://airportgap.com/ | 1,372 | — | 9,317 | — | 7× | — | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
-| AP+ Developers | https://developer.bpaygroup.com.au/ | 2,756 | — | 9,430 | — | 3.4× | — | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
-| Automation Exercise API | https://www.automationexercise.com/api_list | 4,862 | — | 13,186 | — | 3× | — | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
-| Chuck Norris API | https://api.chucknorris.io/ | 2,517 | — | 7,332 | — | 2.9× | — | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
+| Airport Gap | https://airportgap.com/ | 2,433 | $0.000 | 89,938 | $0.411 | 37.0× | N/A | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
+| AP+ Developers | https://developer.bpaygroup.com.au/ | 3,854 | $0.000 | 107,693 | $0.414 | 27.9× | N/A | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
+| Automation Exercise API | https://www.automationexercise.com/api_list | 5,734 | $0.000 | 23,232 | $0.415 | 4.1× | N/A | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
+| Chuck Norris API | https://api.chucknorris.io/ | 3,489 | $0.000 | 24,366 | $0.524 | 7.0× | N/A | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
 | Countries GraphQL | https://countries.trevorblades.com/ | 1,848 | — | 7,441 | — | 4.0× | — | Live GraphiQL editor; query countries, continents, languages; no auth; execute queries directly in browser |
 | FakeRestAPI | https://fakerestapi.azurewebsites.net/ | 8,648 | — | 16,171 | — | 1.9× | — | Azure-hosted Swagger UI; Activities, Authors, Books, CoverPhotos, Users endpoints; Azure cold start affects both CLI and MCP equally |
 | Go REST | https://gorest.co.in/ | 2,141 | — | 9,044 | — | 4.2× | — | Free REST API; token auth for write operations; code tabs (CURL/JS/Python/Ruby/Go) with live Run button; public read endpoints require no auth |
