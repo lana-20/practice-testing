@@ -223,6 +223,6 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
-| Blaze Demo | http://blazedemo.com/index.php | 5,039 | — | 20,418 | — | 4× | — | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
-| Demoblaze | https://demoblaze.com/ | 4,996 | — | 21,626 | — | 4× | — | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces (B3/MB3 still open, deferred); Demoblaze API at api.demoblaze.com |
-| Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 4,144 | — | 16,049 | — | 4× | — | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |
+| Blaze Demo | http://blazedemo.com/index.php | 7,179 | $0.000 | 27,049 | $0.653 | 3.8× | N/A | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
+| Demoblaze | https://demoblaze.com/ | 2,344 | $0.000 | 28,002 | $0.547 | 11.9× | N/A | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces (B3/MB3 still open, deferred); Demoblaze API at api.demoblaze.com |
+| Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 3,027 | $0.000 | 26,747 | $0.658 | 8.8× | N/A | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |

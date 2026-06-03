@@ -110,3 +110,6 @@ ServeRest,API Testing,2598,0.0,18713,0.42921,clean-two-phase
 SpaceTraders,API Testing,3827,0.0,18587,0.430302,clean-two-phase
 Swagger Petstore,API Testing,3349,0.0,19685,0.5432,clean-two-phase
 The Cat API,API Testing,2206,0.0,20726,0.320665,clean-two-phase
+Blaze Demo,Performance Testing,7179,0.0,27049,0.652763,clean-two-phase
+Demoblaze,Performance Testing,2344,0.0,28002,0.547205,clean-two-phase
+Pet Store Web,Performance Testing,3027,0.0,26747,0.658453,clean-two-phase
