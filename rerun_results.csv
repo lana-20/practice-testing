@@ -98,3 +98,7 @@ Airport Gap,API Testing,2433,0.0,89938,0.411272,clean-two-phase
 AP+ Developers,API Testing,3854,0.0,107693,0.41441,clean-two-phase
 Automation Exercise API,API Testing,5734,0.0,23232,0.415407,clean-two-phase
 Chuck Norris API,API Testing,3489,0.0,24366,0.523695,clean-two-phase
+Countries GraphQL,API Testing,2285,0.0,21401,0.417855,clean-two-phase
+FakeRestAPI,API Testing,5550,0.0,22848,0.419812,clean-two-phase
+Go REST,API Testing,4543,0.0,18924,0.421347,clean-two-phase
+httpbin,API Testing,25008,0.0,24094,0.421786,clean-two-phase
