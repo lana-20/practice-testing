@@ -197,14 +197,14 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | FakeRestAPI | https://fakerestapi.azurewebsites.net/ | 5,550 | $0.000 | 22,848 | $0.420 | 4.1× | N/A | Azure-hosted Swagger UI; Activities, Authors, Books, CoverPhotos, Users endpoints; Azure cold start affects both CLI and MCP equally |
 | Go REST | https://gorest.co.in/ | 4,543 | $0.000 | 18,924 | $0.421 | 4.2× | N/A | Free REST API; token auth for write operations; code tabs (CURL/JS/Python/Ruby/Go) with live Run button; public read endpoints require no auth |
 | httpbin | https://httpbin.org/ | 25,008 | $0.000 | 24,094 | $0.422 | 1.0× | N/A | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
-| JSON Placeholder | https://jsonplaceholder.typicode.com/ | 433 | — | 9,650 | — | 22× | — | **Widest API ratio** (22×); **CLI 433ms — fastest in dataset**; full CRUD works; writes return 201 but don't persist (shared mock state) |
-| Poké API | https://pokeapi.co/ | 1,515 | — | 10,306 | — | 7× | — | Read-only; 1,350 Pokémon; aggressive caching; no auth |
-| Restful Booker | https://restful-booker.herokuapp.com/ | 1,357 | — | 8,451 | — | 6× | — | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
-| Rick and Morty API | https://rickandmortyapi.com/graphql | 2,895 | — | 9,873 | — | 3× | — | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
-| ServeRest | https://serverest.dev/ | 1,502 | — | 7,671 | — | 5.1× | — | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
-| SpaceTraders | https://spacetraders.io/ | 14,933 | — | 10,203 | — | 0.7×⁷ | — | Space game REST API; 58-link docs site; **MCP was faster than CLI** — unusual; CLI cold-start on this site unusually slow; register/play via API calls |
-| Swagger Petstore | https://petstore.swagger.io/ | 1,347 | — | 17,599 | — | 13× | — | GET findByStatus, POST pet; shared mutable state — counts vary across sessions; no auth |
-| The Cat API | https://thecatapi.com/ | 1,215 | — | 8,288 | — | 6.8× | — | Cat image API; live voting/breeds/favorites demo on homepage; 29 MCP elements; free API key for write operations |
+| JSON Placeholder | https://jsonplaceholder.typicode.com/ | 2,400 | $0.000 | 20,272 | $0.423 | 8.4× | N/A | **Widest API ratio** (22×); **CLI 433ms — fastest in dataset**; full CRUD works; writes return 201 but don't persist (shared mock state) |
+| Poké API | https://pokeapi.co/ | 3,964 | $0.000 | 24,014 | $0.426 | 6.1× | N/A | Read-only; 1,350 Pokémon; aggressive caching; no auth |
+| Restful Booker | https://restful-booker.herokuapp.com/ | 2,185 | $0.000 | 19,457 | $0.539 | 8.9× | N/A | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
+| Rick and Morty API | https://rickandmortyapi.com/graphql | 3,473 | $0.000 | 18,800 | $0.318 | 5.4× | N/A | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
+| ServeRest | https://serverest.dev/ | 2,598 | $0.000 | 18,713 | $0.429 | 7.2× | N/A | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
+| SpaceTraders | https://spacetraders.io/ | 3,827 | $0.000 | 18,587 | $0.430 | 4.9× | N/A | Space game REST API; 58-link docs site; **MCP was faster than CLI** — unusual; CLI cold-start on this site unusually slow; register/play via API calls |
+| Swagger Petstore | https://petstore.swagger.io/ | 3,349 | $0.000 | 19,685 | $0.543 | 5.9× | N/A | GET findByStatus, POST pet; shared mutable state — counts vary across sessions; no auth |
+| The Cat API | https://thecatapi.com/ | 2,206 | $0.000 | 20,726 | $0.321 | 9.4× | N/A | Cat image API; live voting/breeds/favorites demo on homepage; 29 MCP elements; free API key for write operations |
 
 **API testing note:** CLI is cheaper than MCP for API-only workflows. MCP overhead comes from the protocol layer — each `browser_navigate` + `browser_evaluate` pair generates its own LLM turn. CLI dispatches via bash and the LLM barely participates in execution.  
 ⁷ SpaceTraders: CLI cold-start unusually slow (14,933ms); excluding it the API batch ratio is 4.8×.

@@ -102,3 +102,11 @@ Countries GraphQL,API Testing,2285,0.0,21401,0.417855,clean-two-phase
 FakeRestAPI,API Testing,5550,0.0,22848,0.419812,clean-two-phase
 Go REST,API Testing,4543,0.0,18924,0.421347,clean-two-phase
 httpbin,API Testing,25008,0.0,24094,0.421786,clean-two-phase
+JSON Placeholder,API Testing,2400,0.0,20272,0.423321,clean-two-phase
+Poké API,API Testing,3964,0.0,24014,0.426128,clean-two-phase
+Restful Booker,API Testing,2185,0.0,19457,0.539259,clean-two-phase
+Rick and Morty API,API Testing,3473,0.0,18800,0.317674,clean-two-phase
+ServeRest,API Testing,2598,0.0,18713,0.42921,clean-two-phase
+SpaceTraders,API Testing,3827,0.0,18587,0.430302,clean-two-phase
+Swagger Petstore,API Testing,3349,0.0,19685,0.5432,clean-two-phase
+The Cat API,API Testing,2206,0.0,20726,0.320665,clean-two-phase
