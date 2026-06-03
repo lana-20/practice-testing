@@ -1,4 +1,4 @@
-site,category,cli_ms,cli_usd,mcp_ms,mcp_usd,notes
+site,category,cli_ms,cli_usd,turns_cli,mcp_ms,mcp_usd,turns_mcp,notes
 AcademyBugs,General Practice,4874,0.140038,18766,0.393286,
 A11y Coffee,General Practice,2831,0.000000,17986,0.352185,
 Basic Calculator,General Practice,8395,0.000,98501,0.706473,combined-bracket-long-session-inflation

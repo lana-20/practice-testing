@@ -163,16 +163,26 @@ Run exploratory tests on QA practice sites using vibium browser automation.
 
 When given a site to test, run this structured protocol. Skip steps that are not applicable (e.g. login for sites without auth).
 
-Before Step 1, take a bracket snapshot for per-site token/time tracking:
+Before Step 1, take a bracket snapshot in its **own preliminary bash call** — this ensures the cost and turns of generating the CLI test script are captured inside the bracket:
+
 ```sh
-BASE=$(python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time)
+# Bash call A — snapshot only (do NOT put vibium commands here)
+export PATH="/usr/local/bin:$PATH"
+python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time > /tmp/tb_base.txt
+python3 -c "import time; print(int(time.time()*1000))" > /tmp/t0.txt
+echo "snapshot done"
 ```
-After completing the site test, compute the delta:
+
+Then run the CLI test in the **next bash call** (Steps 1–N below). After completing the site test, diff in a **third bash call**:
+
 ```sh
-python3 ~/.claude/skills/practice-testing/token_bracket.py --diff "$BASE"
-# → time:12847ms  input:142  write:1204  read:89241  output:318  total:90905  cost:$0.0087
+# Bash call C — diff
+BASE=$(cat /tmp/tb_base.txt)
+python3 ~/.claude/skills/practice-testing/token_bracket.py --diff "$BASE" --json
+# → {"input":142,"cache_write":1204,"cache_read":89241,"output":318,"cost_usd":0.0087,"turns":3,"elapsed_ms":12847}
 ```
-Take a fresh snapshot before each site (CLI and MCP are separate brackets). Use `--json` for machine-readable output.
+
+CLI and MCP use separate brackets. MCP snapshot is already correctly placed (separate bash call before any `browser_*` calls). Use `--json` for machine-readable output; `turns` field counts new LLM messages inside the bracket.
 
 ### Step 1 — Reachability
 
