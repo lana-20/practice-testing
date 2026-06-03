@@ -108,10 +108,10 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Automation Bookstore | https://automationbookstore.dev/ | 3,423 | $0.000 | 34,130 | $0.304 | 10.0× | N/A | **Widest ratio in Automation Testing** (36×); filter-only SPA; all 8 book hrefs="#" (no detail pages); CLI 491ms is the **fastest time in the entire dataset** |
 | Automation Camp | https://play2.automationcamp.ir/ | 4,086 | $0.000 | 55,109 | $0.375 | 13.5× | N/A | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
 | Automation Exercise | https://www.automationexercise.com/ | 6,301 | $0.000 | 104,327 | $0.791 | 16.6× | N/A | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
-| Automation in Testing | https://automationintesting.online/#/ | 2,755 | — | 31,544 | — | 11.5× | — | Full B&B booking site; Check Availability button obscured by calendar — use eval click; contact form #description is framework-driven textarea — use eval+dispatchEvent or browser_type for component state (B7/MB7 fill fix applies to plain textareas) |
-| Automation Test Store | https://automationteststore.com/ | 8,175 | — | 42,741 | — | 5.2× | — | AbanteCart e-commerce; full flow: search → detail → cart → checkout; guest checkout available via accountFrm_accountguest radio; vibium select for product variants |
-| Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 1,565 | — | 28,244 | — | 18.1× | — | Blogger single long page; **CLI map returns nothing** — eval-only; **MCP map returns 82 elements**; date input needs eval; alert buttons deadlock — pre-stub; Colors dropdown has duplicate option values (red×2, green×2) |
-| Coffee Cart | https://coffee-cart.app/ | 27,696⁴ | — | 35,598 | — | 1.3×⁴ | — | Vue SPA; product cards via data-test attribute (not class name); full checkout flow works; name+email required; CLI anomaly: cold server hit (27,696ms); **warm CLI ratio ~18×** |
+| Automation in Testing | https://automationintesting.online/#/ | 4,178 | $0.000 | 121,953 | $1.335⁸ | 29.2× | N/A | Full B&B booking site; 33 MCP refs; contact form at @e17–@e22; #description textarea needs eval+dispatchEvent; Submit @e22 browser_click works; MCP cost inflated by BiDi recovery overhead⁸ |
+| Automation Test Store | https://automationteststore.com/ | 5,741 | $0.000 | 48,482 | $0.539 | 8.4× | N/A | AbanteCart; search by keyword URL param; get product_id from search result href; Add to Cart via `eval document.querySelector('a.cart').click()` (browser_click fails — zero-size); full cart confirmed |
+| Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 3,215 | $0.000 | 39,710 | $0.415 | 12.4× | N/A | Blogger single long page; **both CLI and MCP map return 82 elements** (old "CLI returns nothing" note outdated); date input needs eval; radio/checkbox browser_click fails — use eval; alert buttons deadlock — pre-stub |
+| Coffee Cart | https://coffee-cart.app/ | 3,138 | $0.000 | 55,061 | $0.693 | 17.5× | N/A | Vue SPA; 4 map refs only — product cards not in map; data-test attrs exist but `browser_click '[data-test=X]'` fails — use `eval querySelector.click()`; checkout Submit also needs eval click; checkout modal: name + email required |
 | Commit Quality | https://commitquality.com/ | 1,689 | — | 16,517 | — | 9.8× | — | Clean React app; map correctly identifies nav + filter + product elements in both interfaces |
 | Contact List App | https://thinking-tester-contact-list.herokuapp.com/ | 2,194 | — | 25,909 | — | 11.8× | — | Heroku app; login required for all operations; full CRUD contact management flow works |
 | Demo SaaS | https://demo-saas.bugbug.io/ | 1,059 | — | 13,455 | — | 12.7× | — | Clean SPA; minimal interaction; MCP 13.5s is among the fastest MCP times in dataset; 12.7× pure overhead ratio |
@@ -146,7 +146,8 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 ⁴ Coffee Cart CLI anomaly: cold server hit (27,696ms); MCP hit warmer server; warm CLI ratio ~18×.  
 ⁵ Expand Testing CLI anomaly: daemon i/o timeout on first navigate; MCP ran cleanly at 44,906ms. Normal CLI ratio ~5.7×.  
-⁶ Let Code MCP anomaly: repeated BiDi navigation failures due to SSL/privacy errors; clean MCP ratio ~4×.
+⁶ Let Code MCP anomaly: repeated BiDi navigation failures due to SSL/privacy errors; clean MCP ratio ~4×.  
+⁸ Automation in Testing MCP inflated by BiDi dead-frame recovery (multiple stop/start/navigate cycles after Automation Exercise opened a modal); clean MCP cost expected ~$0.45–0.55.
 
 ---
 
