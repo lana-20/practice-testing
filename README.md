@@ -167,13 +167,13 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | DVGA | local only | — | — | — | — | — | — | Damn Vulnerable GraphQL Application; GraphQL-specific vulnerabilities; requires local Docker; no public hosted demo |
 | Firing Range | https://public-firing-range.appspot.com/ | 1,663 | $0.000 | 26,402 | $0.591 | 15.9× | N/A | Google's XSS/CORS/Clickjacking test bed; **MCP map returns 44 DOM XSS entries** on sub-page vs CLI's 10 — MCP more comprehensive on categorized listing pages |
 | Gin & Juice Shop | https://ginandjuice.shop/ | 4,052 | $0.000 | 25,193 | $0.397 | 6.2× | N/A | PortSwigger's vulnerable e-commerce; home → 500 server error — use /catalog; search + 17 products accessible; MCP found search form + category filters |
-| Google Gruyere | https://google-gruyere.appspot.com/ | 1,103 | — | 11,006 | — | 10.0× | — | Google security codelab; 60 topic links covering XSS, XSRF, path traversal, code exec; use /start for an isolated session instance |
+| Google Gruyere | https://google-gruyere.appspot.com/ | 1,741 | $0.000 | 40,519 | $0.499 | 23.3× | N/A | Google security codelab; 60 topic links covering XSS, XSRF, path traversal, code exec; use /start for an isolated session instance |
 | LabEx Cybersecurity | https://labex.io/ | — | — | — | — | — | — | Account required; 403 on course pages without login; interactive cybersecurity learning paths |
-| OWASP Juice Shop | https://demo.owasp-juice.shop/ | 5,116 | — | 33,161 | — | 6.5× | — | **Critical behavioral difference:** CLI receives Application Error (Angular SSR crash); **MCP fully loads the app** with 15 products — most significant cross-interface divergence in the dataset |
-| OWASP VWAD | https://owasp.org/www-project-vulnerable-web-applications-directory/ | 1,573 | — | 7,273 | — | 4.6× | — | Directory of vulnerable web apps (not itself a test target); links to the full registry at vwad.owasp.org |
-| Try Hack Me | https://tryhackme.com/ | 7,719 | — | 15,741 | — | 2.0× | — | **Narrowest ratio in Security batch** — heavy Next.js app (7–15s load time) narrows gap; landing page fully accessible; MCP map returns 72 elements; labs require account |
+| OWASP Juice Shop | https://demo.owasp-juice.shop/ | 4,567 | $0.000 | 22,760 | $0.405 | 5.0× | N/A | **Critical behavioral difference:** CLI receives Application Error (Angular SSR crash); **MCP fully loads the app** with 15 products — most significant cross-interface divergence in the dataset |
+| OWASP VWAD | https://owasp.org/www-project-vulnerable-web-applications-directory/ | 2,599 | $0.000 | 20,456 | $0.407 | 7.9× | N/A | Directory of vulnerable web apps (not itself a test target); links to the full registry at vwad.owasp.org |
+| Try Hack Me | https://tryhackme.com/ | 2,903 | $0.000 | 23,945 | $0.407 | 8.2× | N/A | **Narrowest ratio in Security batch** — heavy Next.js app (7–15s load time) narrows gap; landing page fully accessible; MCP map returns 72 elements; labs require account |
 | VAmPI | local only | — | — | — | — | — | — | Vulnerable REST API; OWASP top 10 API vulnerabilities; requires local Docker; no public hosted demo |
-| Zero Bank | http://zero.webappsecurity.com/ | 1,339 | — | 7,338 | — | 5.5× | — | Micro Focus Fortify demo; **HTTP-only** — BiDi error in both CLI and MCP; curl returns 200 but Chrome/BiDi blocks HTTP origins entirely |
+| Zero Bank | http://zero.webappsecurity.com/ | 3,645 | $0.000 | 28,043 | $0.408 | 7.7× | N/A | Micro Focus Fortify demo; **HTTP-only** — BiDi error in both CLI and MCP; curl returns 200 but Chrome/BiDi blocks HTTP origins entirely |
 
 ---
 

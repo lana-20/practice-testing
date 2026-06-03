@@ -89,3 +89,8 @@ Weather Shopper,Automation Testing,2699,0.0,26494,0.687639,clean-two-phase
 XYZ Bank,Automation Testing,2863,0.0,20551,0.389105,clean-two-phase
 Firing Range,Security Testing,1663,0.0,26402,0.591211,clean-two-phase
 Gin & Juice Shop,Security Testing,4052,0.0,25193,0.396906,clean-two-phase
+Google Gruyere,Security Testing,1741,0.0,40519,0.499278,clean-two-phase
+OWASP Juice Shop,Security Testing,4567,0.0,22760,0.404947,clean-two-phase
+OWASP VWAD,Security Testing,2599,0.0,20456,0.406987,clean-two-phase
+Try Hack Me,Security Testing,2903,0.0,23945,0.407153,clean-two-phase
+Zero Bank,Security Testing,3645,0.0,28043,0.408005,clean-two-phase;http-blocked-both-cli-mcp
