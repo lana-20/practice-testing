@@ -25,19 +25,21 @@
 
 ## Summary
 
-| Category | Sites | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× |
-|----------|-------|----------|---------|----------|---------|-------|-------|
-| General Practice | 28 | 107,711 | — | 863,817 | — | CLI **8.0×** faster | — |
-| Automation Testing | 41 | 255,969 | — | 1,066,307 | — | CLI **4.2×** faster¹ | — |
-| Security Testing | 7 tested / 11 total | 20,946 | — | 108,500 | — | CLI **5.2×** faster | — |
-| API Testing | 16 | 50,763 | — | 166,714 | — | CLI **3.3×** faster² | — |
-| Performance Testing | 3 | 14,179 | — | 58,093 | — | CLI **4.1×** faster | — |
-| **All sites** | **95 timed / 99 total** | **449,568** | **—** | **2,263,431** | **—** | **CLI 5.0× faster** | **—** |
+| Category | Sites | CLI (ms) | CLI turns | CLI ($) | MCP (ms) | MCP turns | MCP ($) | Speed | Turns× | Cost× |
+|----------|-------|----------|-----------|---------|----------|-----------|---------|-------|--------|-------|
+| General Practice | 28 | 107,711 | ~39 | — | 863,817 | ~301 | — | CLI **8.0×** faster | **7.7×** fewer | — |
+| Automation Testing | 41 | 255,969 | ~46 | — | 1,066,307 | ~317 | — | CLI **4.2×** faster¹ | **6.9×** fewer | — |
+| Security Testing | 7 / 11 | 20,946 | 19 | — | 108,500 | 48 | — | CLI **5.2×** faster | **2.5×** fewer | — |
+| API Testing | 16 | 50,763 | 3 | — | 166,714 | 37 | — | CLI **3.3×** faster² | **12×** fewer | — |
+| Performance Testing | 3 | 14,179 | 4 | — | 58,093 | 30 | — | CLI **4.1×** faster | **7.5×** fewer | — |
+| **All sites** | **95 / 99** | **449,568** | **~111** | **—** | **2,263,431** | **~733** | **—** | **CLI 5.0× faster** | **6.6× fewer** | **—** |
 
 ¹ Automation Testing totals skewed by two anomalies: CLI Expand Testing daemon i/o timeout (87,302ms) and MCP Let Code repeated BiDi failures (211,405ms). Excluding both: CLI 5.4× faster.  
 ² API ratio narrows to 3.3× due to SpaceTraders anomaly (MCP faster than CLI — CLI cold start). Excluding SpaceTraders: CLI 4.8× faster.
 
 **Key insight:** MCP time per site is fairly uniform (~7–50s regardless of site complexity). CLI time tracks actual site complexity (0.4s–88s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) absorb MCP's per-tool-call overhead.
+
+**Legend:** `—` = not yet measured (Level 2 rerun in progress) or site no longer accessible. `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `N/A` in MCP columns = MCP session crashed before test completed (e.g. PHP Travels submit fires window.alert which kills the websocket).
 
 Each section below includes an aggregate token/cost table — LLM turn counts and cost deltas measured from `~/.claude/projects/**/*.jsonl`.
 
@@ -102,10 +104,10 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
 | Applitools Demo | https://demo.applitools.com/ | 4,059 | $0.000 | 53,709 | $0.746 | 13.2× | N/A | Intentional visual testing site; any credentials accepted including empty; **dashboard shows $350%7** corrupted total (intentional bug); search non-functional; all action links dead (href="#") |
 | ATM Practice App | https://qe-at-cgi-fi.github.io/atm/ | 3,181 | $0.000 | 61,111 | $0.944 | 19.2× | N/A | Minimal ATM simulator; 4 elements (DEBUG, ADMIN, number input, WITHDRAW); pure overhead exposure — one of the widest ratios for minimal-DOM sites |
-| Automate Now Sandbox | https://automatenow.io/sandbox-automation-testing-practice-website/ | 1,777 | — | 29,648 | — | 16.7× | — | Submit fires window.alert — pre-stub required; slider needs eval+dispatchEvent; **MCP submit button obscured** (receivesEvents check failed) — use browser_evaluate fallback; name input needs click before fill |
-| Automation Bookstore | https://automationbookstore.dev/ | 491 | — | 17,664 | — | 36.0× | — | **Widest ratio in Automation Testing** (36×); filter-only SPA; all 8 book hrefs="#" (no detail pages); CLI 491ms is the **fastest time in the entire dataset** |
-| Automation Camp | https://play2.automationcamp.ir/ | 1,080 | — | 21,262 | — | 19.7× | — | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
-| Automation Exercise | https://www.automationexercise.com/ | 6,995 | — | 28,363 | — | 4.1× | — | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
+| Automate Now Sandbox | https://automatenow.io/sandbox-automation-testing-practice-website/ | 7,819 | $0.000 | 65,191 | $0.510 | 8.3× | N/A | Submit fires window.alert — pre-stub required; slider needs eval+dispatchEvent; **MCP submit button obscured** (receivesEvents check failed) — use browser_evaluate fallback; name input needs click before fill |
+| Automation Bookstore | https://automationbookstore.dev/ | 3,423 | $0.000 | 34,130 | $0.304 | 10.0× | N/A | **Widest ratio in Automation Testing** (36×); filter-only SPA; all 8 book hrefs="#" (no detail pages); CLI 491ms is the **fastest time in the entire dataset** |
+| Automation Camp | https://play2.automationcamp.ir/ | 4,086 | $0.000 | 55,109 | $0.375 | 13.5× | N/A | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
+| Automation Exercise | https://www.automationexercise.com/ | 6,301 | $0.000 | 104,327 | $0.791 | 16.6× | N/A | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
 | Automation in Testing | https://automationintesting.online/#/ | 2,755 | — | 31,544 | — | 11.5× | — | Full B&B booking site; Check Availability button obscured by calendar — use eval click; contact form #description is framework-driven textarea — use eval+dispatchEvent or browser_type for component state (B7/MB7 fill fix applies to plain textareas) |
 | Automation Test Store | https://automationteststore.com/ | 8,175 | — | 42,741 | — | 5.2× | — | AbanteCart e-commerce; full flow: search → detail → cart → checkout; guest checkout available via accountFrm_accountguest radio; vibium select for product variants |
 | Automation Testing Practice | https://testautomationpractice.blogspot.com/ | 1,565 | — | 28,244 | — | 18.1× | — | Blogger single long page; **CLI map returns nothing** — eval-only; **MCP map returns 82 elements**; date input needs eval; alert buttons deadlock — pre-stub; Colors dropdown has duplicate option values (red×2, green×2) |
