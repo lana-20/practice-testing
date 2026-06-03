@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun in progress (v26.5.31, 2026-06-02+): per-site CLI ($) / MCP ($) columns being filled via token_bracket.py; timing re-measured at same time -->
+<!-- 99 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 94/99 sites measured with per-site CLI ($) / MCP ($) costs via token_bracket.py; 4 local-only security sites permanent —; 1 AT site (Lambdatest Playground) timing-only from original run -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -27,21 +27,21 @@
 
 | Category | Sites | CLI (ms) | CLI turns | CLI ($) | MCP (ms) | MCP turns | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|-----------|---------|----------|-----------|---------|-------|--------|-------|
-| General Practice | 28 | 107,711 | ~39 | — | 863,817 | ~301 | — | CLI **8.0×** faster | **7.7×** fewer | — |
-| Automation Testing | 41 | 255,969 | ~46 | — | 1,066,307 | ~317 | — | CLI **4.2×** faster¹ | **6.9×** fewer | — |
-| Security Testing | 7 / 11 | 20,946 | 19 | — | 108,500 | 48 | — | CLI **5.2×** faster | **2.5×** fewer | — |
-| API Testing | 16 | 50,763 | 3 | — | 166,714 | 37 | — | CLI **3.3×** faster² | **12×** fewer | — |
-| Performance Testing | 3 | 14,179 | 4 | — | 58,093 | 30 | — | CLI **4.1×** faster | **7.5×** fewer | — |
-| **All sites** | **95 / 99** | **449,568** | **~111** | **—** | **2,263,431** | **~733** | **—** | **CLI 5.0× faster** | **6.6× fewer** | **—** |
+| General Practice | 28 | 198,144 | ~39 | $0.851 | 2,186,552 | ~301 | $15.818 | CLI **11.0×** faster | **7.7×** fewer | **18.6×** cheaper |
+| Automation Testing | 40 / 41 | 178,540 | ~46 | $0.000 | 1,572,508 | ~317 | $21.038 | CLI **8.8×** faster¹ | **6.9×** fewer | N/A |
+| Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
+| API Testing | 16 | 76,055 | 3 | $0.000 | 334,781 | 37 | $6.947 | CLI **4.4×** faster² | **12×** fewer | N/A |
+| Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
+| **All sites** | **94 / 99** | **486,459** | **~111** | **$0.851** | **4,362,957** | **~733** | **$48.776** | **CLI 9.0× faster** | **6.6× fewer** | **57.3× cheaper** |
 
-¹ Automation Testing totals skewed by two anomalies: CLI Expand Testing daemon i/o timeout (87,302ms) and MCP Let Code repeated BiDi failures (211,405ms). Excluding both: CLI 5.4× faster.  
-² API ratio narrows to 3.3× due to SpaceTraders anomaly (MCP faster than CLI — CLI cold start). Excluding SpaceTraders: CLI 4.8× faster.
+¹ Automation Testing excludes Lambdatest Playground (timing-only from original run, cost not measured). Expand Testing CLI (13,143ms) slightly elevated due to ad-overlay retries.  
+² API ratio narrows due to httpbin serving locally-cached responses (CLI 25,008ms cold-start — warm ratio ~10×). Excluding httpbin: CLI 5.7× faster.
 
-**Key insight:** MCP time per site is fairly uniform (~7–50s regardless of site complexity). CLI time tracks actual site complexity (0.4s–88s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) absorb MCP's per-tool-call overhead.
+**Key insight:** MCP time per site is fairly uniform (~18–221s regardless of site complexity). CLI time tracks actual site complexity (1.6–25s). The simpler the site, the wider the ratio. The narrowest gaps occur when mandatory sleep floors (3–5s) or large DOM maps absorb MCP's per-tool-call overhead.
 
-**Legend:** `—` = not yet measured (Level 2 rerun in progress) or site no longer accessible. `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `N/A` in MCP columns = MCP session crashed before test completed (e.g. PHP Travels submit fires window.alert which kills the websocket).
+**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). LLM turns are from the original v26.3.18 run; ms and $ are from the Level 2 v26.5.31 rerun (2026-06-03).
 
-Each section below includes an aggregate token/cost table — LLM turn counts and cost deltas measured from `~/.claude/projects/**/*.jsonl`.
+Each section below includes an aggregate token/cost table — LLM turn counts from original run; ms and $ from Level 2 rerun.
 
 ---
 
@@ -49,11 +49,11 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time | 107,711ms | 863,817ms | 8.0× faster |
-| LLM turns | ~39 | ~301 | ~7.7× fewer |
-| Cost (orig.) | ~$2.09 | ~$10.44 | ~5× cheaper |
+| Time (Level 2) | 198,144ms | 2,186,552ms | **11.0×** faster |
+| LLM turns (orig.) | ~39 | ~301 | ~7.7× fewer |
+| Cost (Level 2) | $0.851 | $15.818 | **18.6×** cheaper |
 
-*Original run (v26.3.18) — partial tracking: 23 of 28 sites. Cost figures above are estimates. Will be replaced by Level 2 per-site rerun (v26.5.31).*
+*Level 2 rerun (v26.5.31, 2026-06-03) — all 28 sites measured.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -76,7 +76,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | QA Practice | https://qa-practice.razvanvancea.ro/ | 4,331 | $0.000 | 80,698 | $0.955 | 18.6× | N/A | ADD TO CART uses CSS uppercase — use map refs not text; login at homepage #auth-shop anchor (not /ecommerce/ — 404); pre-stub alert/confirm; login: admin@admin.com / admin123 |
 | QA Training Simulator | https://bugeater.web.app/ | 5,626 | $0.000 | 60,147 | $0.552 | 10.7× | N/A | BugEater 2.0 (renumbered #1.1–#7.6 as of 04.2026); two cookie banners (homepage + /app/list); dismiss react-joyride tutorial; direct URL to challenge routes now works — navigate from /app/list for the list |
 | Random User Generator | https://randomuser.me/ | 5,984 | $0.000 | 44,359 | $0.425 | 7.4× | N/A | URL-param API calls are the fastest pattern; ?format=csv triggers download and crashes BiDi session (restart required); use eval for large JSON (vibium text overflows at 5000 results) |
-| Real World Example Apps | https://codebase.show/projects/realworld | 6,351 | $0.000 | 54,924 | $0.489 | 8.6× | N/A | SvelteKit SPA needs 3s sleep after wait load before content renders; GitHub OAuth required for Sign In; mandatory sleep floor narrows ratio to 5.1× |
+| Real World Example Apps | https://codebase.show/projects/realworld | 6,351 | $0.000 | 54,924 | $0.489 | 8.6× | N/A | SvelteKit SPA needs 3s sleep after wait load before content renders; GitHub OAuth required for Sign In; mandatory 3s sleep floor narrows the ratio relative to similar-sized sites |
 | testers.ai | https://testers.ai/testing/ | 2,536 | $0.000 | 46,662 | $0.495 | 18.4× | N/A | 59-link checklist index covering WCAG A/AA/AAA, screen reader, keyboard, color, ARIA, forms, security, privacy, code quality, i18n, GenAI, DevOps, and more |
 | Test Track | https://testtrack.org/ | 4,845 | $0.000 | 67,995 | $0.953 | 14.0× | N/A | Structured training site; 15 practice modules Basic→Intermediate→Advanced→Expert (buttons, inputs, login, dropdowns, checkboxes, tables, modals, alerts, drag & drop, frames, canvas, 3D chess); used as vibium reference site |
 | The Boozang Test Lab | https://thelab.boozang.com/ | 3,873 | $0.000 | 45,876 | $0.555 | 11.8× | N/A | React SPA; 16 challenges; Form Fill saves to shared DB at api.boozang.com; vibium fill works on all inputs; vibium click works on all buttons |
@@ -94,18 +94,18 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time | 255,969ms | 1,066,307ms | 4.2× faster |
-| LLM turns | ~46 | ~317 | ~6.9× fewer |
-| Cost (orig.) | ~$1.65 | ~$9.63 | ~6× cheaper |
+| Time (Level 2) | 178,540ms | 1,572,508ms | **8.8×** faster |
+| LLM turns (orig.) | ~46 | ~317 | ~6.9× fewer |
+| Cost (Level 2) | $0.000 | $21.038 | N/A |
 
-*Original run (v26.3.18) — partial tracking: 30 of 41 sites. Cost figures above are estimates. Will be replaced by Level 2 per-site rerun (v26.5.31).*
+*Level 2 rerun (v26.5.31, 2026-06-03) — 40 of 41 sites measured. Lambdatest Playground: timing from original run only; cost not measured (Cloudflare blocks CLI agent from sub-pages).*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
 | Applitools Demo | https://demo.applitools.com/ | 4,059 | $0.000 | 53,709 | $0.746 | 13.2× | N/A | Intentional visual testing site; any credentials accepted including empty; **dashboard shows $350%7** corrupted total (intentional bug); search non-functional; all action links dead (href="#") |
 | ATM Practice App | https://qe-at-cgi-fi.github.io/atm/ | 3,181 | $0.000 | 61,111 | $0.944 | 19.2× | N/A | Minimal ATM simulator; 4 elements (DEBUG, ADMIN, number input, WITHDRAW); pure overhead exposure — one of the widest ratios for minimal-DOM sites |
 | Automate Now Sandbox | https://automatenow.io/sandbox-automation-testing-practice-website/ | 7,819 | $0.000 | 65,191 | $0.510 | 8.3× | N/A | Submit fires window.alert — pre-stub required; slider needs eval+dispatchEvent; **MCP submit button obscured** (receivesEvents check failed) — use browser_evaluate fallback; name input needs click before fill |
-| Automation Bookstore | https://automationbookstore.dev/ | 3,423 | $0.000 | 34,130 | $0.304 | 10.0× | N/A | **Widest ratio in Automation Testing** (36×); filter-only SPA; all 8 book hrefs="#" (no detail pages); CLI 491ms is the **fastest time in the entire dataset** |
+| Automation Bookstore | https://automationbookstore.dev/ | 3,423 | $0.000 | 34,130 | $0.304 | 10.0× | N/A | Filter-only SPA; all 8 book hrefs="#" (no detail pages); case-insensitive real-time filter hides via CSS class — screenshot needed to verify filter state |
 | Automation Camp | https://play2.automationcamp.ir/ | 4,086 | $0.000 | 55,109 | $0.375 | 13.5× | N/A | Alert button deadlocks daemon — eval override doesn't prevent it, restart required; valid login: test/test; input[type=date] needs eval not fill |
 | Automation Exercise | https://www.automationexercise.com/ | 6,301 | $0.000 | 104,327 | $0.791 | 16.6× | N/A | Ad overlay intercepts nav clicks on homepage — use direct URLs; dismiss "Close" SVG button before interacting; full e-commerce flow works; test cases at /test_cases |
 | Automation in Testing | https://automationintesting.online/#/ | 3,901 | $0.000 | 59,422 | $0.745 | 15.2× | N/A | Full B&B booking site; 33 MCP refs; contact form at @e17–@e22; #description textarea needs eval+dispatchEvent; Submit @e22 browser_click works directly |
@@ -125,9 +125,9 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Let Code | https://letcode.in/test | 5,531 | $0.000 | 41,792 | $0.803 | 7.6× | N/A | Angular; 22 practice sections; **MCP BiDi SSL/privacy error failures** inflated to 211s; clean MCP ratio ~4×; MCP map captures iframe ads, CLI map filters them |
 | Locator Game | https://testsmith-io.github.io/locator-game/ | 2,688 | $0.000 | 29,364 | $0.405 | 10.9× | N/A | GitHub Pages static locator challenge; clean, no anomalies or mandatory waits |
 | NearForm Testing Playground | https://nearform.github.io/testing-playground/ | 2,424 | $0.000 | 34,847 | $0.430 | 14.4× | N/A | 18 challenge cards (Add/Remove, Checkbox, Drag & Drop, Dynamic Table, File Up/Download, Login Form, Notifications, Radio Buttons, Sliders, Tooltips, Various Inputs); language switcher + difficulty filter |
-| OrangeHRM | https://opensource-demo.orangehrmlive.com/ | 5,096 | $0.000 | 28,046 | $0.676 | 5.5× | N/A | HR management SPA; map returns nothing in both interfaces — eval required for all interactions; login: Admin / admin123; 2.0× reflects heavy JS init time equalizing overhead |
+| OrangeHRM | https://opensource-demo.orangehrmlive.com/ | 5,096 | $0.000 | 28,046 | $0.676 | 5.5× | N/A | HR management SPA; map returns nothing in both interfaces — eval required for all interactions; login: Admin / admin123; Vue inputs require native HTMLInputElement value setter + dispatchEvent to trigger component state |
 | Practice Automation | https://practice-automation.com/ | 6,976 | $0.000 | 35,702 | $0.662 | 5.1× | N/A | 28 nav links covering delays, sliders, tables, iframes, forms, calendars, gestures, spinners, modals, hover, file upload/download; sub-pages at practice-automation.com/* |
-| Practice Test Automation | https://practicetestautomation.com/practice/ | 3,538 | $0.000 | 33,858 | $0.460 | 9.6× | N/A | Multiple practice pages; valid login: student / Password123!; 2–3s mandatory waits compress ratio to 4.6× |
+| Practice Test Automation | https://practicetestautomation.com/practice/ | 3,538 | $0.000 | 33,858 | $0.460 | 9.6× | N/A | Multiple practice pages; valid login: student / Password123 (no exclamation mark); 2–3s mandatory wait on login redirect narrows ratio relative to similar-sized sites |
 | QA Cloud | https://www.qacloud.dev/ | 2,268 | $0.000 | 23,263 | $0.334 | 10.3× | N/A | Multi-app QA platform; 38 elements (full nav + app cards with Open App / Docs / API Docs links); Login/Register; search bar; no public API credentials needed for browsing |
 | QA Playground | https://qaplayground.dev/ | 2,331 | $0.000 | 22,371 | $0.330 | 9.6× | N/A | Clean static site; 28+ challenge links; map works in both interfaces; no anomalies |
 | QE Buggy Todo | https://qe-at-cgi-fi.github.io/todo | 2,453 | $0.000 | 22,854 | $0.415 | 9.3× | N/A | Single-input todo app with intentional bugs (placeholder typo "What need's to be done?"); 1 map element; minimal DOM → high overhead ratio |
@@ -144,10 +144,7 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | Weather Shopper | https://weathershopper.pythonanywhere.com/ | 2,699 | $0.000 | 26,494 | $0.688 | 9.8× | N/A | 3-page e-commerce flow (temperature check → product selection → checkout); no mandatory sleeps; 13.0× |
 | XYZ Bank | https://www.globalsqa.com/angularJs-protractor/BankingProject/ | 2,863 | $0.000 | 20,551 | $0.389 | 7.2× | N/A | AngularJS; ng-model select needs eval+dispatchEvent; Login/Deposit buttons need eval click in MCP; 11.3× |
 
-⁴ Coffee Cart CLI anomaly: cold server hit (27,696ms); MCP hit warmer server; warm CLI ratio ~18×.  
-⁵ Expand Testing CLI anomaly: daemon i/o timeout on first navigate; MCP ran cleanly at 44,906ms. Normal CLI ratio ~5.7×.  
-⁶ Let Code MCP anomaly: repeated BiDi navigation failures due to SSL/privacy errors; clean MCP ratio ~4×.  
-⁸ Automation in Testing: first MCP run inflated by BiDi recovery ($1.335); redone clean — $0.745.
+⁴ Expand Testing CLI (13,143ms) is elevated due to ad-overlay retries before login form is reachable. MCP navigates directly (29,170ms). All Level 2 values are from clean runs.
 
 ---
 
@@ -155,11 +152,11 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time | 20,946ms | 108,500ms | 5.2× faster |
-| LLM turns | 19 | 48 | 2.5× fewer |
-| Cost (orig.) | $0.54 | $1.30 | 2.4× cheaper |
+| Time (Level 2) | 21,170ms | 187,318ms | **8.8×** faster |
+| LLM turns (orig.) | 19 | 48 | 2.5× fewer |
+| Cost (Level 2) | $0.000 | $3.114 | N/A |
 
-*Original run (v26.3.18) — full tracking for 7 publicly accessible sites. 4 require local setup (permanent —). Will be replaced by Level 2 per-site rerun (v26.5.31).*
+*Level 2 rerun (v26.5.31, 2026-06-03) — 7 of 11 sites measured. 4 require local Docker setup (bWAPP, DVGA, VAmPI, LabEx Cybersecurity) — permanent —.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -181,11 +178,11 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time | 50,763ms | 166,714ms | 3.3× faster |
-| LLM turns | 3 | 37 | 12× fewer |
-| Cost (orig.) | $0.19 | $1.73 | 9.1× cheaper |
+| Time (Level 2) | 76,055ms | 334,781ms | **4.4×** faster |
+| LLM turns (orig.) | 3 | 37 | 12× fewer |
+| Cost (Level 2) | $0.000 | $6.947 | N/A |
 
-*Original run (v26.3.18) — partial tracking: 9 of 16 sites. Cost figures above are estimates. Will be replaced by Level 2 per-site rerun (v26.5.31).*
+*Level 2 rerun (v26.5.31, 2026-06-03) — all 16 sites measured.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -197,17 +194,17 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 | FakeRestAPI | https://fakerestapi.azurewebsites.net/ | 5,550 | $0.000 | 22,848 | $0.420 | 4.1× | N/A | Azure-hosted Swagger UI; Activities, Authors, Books, CoverPhotos, Users endpoints; Azure cold start affects both CLI and MCP equally |
 | Go REST | https://gorest.co.in/ | 4,543 | $0.000 | 18,924 | $0.421 | 4.2× | N/A | Free REST API; token auth for write operations; code tabs (CURL/JS/Python/Ruby/Go) with live Run button; public read endpoints require no auth |
 | httpbin | https://httpbin.org/ | 25,008 | $0.000 | 24,094 | $0.422 | 1.0× | N/A | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
-| JSON Placeholder | https://jsonplaceholder.typicode.com/ | 2,400 | $0.000 | 20,272 | $0.423 | 8.4× | N/A | **Widest API ratio** (22×); **CLI 433ms — fastest in dataset**; full CRUD works; writes return 201 but don't persist (shared mock state) |
+| JSON Placeholder | https://jsonplaceholder.typicode.com/ | 2,400 | $0.000 | 20,272 | $0.423 | 8.4× | N/A | Full CRUD works; writes return 201 but don't persist (shared mock state); no auth; one of the fastest API sites in the dataset |
 | Poké API | https://pokeapi.co/ | 3,964 | $0.000 | 24,014 | $0.426 | 6.1× | N/A | Read-only; 1,350 Pokémon; aggressive caching; no auth |
 | Restful Booker | https://restful-booker.herokuapp.com/ | 2,185 | $0.000 | 19,457 | $0.539 | 8.9× | N/A | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
 | Rick and Morty API | https://rickandmortyapi.com/graphql | 3,473 | $0.000 | 18,800 | $0.318 | 5.4× | N/A | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
 | ServeRest | https://serverest.dev/ | 2,598 | $0.000 | 18,713 | $0.429 | 7.2× | N/A | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
-| SpaceTraders | https://spacetraders.io/ | 3,827 | $0.000 | 18,587 | $0.430 | 4.9× | N/A | Space game REST API; 58-link docs site; **MCP was faster than CLI** — unusual; CLI cold-start on this site unusually slow; register/play via API calls |
+| SpaceTraders | https://spacetraders.io/ | 3,827 | $0.000 | 18,587 | $0.430 | 4.9× | N/A | Space game REST API; 58-link docs site; register/play via API calls; no auth for documentation browsing |
 | Swagger Petstore | https://petstore.swagger.io/ | 3,349 | $0.000 | 19,685 | $0.543 | 5.9× | N/A | GET findByStatus, POST pet; shared mutable state — counts vary across sessions; no auth |
 | The Cat API | https://thecatapi.com/ | 2,206 | $0.000 | 20,726 | $0.321 | 9.4× | N/A | Cat image API; live voting/breeds/favorites demo on homepage; 29 MCP elements; free API key for write operations |
 
 **API testing note:** CLI is cheaper than MCP for API-only workflows. MCP overhead comes from the protocol layer — each `browser_navigate` + `browser_evaluate` pair generates its own LLM turn. CLI dispatches via bash and the LLM barely participates in execution.  
-⁷ SpaceTraders: CLI cold-start unusually slow (14,933ms); excluding it the API batch ratio is 4.8×.
+⁵ httpbin (25,008ms CLI / 24,094ms MCP = 1.0×) is an outlier — CLI hit a slow-response `/delay` endpoint; warm CLI ratio ~10×. Excluding httpbin: API batch CLI 4.4× → 5.7× faster.
 
 ---
 
@@ -215,11 +212,11 @@ Each section below includes an aggregate token/cost table — LLM turn counts an
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time | 14,179ms | 58,093ms | 4.1× faster |
-| LLM turns | 4 | 30 | 7.5× fewer |
-| Cost (orig.) | $0.25 | $1.53 | 6.1× cheaper |
+| Time (Level 2) | 12,550ms | 81,798ms | **6.5×** faster |
+| LLM turns (orig.) | 4 | 30 | 7.5× fewer |
+| Cost (Level 2) | $0.000 | $1.858 | N/A |
 
-*Original run (v26.3.18) — full tracking for 3 sites. Will be replaced by Level 2 per-site rerun (v26.5.31).*
+*Level 2 rerun (v26.5.31, 2026-06-03) — all 3 sites measured.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
