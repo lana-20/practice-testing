@@ -60,7 +60,7 @@ Slug: {SLUG}
 ### Bash call A — snapshot only (preliminary — must be its own call)
   export PATH="/usr/local/bin:$PATH"
   vibium stop 2>/dev/null; sleep 1
-  python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time > /tmp/rerun_{SLUG}_base.txt
+  python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --session > /tmp/rerun_{SLUG}_base.txt
   python3 -c "import time; print(int(time.time()*1000))" > /tmp/rerun_{SLUG}_t0.txt
   echo "snapshot done"
 
@@ -111,7 +111,7 @@ Parse cli_ms, cli_usd, cli_turns from the JSON.
 
 ### Step 2 — MCP snapshot (own bash call — MCP tool calls follow in the next turn)
 Run via Bash:
-  python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --time > /tmp/rerun_{SLUG}_mcp_base.txt
+  python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --session > /tmp/rerun_{SLUG}_mcp_base.txt
   python3 -c "import time; print(int(time.time()*1000))" > /tmp/rerun_{SLUG}_mcp_t0.txt
   echo "MCP snapshot done"
 
