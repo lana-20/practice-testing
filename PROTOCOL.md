@@ -20,7 +20,7 @@ Appends results to `rerun_results.csv`; last `clean-two-phase` row per site wins
 ## Orchestration
 
 MCP shares a single browser daemon — parallel MCP agents cause session conflicts.
-CLI agents are serialized to avoid daemon collisions from concurrent `vibium stop/start`.
+CLI agents run in parallel. Each agent runs `vibium stop/start` in Bash A; if two agents overlap on that call they can collide, but in practice Agent 2's stop fires after Agent 1 has already moved into Bash B, so the risk is low and accepted.
 **Two-phase approach: parallel CLI → sequential MCP.**
 
 1. Read CSV to find already-done sites:
