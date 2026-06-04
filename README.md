@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking; fresh subagents per site; GP 31/31 done, AT 14/41 done; per-site data updated to L3 where available -->
+<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking; fresh subagents per site; GP 28/28 done, AT 19/42 done; per-site data updated to L3 where available -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -27,19 +27,19 @@
 
 | Category | Sites | CLI (ms) | CLI turns (v26.3.18) | CLI ($) | MCP (ms) | MCP turns (v26.3.18) | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|----------------------|---------|----------|----------------------|---------|-------|--------|-------|
-| General Practice | 31 | 427,101 | ~39 | $0.633 | 1,463,102 | ~301 | $2.752 | CLI **3.4×** faster | **7.7×** fewer | **4.3×** cheaper |
-| Automation Testing | 41 | 370,784 | ~46 | $0.951 | 1,301,744 | ~317 | $13.911 | CLI **3.5×** faster¹ | **6.9×** fewer | **14.6×** cheaper |
+| General Practice | 28 | 380,681 | ~39 | $0.573 | 1,313,402 | ~301 | $2.470 | CLI **3.5×** faster | **7.7×** fewer | **4.3×** cheaper |
+| Automation Testing | 42 | 435,053 | ~46 | $1.229 | 1,705,242 | ~317 | $13.053 | CLI **3.9×** faster¹ | **6.9×** fewer | **10.6×** cheaper |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
-| API Testing | 18 | 112,526 | 3 | $0.038 | 425,229 | 37 | $7.103 | CLI **3.8×** faster² | **12×** fewer | **189.4×** cheaper |
+| API Testing | 20 | 136,558 | 3 | $0.079 | 515,684 | 37 | $7.280 | CLI **3.8×** faster² | **12×** fewer | **92.7×** cheaper |
 | Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
-| **All sites** | **100 / 104** | **944,131** | **~111** | **$1.622** | **3,459,191** | **~733** | **$28.738** | **CLI 3.7× faster** | **6.6× fewer** | **17.7× cheaper** |
+| **All sites** | **100 / 104** | **986,012** | **~111** | **$1.881** | **3,803,444** | **~733** | **$27.776** | **CLI 3.9× faster** | **6.6× fewer** | **14.8× cheaper** |
 
-¹ Automation Testing L3 CLI costs now captured (sonnet-4-6 bracket); batch 9 (7 sites, run under Haiku 4.5) shows $0.000 CLI — not captured by the sonnet-4-6 filter. Lambdatest Playground MCP requires `eval window.location.href` — dead-frame after stop/start.  
+¹ Automation Testing L3 CLI costs now captured (sonnet-4-6 bracket); batch 9 (7 sites, originally run under Haiku 4.5) was rerun in Sonnet 4.6 on 2026-06-03 — costs now captured. Lambdatest Playground MCP requires `eval window.location.href` — dead-frame after stop/start.  
 ² API Testing L3 CLI ms elevated by httpbin (25,008ms cold-start); excluding httpbin: CLI 4.8× faster. API Challenges and QuickPizza are new sites with L3-only data.
 
 **Key insight:** With L3 bracket fix (script-generation cost now inside the bracket), CLI costs are real and non-trivial for complex sites. MCP time per site is fairly uniform; CLI time tracks site complexity. Security and Performance Testing retain wide speed ratios; GP, AT, and API ratios narrowed in L3 due to longer CLI generation times captured.
 
-**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; L3 rerun turn counts are subagent-level and tracked separately. ms and $ are best-available: L3 where measured (GP all 31, AT 14/41, API 2/18 new sites), L2 elsewhere.
+**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; L3 rerun turn counts are subagent-level and tracked separately. ms and $ are best-available: L3 where measured (GP all 28, AT 19/42, API 2/18 new sites), L2 elsewhere.
 
 Each section below includes an aggregate token/cost table — turn counts from v26.3.18; ms and $ from best-available (L3 > L2).
 
@@ -93,15 +93,15 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 ---
 
-## Automation Testing (41 sites)
+## Automation Testing (42 sites)
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (best-available) | 370,784ms | 1,301,744ms | **3.5×** faster |
+| Time (best-available) | 435,053ms | 1,705,242ms | **3.9×** faster |
 | LLM turns (v26.3.18) | ~46 | ~317 | ~6.9× fewer |
-| Cost (best-available) | $0.951 | $13.911 | **14.6×** cheaper |
+| Cost (best-available) | $1.229 | $13.053 | **10.6×** cheaper |
 
-*Best-available data: L3 for 14/41 sites (batches 9–10); L2 for remaining 27. Batch 9 CLI costs are $0.000 (ran under Haiku 4.5, not captured by sonnet-4-6 filter).*
+*Best-available data: L3 for 19/42 sites (batches 9–11); L2 for remaining 23. Batch 9 (7 sites) rerun in Sonnet 4.6 on 2026-06-03; batch 11 (5 sites) run 2026-06-03.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -119,11 +119,11 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | Contact List App | https://thinking-tester-contact-list.herokuapp.com/ | 9,628 | $0.020 | 53,999 | $0.090 | 5.6× | 4.5× | Heroku app; login required for all operations; full CRUD contact management flow works |
 | Demo SaaS | https://demo-saas.bugbug.io/ | 16,267 | $0.064 | 29,383 | $0.053 | 1.8× | 0.8× | Clean SPA; minimal interaction; MCP 13.5s is among the fastest MCP times in dataset; 12.7× pure overhead ratio |
 | DemoQA | https://demoqa.com/ | 18,079 | $0.064 | 27,151 | $0.052 | 1.5× | 0.8× | Component library; 7 practice sections (Elements, Forms, Alerts/Frames/Windows, Widgets, Interactions, Book Store); many sub-pages; clean map in both interfaces |
-| Expand Testing | https://practice.expandtesting.com/ | 13,143 | $0.000 | 29,170 | $0.485 | 2.2× | N/A | Login button obscured by ad — use `dispatchEvent(MouseEvent)` on submit; valid login: practice / SuperSecretPassword!; navigate directly to /login (not homepage) |
-| GitHub Users Search | https://gh-users-search.netlify.app/ | 3,550 | $0.000 | 34,797 | $0.498 | 9.8× | N/A | React GitHub user search; default user pre-loaded; 34 elements (search input + submit + follower links); clean minimal SPA |
-| Global SQA Demo | http://www.globalsqa.com/demo-site/ | 6,171 | $0.000 | 33,769 | $0.375 | 5.5× | N/A | **Key behavioral difference:** CLI gets BiDi error on http:// URL; **MCP silently follows HTTP→HTTPS redirect** and loads site successfully; MCP maps 49 interactive elements |
-| GreenKart | https://rahulshettyacademy.com/seleniumPractise/#/ | 8,351 | $0.000 | 29,658 | $0.446 | 3.6× | N/A | Angular; 31 products; **MCP browser_map returns 126 elements** (31 products × 4 controls); large map call compresses ratio to 2.8× — one of the narrowest Automation ratios |
-| Hands-On Selenium WebDriver | https://bonigarcia.dev/selenium-webdriver-java/ | 3,274 | $0.000 | 27,098 | $0.396 | 8.3× | N/A | Static site; 30 practice sub-pages at clean URLs; fill works on textarea (B7/MB7 fixed v26.5.31); calculator buttons are span.btn not button (use eval) |
+| Expand Testing | https://practice.expandtesting.com/ | 16,807 | $0.019 | 50,277 | $0.084 | 3.0× | 4.5× | Login button obscured by ad — use `dispatchEvent(MouseEvent)` on submit; valid login: practice / SuperSecretPassword!; navigate directly to /login (not homepage) |
+| GitHub Users Search | https://gh-users-search.netlify.app/ | 15,264 | $0.033 | 37,530 | $0.093 | 2.5× | 2.8× | React GitHub user search; default user pre-loaded; 34 elements (search input + submit + follower links); clean minimal SPA |
+| Global SQA Demo | http://www.globalsqa.com/demo-site/ | 18,182 | $0.023 | 54,398 | $0.084 | 3.0× | 3.6× | **Key behavioral difference:** CLI gets BiDi error on http:// URL; **MCP silently follows HTTP→HTTPS redirect** and loads site successfully; MCP maps 49 interactive elements |
+| GreenKart | https://rahulshettyacademy.com/seleniumPractise/#/ | 17,865 | $0.026 | 80,317 | $0.122 | 4.5× | 4.8× | Angular; 31 products; **MCP browser_map returns 126 elements** (31 products × 4 controls); large map call compresses ratio to 2.8× — one of the narrowest Automation ratios |
+| Hands-On Selenium WebDriver | https://bonigarcia.dev/selenium-webdriver-java/ | 12,935 | $0.019 | 70,520 | $0.155 | 5.5× | 8.3× | Static site; 30 practice sub-pages at clean URLs; fill works on textarea (B7/MB7 fixed v26.5.31); calculator buttons are span.btn not button (use eval) |
 | Lambdatest Playground | https://ecommerce-playground.lambdatest.io/ | 36,711 | $0.035 | 88,980 | $0.745 | 2.4× | 21.3× | OpenCart-based e-commerce; **MCP browser_navigate dead-frame after stop/start — use eval `window.location.href`**; CLI map and MCP map both return 308 refs; search is AJAX and stays on homepage; Add to Cart silently fails for guests |
 | Let Code | https://letcode.in/test | 5,531 | $0.000 | 41,792 | $0.803 | 7.6× | N/A | Angular; 22 practice sections; **MCP BiDi SSL/privacy error failures** inflated to 211s; clean MCP ratio ~4×; MCP map captures iframe ads, CLI map filters them |
 | Locator Game | https://testsmith-io.github.io/locator-game/ | 2,688 | $0.000 | 29,364 | $0.405 | 10.9× | N/A | GitHub Pages static locator challenge; clean, no anomalies or mandatory waits |
@@ -147,7 +147,7 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | Weather Shopper | https://weathershopper.pythonanywhere.com/ | 2,699 | $0.000 | 26,494 | $0.688 | 9.8× | N/A | 3-page e-commerce flow (temperature check → product selection → checkout); no mandatory sleeps; 13.0× |
 | XYZ Bank | https://www.globalsqa.com/angularJs-protractor/BankingProject/ | 2,863 | $0.000 | 20,551 | $0.389 | 7.2× | N/A | AngularJS; ng-model select needs eval+dispatchEvent; Login/Deposit buttons need eval click in MCP; 11.3× |
 
-⁴ Expand Testing CLI (13,143ms) is elevated due to ad-overlay retries before login form is reachable. MCP navigates directly (29,170ms). All Level 2 values are from clean runs.
+⁴ Expand Testing L3: navigate directly to /login; eval click on submit; valid login: practice / SuperSecretPassword! → /secure. MCP: eval '#submit-login'.click() for reliability after ad re-render.
 
 ---
 
