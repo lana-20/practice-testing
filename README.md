@@ -4,7 +4,7 @@
 
 [<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking; fresh subagents per site; GP 28/28 done, AT 24/42 done; per-site data updated to L3 where available -->
+<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 rerun in progress (2026-06-03+): fixed CLI bracket + turns tracking; fresh subagents per site; GP 28/28 done, AT 29/42 done; per-site data updated to L3 where available -->
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
@@ -28,18 +28,18 @@
 | Category | Sites | CLI (ms) | CLI turns (v26.3.18) | CLI ($) | MCP (ms) | MCP turns (v26.3.18) | MCP ($) | Speed | Turns× | Cost× |
 |----------|-------|----------|----------------------|---------|----------|----------------------|---------|-------|--------|-------|
 | General Practice | 28 | 380,681 | ~39 | $0.573 | 1,313,402 | ~301 | $2.470 | CLI **3.5×** faster | **7.7×** fewer | **4.3×** cheaper |
-| Automation Testing | 42 | 438,555 | ~46 | $1.319 | 1,703,637 | ~317 | $10.423 | CLI **3.9×** faster¹ | **6.9×** fewer | **7.9×** cheaper |
+| Automation Testing | 42 | 469,489 | ~46 | $1.419 | 1,761,346 | ~317 | $8.601 | CLI **3.8×** faster¹ | **6.9×** fewer | **6.1×** cheaper |
 | Security Testing | 7 / 11 | 21,170 | 19 | $0.000 | 187,318 | 48 | $3.114 | CLI **8.8×** faster | **2.5×** fewer | N/A |
 | API Testing | 20 | 136,558 | 3 | $0.079 | 515,684 | 37 | $7.280 | CLI **3.8×** faster² | **12×** fewer | **92.7×** cheaper |
 | Performance Testing | 3 | 12,550 | 4 | $0.000 | 81,798 | 30 | $1.858 | CLI **6.5×** faster | **7.5×** fewer | N/A |
-| **All sites** | **100 / 104** | **989,514** | **~111** | **$1.971** | **3,801,839** | **~733** | **$25.146** | **CLI 3.8× faster** | **6.6× fewer** | **12.8× cheaper** |
+| **All sites** | **100 / 104** | **1,020,448** | **~111** | **$2.071** | **3,859,548** | **~733** | **$23.324** | **CLI 3.8× faster** | **6.6× fewer** | **11.3× cheaper** |
 
 ¹ Automation Testing L3 CLI costs now captured (sonnet-4-6 bracket); batch 9 (7 sites, originally run under Haiku 4.5) was rerun in Sonnet 4.6 on 2026-06-03 — costs now captured. Lambdatest Playground MCP requires `eval window.location.href` — dead-frame after stop/start.  
 ² API Testing L3 CLI ms elevated by httpbin (25,008ms cold-start); excluding httpbin: CLI 4.8× faster. API Challenges and QuickPizza are new sites with L3-only data.
 
 **Key insight:** With L3 bracket fix (script-generation cost now inside the bracket), CLI costs are real and non-trivial for complex sites. MCP time per site is fairly uniform; CLI time tracks site complexity. Security and Performance Testing retain wide speed ratios; GP, AT, and API ratios narrowed in L3 due to longer CLI generation times captured.
 
-**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; L3 rerun turn counts are subagent-level and tracked separately. ms and $ are best-available: L3 where measured (GP all 28, AT 24/42, API 2/18 new sites), L2 elsewhere.
+**Legend:** `—` = site no longer accessible or local-only (permanent). `N/A` in Cost× = CLI cost is $0.000 (no LLM tokens consumed in CLI bracket — ratio undefined). `CLI/MCP turns (v26.3.18)` = interactive turn counts from the original run using per-command back-and-forth; L3 rerun turn counts are subagent-level and tracked separately. ms and $ are best-available: L3 where measured (GP all 28, AT 29/42, API 2/18 new sites), L2 elsewhere.
 
 Each section below includes an aggregate token/cost table — turn counts from v26.3.18; ms and $ from best-available (L3 > L2).
 
@@ -97,11 +97,11 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | | CLI | MCP | Ratio |
 |---|---|---|---|
-| Time (best-available) | 438,555ms | 1,703,637ms | **3.9×** faster |
+| Time (best-available) | 469,489ms | 1,761,346ms | **3.8×** faster |
 | LLM turns (v26.3.18) | ~46 | ~317 | ~6.9× fewer |
 | Cost (best-available) | $1.319 | $10.423 | **7.9×** cheaper |
 
-*Best-available data: L3 for 24/42 sites (batches 9–12); L2 for remaining 18. Batch 9 (7 sites) rerun in Sonnet 4.6 on 2026-06-03; batches 11–12 (10 sites) run 2026-06-03.*
+*Best-available data: L3 for 29/42 sites (batches 9–13); L2 for remaining 13. Batch 9 rerun in Sonnet 4.6; batches 11–13 run 2026-06-03.*
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
@@ -129,11 +129,11 @@ Each section below includes an aggregate token/cost table — turn counts from v
 | Locator Game | https://testsmith-io.github.io/locator-game/ | 8,209 | $0.018 | 42,541 | $0.078 | 5.2× | 4.3× | GitHub Pages static locator challenge; clean, no anomalies or mandatory waits |
 | NearForm Testing Playground | https://nearform.github.io/testing-playground/ | 6,459 | $0.015 | 38,105 | $0.083 | 5.9× | 5.4× | 18 challenge cards (Add/Remove, Checkbox, Drag & Drop, Dynamic Table, File Up/Download, Login Form, Notifications, Radio Buttons, Sliders, Tooltips, Various Inputs); language switcher + difficulty filter |
 | OrangeHRM | https://opensource-demo.orangehrmlive.com/ | 12,624 | $0.022 | 55,479 | $0.083 | 4.4× | 3.8× | HR management SPA; map returns nothing in both interfaces — eval required for all interactions; login: Admin / admin123; Vue inputs require native HTMLInputElement value setter + dispatchEvent to trigger component state |
-| Practice Automation | https://practice-automation.com/ | 6,976 | $0.000 | 35,702 | $0.662 | 5.1× | N/A | 28 nav links covering delays, sliders, tables, iframes, forms, calendars, gestures, spinners, modals, hover, file upload/download; sub-pages at practice-automation.com/* |
-| Practice Test Automation | https://practicetestautomation.com/practice/ | 3,538 | $0.000 | 33,858 | $0.460 | 9.6× | N/A | Multiple practice pages; valid login: student / Password123 (no exclamation mark); 2–3s mandatory wait on login redirect narrows ratio relative to similar-sized sites |
-| QA Cloud | https://www.qacloud.dev/ | 2,268 | $0.000 | 23,263 | $0.334 | 10.3× | N/A | Multi-app QA platform; 38 elements (full nav + app cards with Open App / Docs / API Docs links); Login/Register; search bar; no public API credentials needed for browsing |
-| QA Playground | https://qaplayground.dev/ | 2,331 | $0.000 | 22,371 | $0.330 | 9.6× | N/A | Clean static site; 28+ challenge links; map works in both interfaces; no anomalies |
-| QE Buggy Todo | https://qe-at-cgi-fi.github.io/todo | 2,453 | $0.000 | 22,854 | $0.415 | 9.3× | N/A | Single-input todo app with intentional bugs (placeholder typo "What need's to be done?"); 1 map element; minimal DOM → high overhead ratio |
+| Practice Automation | https://practice-automation.com/ | 12,993 | $0.021 | 57,032 | $0.120 | 4.4× | 5.8× | 28 nav links covering delays, sliders, tables, iframes, forms, calendars, gestures, spinners, modals, hover, file upload/download; sub-pages at practice-automation.com/* |
+| Practice Test Automation | https://practicetestautomation.com/practice/ | 12,800 | $0.019 | 42,545 | $0.082 | 3.3× | 4.2× | Multiple practice pages; valid login: student / Password123 (no exclamation mark); 2–3s mandatory wait on login redirect narrows ratio relative to similar-sized sites |
+| QA Cloud | https://www.qacloud.dev/ | 6,506 | $0.020 | 32,641 | $0.057 | 5.0× | 2.9× | Multi-app QA platform; 38 elements (full nav + app cards with Open App / Docs / API Docs links); Login/Register; search bar; no public API credentials needed for browsing |
+| QA Playground | https://qaplayground.dev/ | 7,001 | $0.023 | 27,283 | $0.058 | 3.9× | 2.5× | Clean static site; 28+ challenge links; map works in both interfaces; no anomalies |
+| QE Buggy Todo | https://qe-at-cgi-fi.github.io/todo | 9,200 | $0.017 | 36,256 | $0.062 | 3.9× | 3.6× | Single-input todo app with intentional bugs (placeholder typo "What need's to be done?"); 1 map element; minimal DOM → high overhead ratio |
 | React Shopping Cart | https://react-shopping-cart-67954.firebaseapp.com/ | 2,012 | $0.000 | 27,200 | $0.502 | 13.5× | N/A | Firebase SPA; **MCP map enumerates all 16 products**; **CLI map returns 0** (styled-components hash classes change between builds); CLI still faster due to lower tool overhead |
 | SeleniumBase | https://seleniumbase.io/ | 3,545 | $0.000 | 26,215 | $0.353 | 7.4× | N/A | Docs site with 256 MCP elements; 52+ demo pages (Coffee Cart, Drag & Drop, Calculator, Shadow DOM, CAPTCHA); CAPTCHA test pages for CF Turnstile, reCAPTCHA v2 |
 | Selectors Hub | https://selectorshub.com/xpath-practice-page/ | 4,914 | $0.000 | 24,751 | $0.354 | 5.0× | N/A | 125-element XPath practice page; shadow DOM elements disabled; large map narrows ratio (MCP spends proportionally more time on map call itself) |
