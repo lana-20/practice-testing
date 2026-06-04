@@ -169,6 +169,7 @@ Batch 11 complete (2026-06-03): Automation Testing 19/42 done.
 Batch 12 complete (2026-06-03): Automation Testing 24/42 done.
 Batch 13 complete (2026-06-03): Automation Testing 29/42 done.
 Batch 14 complete (2026-06-04): Automation Testing 35/42 done.
+Batch 15 complete (2026-06-04): Automation Testing 42/42 done. ⚠ CLI turns inflated (5–11) for batches 14–15 — agents used adaptive scripting instead of pre-written exact scripts; CLI data needs re-run for all 12 AT sites in these batches.
 
 **General Practice (28/28 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
 BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
@@ -189,10 +190,11 @@ Expand Testing L3✓✓, GitHub Users Search L3✓✓, Global SQA Demo L3✓✓,
 Hands-On Selenium WebDriver L3✓✓, Lambdatest Playground L3✓✓, Let Code L3✓✓,
 Locator Game L3✓✓, NearForm Testing Playground L3✓✓, OrangeHRM L3✓✓,
 Practice Automation L3✓✓, Practice Test Automation L3✓✓, QA Cloud L3✓✓, QA Playground L3✓✓, QE Buggy Todo L3✓✓,
- React Shopping Cart L3✓✓, SeleniumBase L3✓✓,
-Selectors Hub L3✓✓, Selenium Playground L3✓✓, Swag Labs L3✓✓, Sweet Shop L2✓,
-TestDino L2✓, Travel Agileway L2✓, Tricentis Obstacle Course L2✓, var.parts L2✓,
-Weather Shopper L2✓, XYZ Bank L2✓
+ React Shopping Cart L3✓✓⚠, SeleniumBase L3✓✓⚠,
+Selectors Hub L3✓✓⚠, Selenium Playground L3✓✓⚠, Swag Labs L3✓✓⚠, Sweet Shop L3✓✓⚠,
+TestDino L3✓✓⚠, Travel Agileway L3✓✓⚠, Tricentis Obstacle Course L3✓✓⚠, var.parts L3✓✓⚠,
+Weather Shopper L3✓✓⚠, XYZ Bank L3✓✓⚠
+(⚠ = CLI turns inflated; CLI re-run needed with exact pre-scripted Bash B)
 
 **Security Testing (7/11 L2; 0/7 L3):** Firing Range L2✓, Gin & Juice Shop L2✓, Google Gruyere L2✓,
 OWASP Juice Shop L2✓, OWASP VWAD L2✓, Try Hack Me L2✓, Zero Bank L2✓
