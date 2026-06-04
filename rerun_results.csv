@@ -212,3 +212,31 @@ Tricentis Obstacle Course,Automation Testing,17083,0.329848,11,80937,0.169063,24
 var.parts,Automation Testing,13985,0.243755,9,40307,0.066748,10,clean-two-phase;l3
 Weather Shopper,Automation Testing,11002,0.133398,8,45472,0.080683,14,clean-two-phase;l3
 XYZ Bank,Automation Testing,10046,0.175183,9,67361,0.116146,19,clean-two-phase;l3
+React Shopping Cart,Automation Testing,10356,0.099676,6,40799,0.086341,13,clean-two-phase;l3;cli-rerun
+SeleniumBase,Automation Testing,11401,0.137285,9,54932,0.140192,18,clean-two-phase;l3;cli-rerun
+Selectors Hub,Automation Testing,16033,0.186129,12,39352,0.074743,10,clean-two-phase;l3;cli-rerun
+Selenium Playground,Automation Testing,16574,0.203115,13,60106,0.125215,19,clean-two-phase;l3;cli-rerun
+Swag Labs,Automation Testing,13465,0.153871,11,66470,0.141627,23,clean-two-phase;l3;cli-rerun
+TestDino,Automation Testing,6453,0.119898,10,104986,0.240582,30,clean-two-phase;l3;cli-rerun
+Sweet Shop,Automation Testing,10249,0.131839,12,40955,0.082929,13,clean-two-phase;l3;cli-rerun
+Travel Agileway,Automation Testing,8245,0.114749,11,43452,0.088586,14,clean-two-phase;l3;cli-rerun
+Tricentis Obstacle Course,Automation Testing,14893,0.490538,13,80937,0.169063,24,clean-two-phase;l3;cli-rerun
+var.parts,Automation Testing,8502,0.437376,8,40307,0.066748,10,clean-two-phase;l3;cli-rerun
+Weather Shopper,Automation Testing,9240,0.428679,9,45472,0.080683,14,clean-two-phase;l3;cli-rerun
+XYZ Bank,Automation Testing,7532,0.044474,6,67361,0.116146,19,clean-two-phase;l3;cli-rerun
+React Shopping Cart,Automation Testing,13587,0.034668,2,40799,0.086341,13,clean-two-phase;l3;cli-rerun-v2
+SeleniumBase,Automation Testing,7543,0.034577,2,54932,0.140192,18,clean-two-phase;l3;cli-rerun-v2
+Selectors Hub,Automation Testing,14036,0.029301,2,39352,0.074743,10,clean-two-phase;l3;cli-rerun-v2
+Selenium Playground,Automation Testing,16387,0.0,0,60106,0.125215,19,clean-two-phase;l3;cli-rerun-v2
+Swag Labs,Automation Testing,18862,0.0233,2,66470,0.141627,23,clean-two-phase;l3;cli-rerun-v2
+TestDino,Automation Testing,7411,0.031999,2,104986,0.240582,30,clean-two-phase;l3;cli-rerun-v2
+Travel Agileway,Automation Testing,6199,0.028507,1,43452,0.088586,14,clean-two-phase;l3;cli-rerun-v2
+Sweet Shop,Automation Testing,14680,0.066267,4,40955,0.082929,13,clean-two-phase;l3;cli-rerun-v2
+var.parts,Automation Testing,13467,0.00604,1,40307,0.066748,10,clean-two-phase;l3;cli-rerun-v2
+Tricentis Obstacle Course,Automation Testing,15778,0.198368,1,80937,0.169063,24,clean-two-phase;l3;cli-rerun-v2
+Weather Shopper,Automation Testing,7675,0.0,0,45472,0.080683,14,clean-two-phase;l3;cli-rerun-v2
+XYZ Bank,Automation Testing,7770,0.016605,2,67361,0.116146,19,clean-two-phase;l3;cli-rerun-v2
+Selenium Playground,Automation Testing,11015,0.0,0,60106,0.125215,19,clean-two-phase;l3;cli-rerun-v2
+Selenium Playground,Automation Testing,11270,0.008074,1,60106,0.125215,19,clean-two-phase;l3;cli-rerun-v2
+Weather Shopper,Automation Testing,8653,0.008238,1,45472,0.080683,14,clean-two-phase;l3;cli-rerun-v2
+var.parts,Automation Testing,7356,0.007526,1,40307,0.066748,10,clean-two-phase;l3;cli-rerun-v2

@@ -169,7 +169,8 @@ Batch 11 complete (2026-06-03): Automation Testing 19/42 done.
 Batch 12 complete (2026-06-03): Automation Testing 24/42 done.
 Batch 13 complete (2026-06-03): Automation Testing 29/42 done.
 Batch 14 complete (2026-06-04): Automation Testing 35/42 done.
-Batch 15 complete (2026-06-04): Automation Testing 42/42 done. ⚠ CLI turns inflated (5–11) for batches 14–15 — agents used adaptive scripting instead of pre-written exact scripts; CLI data needs re-run for all 12 AT sites in these batches.
+Batch 15 complete (2026-06-04): Automation Testing 42/42 done.
+CLI reruns complete (2026-06-04): all 12 AT sites from batches 14–15 re-measured with token_bracket.py v2 (per-session isolation via st_birthtime). CLI turns now 1–2 per site (clean). tag: cli-rerun-v2.
 
 **General Practice (28/28 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
 BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
@@ -194,7 +195,7 @@ Practice Automation L3✓✓, Practice Test Automation L3✓✓, QA Cloud L3✓�
 Selectors Hub L3✓✓⚠, Selenium Playground L3✓✓⚠, Swag Labs L3✓✓⚠, Sweet Shop L3✓✓⚠,
 TestDino L3✓✓⚠, Travel Agileway L3✓✓⚠, Tricentis Obstacle Course L3✓✓⚠, var.parts L3✓✓⚠,
 Weather Shopper L3✓✓⚠, XYZ Bank L3✓✓⚠
-(⚠ = CLI turns inflated; CLI re-run needed with exact pre-scripted Bash B)
+(cli-rerun-v2 = re-measured with per-session token bracket; clean 1–2 turns)
 
 **Security Testing (7/11 L2; 0/7 L3):** Firing Range L2✓, Gin & Juice Shop L2✓, Google Gruyere L2✓,
 OWASP Juice Shop L2✓, OWASP VWAD L2✓, Try Hack Me L2✓, Zero Bank L2✓

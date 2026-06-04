@@ -125,18 +125,28 @@ def read_totals_session(filepath, start_offset=0):
 # Session file detection
 # ---------------------------------------------------------------------------
 
+def _birthtime(path):
+    """
+    Return actual file creation time (birthtime).
+    macOS: uses st_birthtime (true creation time).
+    Other platforms: falls back to st_ctime.
+    """
+    st = os.stat(path)
+    return getattr(st, "st_birthtime", st.st_ctime)
+
+
 def find_current_session_file():
     """
     Return the JSONL file belonging to the current Claude session.
 
-    Heuristic: the file most recently modified. This works because the current
-    session just wrote a message (the LLM call that generated this bash command)
-    making its file the newest on disk.
+    Uses birthtime (true file creation time) — each agent/session starts with
+    a freshly created JSONL file, while the orchestrating session's file was
+    created much earlier. Immune to mtime and ctime racing from ongoing writes.
     """
     files = _all_jsonl_files()
     if not files:
         return None
-    return max(files, key=lambda f: os.path.getmtime(f))
+    return max(files, key=_birthtime)
 
 
 # ---------------------------------------------------------------------------
