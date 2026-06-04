@@ -168,6 +168,7 @@ L3 ✓✓ = measured in both L2 and L3. L3 ✓ = L3 only (new sites). L2 ✓ = L
 Batch 11 complete (2026-06-03): Automation Testing 19/42 done.
 Batch 12 complete (2026-06-03): Automation Testing 24/42 done.
 Batch 13 complete (2026-06-03): Automation Testing 29/42 done.
+Batch 14 complete (2026-06-04): Automation Testing 35/42 done.
 
 **General Practice (28/28 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
 BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
@@ -188,8 +189,8 @@ Expand Testing L3✓✓, GitHub Users Search L3✓✓, Global SQA Demo L3✓✓,
 Hands-On Selenium WebDriver L3✓✓, Lambdatest Playground L3✓✓, Let Code L3✓✓,
 Locator Game L3✓✓, NearForm Testing Playground L3✓✓, OrangeHRM L3✓✓,
 Practice Automation L3✓✓, Practice Test Automation L3✓✓, QA Cloud L3✓✓, QA Playground L3✓✓, QE Buggy Todo L3✓✓,
- React Shopping Cart L2✓, SeleniumBase L2✓,
-Selectors Hub L2✓, Selenium Playground L2✓, Swag Labs L2✓, Sweet Shop L2✓,
+ React Shopping Cart L3✓✓, SeleniumBase L3✓✓,
+Selectors Hub L3✓✓, Selenium Playground L3✓✓, Swag Labs L3✓✓, Sweet Shop L2✓,
 TestDino L2✓, Travel Agileway L2✓, Tricentis Obstacle Course L2✓, var.parts L2✓,
 Weather Shopper L2✓, XYZ Bank L2✓
 
