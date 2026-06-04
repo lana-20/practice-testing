@@ -166,6 +166,7 @@ After all MCP agents in a batch complete:
 Level 2 complete (2026-06-03). Level 3 in progress (2026-06-03+): fixed CLI bracket, turns tracking, fresh subagents.
 L3 ✓✓ = measured in both L2 and L3. L3 ✓ = L3 only (new sites). L2 ✓ = L2 only (pending L3).
 Batch 11 complete (2026-06-03): Automation Testing 19/42 done.
+Batch 12 complete (2026-06-03): Automation Testing 24/42 done.
 
 **General Practice (28/28 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
 BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
@@ -183,8 +184,8 @@ Automation Exercise L3✓✓, Automation in Testing L3✓✓, Automation Test St
 Automation Testing Practice L3✓✓, Coffee Cart L3✓✓, Commit Quality L3✓✓,
 Contact List App L3✓✓, Demo SaaS L3✓✓, DemoQA L3✓✓, The Internet L3✓✓,
 Expand Testing L3✓✓, GitHub Users Search L3✓✓, Global SQA Demo L3✓✓, GreenKart L3✓✓,
-Hands-On Selenium WebDriver L3✓✓, Lambdatest Playground L2✓, Let Code L2✓,
-Locator Game L2✓, NearForm Testing Playground L2✓, OrangeHRM L2✓,
+Hands-On Selenium WebDriver L3✓✓, Lambdatest Playground L3✓✓, Let Code L3✓✓,
+Locator Game L3✓✓, NearForm Testing Playground L3✓✓, OrangeHRM L3✓✓,
 Practice Automation L2✓, Practice Test Automation L2✓, QA Cloud L2✓,
 QA Playground L2✓, QE Buggy Todo L2✓, React Shopping Cart L2✓, SeleniumBase L2✓,
 Selectors Hub L2✓, Selenium Playground L2✓, Swag Labs L2✓, Sweet Shop L2✓,
