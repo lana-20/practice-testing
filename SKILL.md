@@ -7,7 +7,7 @@ description: Explore and test QA practice sites. Pass a site name or URL to navi
 
 Run exploratory tests on QA practice sites using vibium browser automation.
 
-**Status:** Level 3 complete (2026-06-05) — 100/100 sites measured · CLI v2 isolation deployed · Verification findings: token metrics stable, timing ±50% variance expected (I/O bound)
+**Status:** Measurement complete (2026-06-05) — 100/100 sites measured · Bracket v2 isolation deployed · Findings: token metrics stable, timing ±50% variance expected (I/O bound), parallel CLI 6.3× faster than sequential MCP
 **References:** [README (benchmarks)](references/README.md) · [METHODOLOGY (L3 protocol, v2 isolation, token_bracket.py)](references/METHODOLOGY.md) · [PROTOCOL (agent templates, parallel context pattern)](references/PROTOCOL.md) · [VERIFICATION_FINDINGS (stability check, 12-site re-measure)](references/VERIFICATION_FINDINGS.md)
 
 ## How to run
