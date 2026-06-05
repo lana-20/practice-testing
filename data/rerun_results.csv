@@ -61,7 +61,7 @@ Swag Labs,Automation Testing,18862,0.0233,2,66470,0.141627,23,clean-two-phase;l3
 Sweet Shop,Automation Testing,14680,0.066267,4,40955,0.082929,13,clean-two-phase;l3;cli-rerun-v2
 TestDino,Automation Testing,7411,0.031999,2,104986,0.240582,30,clean-two-phase;l3;cli-rerun-v2
 Travel Agileway,Automation Testing,6199,0.028507,1,43452,0.088586,14,clean-two-phase;l3;cli-rerun-v2
-Tricentis Obstacle Course,Automation Testing,15778,0.198368,1,80937,0.169063,24,clean-two-phase;l3;cli-rerun-v2
+Tricentis Obstacle Course,Automation Testing,6079,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
 var.parts,Automation Testing,7356,0.007526,1,40307,0.066748,10,clean-two-phase;l3;cli-rerun-v2
 Weather Shopper,Automation Testing,8653,0.008238,1,45472,0.080683,14,clean-two-phase;l3;cli-rerun-v2
 XYZ Bank,Automation Testing,7770,0.016605,2,67361,0.116146,19,clean-two-phase;l3;cli-rerun-v2
@@ -80,14 +80,14 @@ Countries GraphQL,API Testing,5343,0.016998,3,21610,0.066079,8,clean-two-phase;l
 FakeRestAPI,API Testing,16933,0.016742,2,33304,0.066525,8,clean-two-phase;l3
 Go REST,API Testing,12599,0.023946,3,28311,0.06584,8,clean-two-phase;l3
 httpbin,API Testing,9285,0.019221,2,26028,0.062663,8,clean-two-phase;l3
-JSON Placeholder,API Testing,4909,0.0,0,24123,0.064861,8,clean-two-phase;l3
-Poké API,API Testing,7006,0.0,0,25696,0.064832,8,clean-two-phase;l3
+JSON Placeholder,API Testing,8461,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
+Poké API,API Testing,4974,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
 Restful Booker,API Testing,14426,0.044908,3,22596,0.066249,8,clean-two-phase;l3
 Rick and Morty API,API Testing,5930,0.014758,3,25247,0.066508,8,clean-two-phase;l3
-ServeRest,API Testing,4963,0.0,0,28191,0.064906,8,clean-two-phase;l3
-SpaceTraders,API Testing,7037,0.0,0,27549,0.072141,9,clean-two-phase;l3
-Swagger Petstore,API Testing,7937,0.0,0,32482,0.064116,8,clean-two-phase;l3
-The Cat API,API Testing,2206,0.0,,20726,0.320665,,clean-two-phase
+ServeRest,API Testing,5520,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
+SpaceTraders,API Testing,5648,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
+Swagger Petstore,API Testing,4190,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
+The Cat API,API Testing,4232,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
 Blaze Demo,Performance Testing,18033,0.016742,2,23810,0.066454,8,clean-two-phase;l3
 Demoblaze,Performance Testing,11176,0.01874,2,23598,0.065004,8,clean-two-phase;l3
 Pet Store Web,Performance Testing,5803,0.014799,3,21987,0.066172,8,clean-two-phase;l3
