@@ -2,7 +2,7 @@
 
 **[Live benchmark page →](https://lana-20.github.io/practice-testing/)** · **[CLI vs MCP behavioral comparison → METHODOLOGY.md](METHODOLOGY.md#cli-vs-mcp--behavioral-comparison)**
 
-[<video src="cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
+[<video src="../assets/cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
 <!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 complete (2026-06-05): 100/100 sites measured · CLI v2 isolation deployed · parallel context pattern documented · verification run complete (timing ±50%, token metrics stable)
 <!--

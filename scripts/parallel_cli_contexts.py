@@ -23,7 +23,7 @@ SITES = {
     "spacetraders": ("SpaceTraders", "https://spacetraders.io/", "spacetraders", "API Testing"),
 }
 
-CSV_PATH = Path.home() / ".claude" / "skills" / "practice-testing" / "rerun_results.csv"
+CSV_PATH = Path.home() / ".claude" / "skills" / "practice-testing" / "data" / "rerun_results.csv"
 
 def run_site_measurement(site_key: str, page_id: int) -> dict:
     """Run CLI measurement for one site in its own context (simulated via sequential calls)."""
@@ -36,7 +36,7 @@ def run_site_measurement(site_key: str, page_id: int) -> dict:
         # Bash A: snapshot
         result_a = subprocess.run(
             f"export PATH=/usr/local/bin:$PATH && vibium stop 2>/dev/null; sleep 1; "
-            f"python3 ~/.claude/skills/practice-testing/token_bracket.py --snapshot --session > /tmp/rerun_{slug}_base.txt; "
+            f"python3 ~/.claude/skills/practice-testing/scripts/token_bracket.py --snapshot --session > /tmp/rerun_{slug}_base.txt; "
             f"python3 -c \"import time; print(int(time.time()*1000))\" > /tmp/rerun_{slug}_t0.txt; echo done",
             shell=True, capture_output=True, text=True, timeout=30
         )
@@ -56,7 +56,7 @@ def run_site_measurement(site_key: str, page_id: int) -> dict:
         # Bash C: diff
         result_c = subprocess.run(
             f"BASE=$(cat /tmp/rerun_{slug}_base.txt); "
-            f"DIFF=$(python3 ~/.claude/skills/practice-testing/token_bracket.py --diff \"$BASE\" --json); "
+            f"DIFF=$(python3 ~/.claude/skills/practice-testing/scripts/token_bracket.py --diff \"$BASE\" --json); "
             f"CLI_MS=$(( $(cat /tmp/rerun_{slug}_t1.txt) - $(cat /tmp/rerun_{slug}_t0.txt) )); "
             f"CLI_USD=$(echo \"$DIFF\" | python3 -c \"import sys,json; print(json.load(sys.stdin)['cost_usd'])\"); "
             f"CLI_TURNS=$(echo \"$DIFF\" | python3 -c \"import sys,json; print(json.load(sys.stdin).get('turns',''))\"); "

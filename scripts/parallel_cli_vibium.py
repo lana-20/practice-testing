@@ -29,8 +29,8 @@ SITES = {
     "spacetraders": ("SpaceTraders", "https://spacetraders.io/", "spacetraders", "API Testing"),
 }
 
-CSV_PATH = Path.home() / ".claude" / "skills" / "practice-testing" / "rerun_results.csv"
-TOKEN_BRACKET_PY = Path.home() / ".claude" / "skills" / "practice-testing" / "token_bracket.py"
+CSV_PATH = Path.home() / ".claude" / "skills" / "practice-testing" / "data" / "rerun_results.csv"
+TOKEN_BRACKET_PY = Path.home() / ".claude" / "skills" / "practice-testing" / "scripts" / "token_bracket.py"
 
 
 def get_session_jsonl_path() -> str:

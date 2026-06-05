@@ -27,7 +27,7 @@ VERIFY_SITES = {
     "poke-api": ("Poké API", "https://pokeapi.co/", "poke-api", "API Testing"),
 }
 
-CSV_PATH = Path.home() / ".claude" / "skills" / "practice-testing" / "rerun_results.csv"
+CSV_PATH = Path.home() / ".claude" / "skills" / "practice-testing" / "data" / "rerun_results.csv"
 
 
 def load_original_l3() -> dict:

@@ -73,6 +73,6 @@ def update(readme_path, results, dry_run=False):
 
 if __name__ == "__main__":
     dry_run = "--dry-run" in sys.argv
-    results = load_clean_results(BASE / "rerun_results.csv")
+    results = load_clean_results(BASE.parent / "data" / "rerun_results.csv")
     print(f"Loaded {len(results)} clean-two-phase sites from CSV")
-    update(BASE / "README.md", results, dry_run)
+    update(BASE.parent / "references" / "README.md", results, dry_run)
