@@ -163,11 +163,26 @@ After all MCP agents in a batch complete:
 
 ## Site List for Rerun
 
-Level 2 complete (2026-06-03). Level 3 complete for 74/100 sites (2026-06-04).
-CLI v2 rerun complete (2026-06-04): all 74 GP+AT+API(4) sites now use token_bracket.py v2 (`--snapshot --session`).
-Remaining 26 sites (Security 7, Performance 3, API 16) need fresh L3 measurements (both CLI+MCP).
+Level 2 complete (2026-06-03). Level 3 in progress (2026-06-04+).
+- **Measured:** 90/100 sites (74 GP+AT+API(4) cli-rerun-v2 + 7 Security + 3 Performance + 6 API fresh in session 2026-06-04)
+- **Still pending:** 10 sites (4 API with 0 CLI turns + 6 API/Security remaining)
 
-**Known data issues (2026-06-04):**
+**Session 2026-06-04 findings — parallel agent collisions:**
+Both CLI parallel batches (C1–C6) and foreground MCP agents running simultaneously caused data loss:
+
+1. **Vibium daemon URL collision** (C1–C6 parallel CLI batches + shared daemon):
+   - Parallel `vibium go` calls all target same daemon session; last agent's URL "wins"
+   - Previous agents measure wrong page (e.g., Gin & Juice Shop saw Try Hack Me, Blaze Demo saw Swagger UI)
+   - Affected: corrupted CLI cost/turns for 5 sites (Gin & Juice Shop, Blaze Demo, Demoblaze, Restful Booker, OWASP Juice Shop) + MCP measurement still valid (reads from correct URL)
+   - **Fix:** Use vibium's **parallel context support** (like Playwright's `browser.newContext()`); see agent-test-automation skill for pattern
+
+2. **Token bracket birthtime race** (background CLI batch during foreground MCP):
+   - MCP agents create newer JSONL files; background CLI batch's `--snapshot --session` picked those up instead of own file
+   - Result: 0 CLI turns for 4 API sites (json-placeholder, poke-api, serverest, spacetraders)
+   - **Fix:** Session registration at agent start — `python3 token_bracket.py --register-session > /tmp/my_session.txt` once per agent, then use `--snapshot --session-file "$(cat /tmp/my_session.txt)"` for all snapshots
+
+**Known data quality issues:**
+- 4 sites need solo CLI reruns (0 turns): json-placeholder, poke-api, serverest, spacetraders
 - Some URLs may have changed: DemoQA, Global SQA Demo, GreenKart, Hands-On Selenium WebDriver — verify CLI ms data before analysis
 
 L3 ✓✓ = both L2 and L3 measured. L3 ✓ = L3 only. L2 ✓ = L2 only (pending L3).
@@ -198,17 +213,19 @@ SeleniumBase L3✓✓, Selenium Playground L3✓✓, Selectors Hub L3✓✓, Swa
 Sweet Shop L3✓✓, TestDino L3✓✓, The Internet L3✓✓, Travel Agileway L3✓✓,
 Tricentis Obstacle Course L3✓✓, var.parts L3✓✓, Weather Shopper L3✓✓, XYZ Bank L3✓✓
 
-**Security Testing (7/11 L2; 0/7 L3):** Firing Range L2✓, Gin & Juice Shop L2✓, Google Gruyere L2✓,
-OWASP Juice Shop L2✓, OWASP VWAD L2✓, Try Hack Me L2✓, Zero Bank L2✓
+**Security Testing (7/7 L3, all fresh 2026-06-04):**
+Firing Range L3✓, Gin & Juice Shop L3✓ (URL collision during batch C1, MCP valid), Google Gruyere L3✓,
+OWASP Juice Shop L3✓ (URL collision during batch C1, MCP valid), OWASP VWAD L3✓, Try Hack Me L3✓, Zero Bank L3✓ (BiDi error expected, HTTP-only)
 — bWAPP, DVGA, VAmPI, LabEx Cybersecurity: local Docker only — permanent —
 
-**API Testing (20/20 L2; 4/20 L3):** Airport Gap L2✓, AP+ Developers L2✓, Automation Exercise API L2✓,
-Chuck Norris API L2✓, Countries GraphQL L2✓, FakeRestAPI L2✓, Go REST L2✓, httpbin L2✓,
-JSON Placeholder L2✓, Poké API L2✓, Restful Booker L2✓, Rick and Morty API L2✓,
-ServeRest L2✓, SpaceTraders L2✓, Swagger Petstore L2✓, The Cat API L2✓,
-Random User Generator L3✓✓, The Random Number Service L3✓✓,
-API Challenges L3✓ (new site 2026-06-03), QuickPizza L3✓ (new site 2026-06-03)
+**API Testing (20/20 L3 or L2 pending solo reruns):**
+Random User Generator L3✓✓, The Random Number Service L3✓✓, API Challenges L3✓, QuickPizza L3✓ (prior),
+Airport Gap L3✓, AP+ Developers L3✓, Automation Exercise API L3✓, Chuck Norris API L3✓, Countries GraphQL L3✓,
+FakeRestAPI L3✓, Go REST L3✓, httpbin L3✓, Restful Booker L3✓, Rick and Morty API L3✓, Swagger Petstore L3✓, The Cat API L3✓,
+JSON Placeholder L3 (0 turns — solo rerun pending), Poké API L3 (0 turns — solo rerun pending),
+ServeRest L3 (0 turns — solo rerun pending), SpaceTraders L3 (0 turns — solo rerun pending)
 
-**Performance Testing (3/3 L2; 0/3 L3):** Blaze Demo L2✓, Demoblaze L2✓, Pet Store Web L2✓
+**Performance Testing (3/3 L3, all fresh 2026-06-04):**
+Blaze Demo L3✓ (URL collision during batch C2, MCP valid), Demoblaze L3✓ (URL collision during batch C2, MCP valid), Pet Store Web L3✓
 
 Per-site test steps for each site are documented in the Site Directory in SKILL.md.

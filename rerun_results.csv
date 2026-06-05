@@ -304,3 +304,28 @@ QuickPizza,API Testing,6793,0.008603,1,43165,0.065433,11,clean-two-phase;l3;cli-
 Lambdatest Playground,Automation Testing,7126,0.031145,2,36775,0.097266,11,clean-two-phase;l3;cli-rerun-v2
 The iframe Search Engine,General Practice,4156,0.006577,1,43240,0.099711,15,clean-two-phase;l3;cli-rerun-v2
 Expand Testing,Automation Testing,12378,0.007052,1,50277,0.084036,13,clean-two-phase;l3;cli-rerun-v2
+Firing Range,Security Testing,4578,0.007854,1,23047,0.08558,8,clean-two-phase;l3
+Gin & Juice Shop,Security Testing,12474,0.039248,2,24606,0.065823,8,clean-two-phase;l3
+Google Gruyere,Security Testing,6438,0.007402,1,21645,0.06628,8,clean-two-phase;l3
+OWASP Juice Shop,Security Testing,18158,0.04684,3,22947,0.066697,8,clean-two-phase;l3
+OWASP VWAD,Security Testing,12250,0.01874,2,23504,0.072677,9,clean-two-phase;l3
+Try Hack Me,Security Testing,10781,0.005786,1,26476,0.066089,8,clean-two-phase;l3
+Zero Bank,Security Testing,5945,0.013825,2,21938,0.060521,7,clean-two-phase;l3
+Blaze Demo,Performance Testing,18033,0.016742,2,23810,0.066454,8,clean-two-phase;l3
+Demoblaze,Performance Testing,11176,0.01874,2,23598,0.065004,8,clean-two-phase;l3
+Pet Store Web,Performance Testing,5803,0.014799,3,21987,0.066172,8,clean-two-phase;l3
+Airport Gap,API Testing,6327,0.007402,1,24371,0.06586,8,clean-two-phase;l3
+AP+ Developers,API Testing,18106,0.037315,2,23542,0.06599,8,clean-two-phase;l3
+Automation Exercise API,API Testing,12643,0.01874,2,26858,0.065175,8,clean-two-phase;l3
+Chuck Norris API,API Testing,6571,0.006462,1,24648,0.064352,8,clean-two-phase;l3
+Countries GraphQL,API Testing,5343,0.016998,3,21610,0.066079,8,clean-two-phase;l3
+FakeRestAPI,API Testing,16933,0.016742,2,33304,0.066525,8,clean-two-phase;l3
+Go REST,API Testing,12599,0.023946,3,28311,0.06584,8,clean-two-phase;l3
+httpbin,API Testing,9285,0.019221,2,26028,0.062663,8,clean-two-phase;l3
+JSON Placeholder,API Testing,4909,0.0,0,24123,0.064861,8,clean-two-phase;l3
+Poké API,API Testing,7006,0.0,0,25696,0.064832,8,clean-two-phase;l3
+Restful Booker,API Testing,14426,0.044908,3,22596,0.066249,8,clean-two-phase;l3
+Rick and Morty API,API Testing,5930,0.014758,3,25247,0.066508,8,clean-two-phase;l3
+ServeRest,API Testing,4963,0.0,0,28191,0.064906,8,clean-two-phase;l3
+SpaceTraders,API Testing,7037,0.0,0,27549,0.072141,9,clean-two-phase;l3
+Swagger Petstore,API Testing,7937,0.0,0,32482,0.064116,8,clean-two-phase;l3
