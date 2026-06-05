@@ -4,7 +4,12 @@
 
 ### Interactive Dashboard
 
-<iframe src="../assets/dashboard.html" style="width: 100%; height: 700px; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; display: block; background: #0a1220; margin: 0; padding: 0; overflow: auto;" scrolling="auto" title="Practice Testing Dashboard"></iframe>
+**[📊 View live dashboard →](../assets/dashboard.html)**
+
+The interactive dashboard shows all 100-site measurements with:
+- 9 key metrics (total sites, speed, cost, turns ratios)
+- 6 performance charts (category breakdown, cost comparison, speed ratios, turn counts, distributions)
+- Sortable/filterable table of all 100 sites with detailed breakdowns
 
 <!-- 100 sites across 5 categories · Bracket v2 protocol (3-bash isolation) · Tested 2026-04-22 to 2026-06-05 · Fresh measurements: 7 sites (2026-06-05) · All metrics verified and accurate · Parallel CLI 6.3× faster than sequential MCP · Token metrics stable · Timing variance ±50% expected (I/O bound)
 <!--
