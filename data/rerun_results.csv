@@ -1,101 +1,101 @@
 site,category,cli_ms,cli_usd,turns_cli,mcp_ms,mcp_usd,turns_mcp,notes
-AcademyBugs,General Practice,6380,0.008423,1,61013,0.108617,17,clean-two-phase;l3;cli-rerun-v2
-A11y Coffee,General Practice,6125,0.008237,1,34973,0.063507,10,clean-two-phase;l3;cli-rerun-v2
-Basic Calculator,General Practice,4874,0.008834,1,44934,0.068643,12,clean-two-phase;l3;cli-rerun-v2
-Candy Mapper,General Practice,10590,0.007752,1,37853,0.069097,10,clean-two-phase;l3;cli-rerun-v2
-Cnarios,General Practice,7093,0.041359,2,41276,0.064281,10,clean-two-phase;l3;cli-rerun-v2
-Evil Tester,General Practice,8775,0.013977,2,44361,0.139864,14,clean-two-phase;l3;cli-rerun-v2
-Gefälscht CompuTech,General Practice,25809,0.027636,3,44533,0.085381,13,clean-two-phase;l3;cli-rerun-v2
-Parabank,General Practice,11840,0.041804,2,34389,0.057092,10,clean-two-phase;l3;cli-rerun-v2
-Parking Cost Calculator,General Practice,5637,0.007544,1,50486,0.097946,15,clean-two-phase;l3;cli-rerun-v2
-PHP Travels,General Practice,6293,0.024962,2,53688,0.101367,14,clean-two-phase;l3;cli-rerun-v2
-Polymer Shop,General Practice,8647,0.007621,1,31033,0.057941,9,clean-two-phase;l3;cli-rerun-v2
-Potion Shop,General Practice,5426,0.027636,3,42220,0.074933,11,clean-two-phase;l3;cli-rerun-v2
-Practice Software Testing,General Practice,11192,0.019011,2,61556,0.128798,19,clean-two-phase;l3;cli-rerun-v2
-PrestaShop,General Practice,11738,0.041804,2,47687,0.076632,11,clean-two-phase;l3;cli-rerun-v2
-QA Practice,General Practice,6314,0.007404,1,52303,0.108796,17,clean-two-phase;l3;cli-rerun-v2
-QA Training Simulator,General Practice,23170,0.007692,1,50566,0.080904,13,clean-two-phase;l3;cli-rerun-v2
-Random User Generator,API Testing,7347,0.053125,1,43690,0.083337,13,clean-two-phase;l3;cli-rerun-v2
-Real World Example Apps,General Practice,11687,0.059078,4,42298,0.089305,11,clean-two-phase;l3;cli-rerun-v2
-testers.ai,General Practice,4226,0.018297,2,41875,0.067227,11,clean-two-phase;l3;cli-rerun-v2
-Test Track,General Practice,11588,0.013876,2,57440,0.110937,19,clean-two-phase;l3;cli-rerun-v2
-The Boozang Test Lab,General Practice,8401,0.007831,1,50224,0.0808,14,clean-two-phase;l3;cli-rerun-v2
-The iframe Search Engine,General Practice,4156,0.006577,1,43240,0.099711,15,clean-two-phase;l3;cli-rerun-v2
-The Internet,Automation Testing,10647,0.018309,2,59245,0.104447,16,clean-two-phase;l3;cli-rerun-v2
-The Random Number Service,API Testing,5942,0.007614,1,46765,0.094044,14,clean-two-phase;l3;cli-rerun-v2
-ToDo List,General Practice,9878,0.017302,2,59299,0.084199,13,clean-two-phase;l3;cli-rerun-v2
-UI5 Demo Kit,General Practice,13242,0.013876,2,57399,0.114297,15,clean-two-phase;l3;cli-rerun-v2
-Applitools Demo,Automation Testing,9840,0.007407,1,41396,0.063913,11,clean-two-phase;l3;cli-rerun-v2
-ATM Practice App,Automation Testing,13669,0.041149,2,37400,0.077089,12,clean-two-phase;l3;cli-rerun-v2
-Automate Now Sandbox,Automation Testing,22968,0.030675,2,30727,0.052748,8,clean-two-phase;l3;cli-rerun-v2
-Automation Bookstore,Automation Testing,14132,0.023766,3,33758,0.065068,10,clean-two-phase;l3;cli-rerun-v2
-Automation Camp,Automation Testing,9878,0.007407,1,43601,0.065921,10,clean-two-phase;l3;cli-rerun-v2
-Automation Exercise,Automation Testing,13616,0.041149,2,54692,0.094056,14,clean-two-phase;l3;cli-rerun-v2
-Automation in Testing,Automation Testing,22205,0.007686,1,45691,0.08188,13,clean-two-phase;l3;cli-rerun-v2
-Automation Test Store,Automation Testing,16988,0.023766,3,53344,0.101249,15,clean-two-phase;l3;cli-rerun-v2
-Automation Testing Practice,Automation Testing,12345,0.014402,2,53389,0.083856,13,clean-two-phase;l3;cli-rerun-v2
-Coffee Cart,Automation Testing,12293,0.013876,2,60082,0.115202,19,clean-two-phase;l3;cli-rerun-v2
-Commit Quality,Automation Testing,21856,0.007686,1,49518,0.133942,14,clean-two-phase;l3;cli-rerun-v2
-Contact List App,Automation Testing,16955,0.023766,3,53999,0.09017,16,clean-two-phase;l3;cli-rerun-v2
-Demo SaaS,Automation Testing,14056,0.025222,3,29383,0.052707,8,clean-two-phase;l3;cli-rerun-v2
-DemoQA,Automation Testing,18911,0.008655,1,27151,0.052034,8,clean-two-phase;l3;cli-rerun-v2
-Expand Testing,Automation Testing,12378,0.007052,1,50277,0.084036,13,clean-two-phase;l3;cli-rerun-v2
-GitHub Users Search,Automation Testing,14264,0.023766,3,37530,0.092666,12,clean-two-phase;l3;cli-rerun-v2
-Global SQA Demo,Automation Testing,14001,0.025222,3,54398,0.084332,14,clean-two-phase;l3;cli-rerun-v2
-GreenKart,Automation Testing,19034,0.008655,1,80317,0.122451,18,clean-two-phase;l3;cli-rerun-v2
-Hands-On Selenium WebDriver,Automation Testing,9035,0.02134,2,70520,0.155014,24,clean-two-phase;l3;cli-rerun-v2
-Selenium Playground,Automation Testing,11270,0.008074,1,60106,0.125215,19,clean-two-phase;l3;cli-rerun-v2
-Let Code,Automation Testing,14267,0.007674,1,48524,0.08788,14,clean-two-phase;l3;cli-rerun-v2
-Locator Game,Automation Testing,4984,0.008046,1,42541,0.077707,12,clean-two-phase;l3;cli-rerun-v2
-NearForm Testing Playground,Automation Testing,6332,0.008314,1,38105,0.082677,13,clean-two-phase;l3;cli-rerun-v2
-OrangeHRM,Automation Testing,19102,0.008655,1,55479,0.083359,13,clean-two-phase;l3;cli-rerun-v2
-Practice Automation,Automation Testing,9098,0.008822,1,57032,0.120442,19,clean-two-phase;l3;cli-rerun-v2
-Practice Test Automation,Automation Testing,5789,0.007499,1,42545,0.081718,13,clean-two-phase;l3;cli-rerun-v2
-QA Cloud,Automation Testing,7252,0.053125,1,32641,0.056723,8,clean-two-phase;l3;cli-rerun-v2
-QA Playground,Automation Testing,5842,0.022025,2,27283,0.058283,8,clean-two-phase;l3;cli-rerun-v2
-QE Buggy Todo,Automation Testing,5612,0.008284,1,36256,0.062428,11,clean-two-phase;l3;cli-rerun-v2
-React Shopping Cart,Automation Testing,13587,0.034668,2,40799,0.086341,13,clean-two-phase;l3;cli-rerun-v2
-SeleniumBase,Automation Testing,7543,0.034577,2,54932,0.140192,18,clean-two-phase;l3;cli-rerun-v2
-Selectors Hub,Automation Testing,14036,0.029301,2,39352,0.074743,10,clean-two-phase;l3;cli-rerun-v2
-Swag Labs,Automation Testing,18862,0.0233,2,66470,0.141627,23,clean-two-phase;l3;cli-rerun-v2
-Sweet Shop,Automation Testing,14680,0.066267,4,40955,0.082929,13,clean-two-phase;l3;cli-rerun-v2
-TestDino,Automation Testing,7411,0.031999,2,104986,0.240582,30,clean-two-phase;l3;cli-rerun-v2
-Travel Agileway,Automation Testing,6199,0.028507,1,43452,0.088586,14,clean-two-phase;l3;cli-rerun-v2
-Tricentis Obstacle Course,Automation Testing,6079,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-var.parts,Automation Testing,7356,0.007526,1,40307,0.066748,10,clean-two-phase;l3;cli-rerun-v2
-Weather Shopper,Automation Testing,8653,0.008238,1,45472,0.080683,14,clean-two-phase;l3;cli-rerun-v2
-XYZ Bank,Automation Testing,7770,0.016605,2,67361,0.116146,19,clean-two-phase;l3;cli-rerun-v2
-Firing Range,Security Testing,4578,0.007854,1,23047,0.08558,8,clean-two-phase;l3
-Gin & Juice Shop,Security Testing,12474,0.039248,2,24606,0.065823,8,clean-two-phase;l3
-Google Gruyere,Security Testing,6438,0.007402,1,21645,0.06628,8,clean-two-phase;l3
-OWASP Juice Shop,Security Testing,18158,0.04684,3,22947,0.066697,8,clean-two-phase;l3
-OWASP VWAD,Security Testing,12250,0.01874,2,23504,0.072677,9,clean-two-phase;l3
-Try Hack Me,Security Testing,10781,0.005786,1,26476,0.066089,8,clean-two-phase;l3
-Zero Bank,Security Testing,5945,0.013825,2,21938,0.060521,7,clean-two-phase;l3
-Airport Gap,API Testing,6327,0.007402,1,24371,0.06586,8,clean-two-phase;l3
-AP+ Developers,API Testing,18106,0.037315,2,23542,0.06599,8,clean-two-phase;l3
-Automation Exercise API,API Testing,12643,0.01874,2,26858,0.065175,8,clean-two-phase;l3
-Chuck Norris API,API Testing,6571,0.006462,1,24648,0.064352,8,clean-two-phase;l3
-Countries GraphQL,API Testing,5343,0.016998,3,21610,0.066079,8,clean-two-phase;l3
-FakeRestAPI,API Testing,16933,0.016742,2,33304,0.066525,8,clean-two-phase;l3
-Go REST,API Testing,12599,0.023946,3,28311,0.06584,8,clean-two-phase;l3
-httpbin,API Testing,9285,0.019221,2,26028,0.062663,8,clean-two-phase;l3
-JSON Placeholder,API Testing,8461,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-Poké API,API Testing,4974,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-Restful Booker,API Testing,14426,0.044908,3,22596,0.066249,8,clean-two-phase;l3
-Rick and Morty API,API Testing,5930,0.014758,3,25247,0.066508,8,clean-two-phase;l3
-ServeRest,API Testing,5520,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-SpaceTraders,API Testing,5648,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-Swagger Petstore,API Testing,4190,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-The Cat API,API Testing,4232,0.000000,0,23500,0.000000,0,fresh-2026-06-05;l3;parallel-cli;sequential-mcp
-Blaze Demo,Performance Testing,18033,0.016742,2,23810,0.066454,8,clean-two-phase;l3
-Demoblaze,Performance Testing,11176,0.01874,2,23598,0.065004,8,clean-two-phase;l3
-Pet Store Web,Performance Testing,5803,0.014799,3,21987,0.066172,8,clean-two-phase;l3
-Black Box Puzzles,General Practice,5000,0.026265,2,35509,0.057553,10,clean-two-phase;l3;cli-rerun-v2
-BookCart,General Practice,21515,0.007686,1,38433,0.071403,11,clean-two-phase;l3;cli-rerun-v2
-Lambdatest Playground,Automation Testing,7126,0.031145,2,36775,0.097266,11,clean-two-phase;l3;cli-rerun-v2
-BearQ,General Practice,4961,0.009033,1,43902,0.069399,11,clean-two-phase;l3;cli-rerun-v2
-PromptQA Playground,General Practice,14243,0.023766,3,64915,0.09601,14,clean-two-phase;l3;cli-rerun-v2
-API Challenges,API Testing,5685,0.008284,1,47283,0.090543,14,clean-two-phase;l3;cli-rerun-v2
-QuickPizza,API Testing,6793,0.008603,1,43165,0.065433,11,clean-two-phase;l3;cli-rerun-v2
-Bill Payment API,General Practice,8764,0.00939,1,45997,0.145228,12,clean-two-phase;l3;cli-rerun-v2
+AcademyBugs,General Practice,6380,0.008423,1,61013,0.108617,17,clean-two-phase;bracket-v2;cli-rerun-v2
+A11y Coffee,General Practice,6125,0.008237,1,34973,0.063507,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Basic Calculator,General Practice,4874,0.008834,1,44934,0.068643,12,clean-two-phase;bracket-v2;cli-rerun-v2
+Candy Mapper,General Practice,10590,0.007752,1,37853,0.069097,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Cnarios,General Practice,7093,0.041359,2,41276,0.064281,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Evil Tester,General Practice,8775,0.013977,2,44361,0.139864,14,clean-two-phase;bracket-v2;cli-rerun-v2
+Gefälscht CompuTech,General Practice,25809,0.027636,3,44533,0.085381,13,clean-two-phase;bracket-v2;cli-rerun-v2
+Parabank,General Practice,11840,0.041804,2,34389,0.057092,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Parking Cost Calculator,General Practice,5637,0.007544,1,50486,0.097946,15,clean-two-phase;bracket-v2;cli-rerun-v2
+PHP Travels,General Practice,6293,0.024962,2,53688,0.101367,14,clean-two-phase;bracket-v2;cli-rerun-v2
+Polymer Shop,General Practice,8647,0.007621,1,31033,0.057941,9,clean-two-phase;bracket-v2;cli-rerun-v2
+Potion Shop,General Practice,5426,0.027636,3,42220,0.074933,11,clean-two-phase;bracket-v2;cli-rerun-v2
+Practice Software Testing,General Practice,11192,0.019011,2,61556,0.128798,19,clean-two-phase;bracket-v2;cli-rerun-v2
+PrestaShop,General Practice,11738,0.041804,2,47687,0.076632,11,clean-two-phase;bracket-v2;cli-rerun-v2
+QA Practice,General Practice,6314,0.007404,1,52303,0.108796,17,clean-two-phase;bracket-v2;cli-rerun-v2
+QA Training Simulator,General Practice,23170,0.007692,1,50566,0.080904,13,clean-two-phase;bracket-v2;cli-rerun-v2
+Random User Generator,API Testing,7347,0.053125,1,43690,0.083337,13,clean-two-phase;bracket-v2;cli-rerun-v2
+Real World Example Apps,General Practice,11687,0.059078,4,42298,0.089305,11,clean-two-phase;bracket-v2;cli-rerun-v2
+testers.ai,General Practice,4226,0.018297,2,41875,0.067227,11,clean-two-phase;bracket-v2;cli-rerun-v2
+Test Track,General Practice,11588,0.013876,2,57440,0.110937,19,clean-two-phase;bracket-v2;cli-rerun-v2
+The Boozang Test Lab,General Practice,8401,0.007831,1,50224,0.0808,14,clean-two-phase;bracket-v2;cli-rerun-v2
+The iframe Search Engine,General Practice,4156,0.006577,1,43240,0.099711,15,clean-two-phase;bracket-v2;cli-rerun-v2
+The Internet,Automation Testing,10647,0.018309,2,59245,0.104447,16,clean-two-phase;bracket-v2;cli-rerun-v2
+The Random Number Service,API Testing,5942,0.007614,1,46765,0.094044,14,clean-two-phase;bracket-v2;cli-rerun-v2
+ToDo List,General Practice,9878,0.017302,2,59299,0.084199,13,clean-two-phase;bracket-v2;cli-rerun-v2
+UI5 Demo Kit,General Practice,13242,0.013876,2,57399,0.114297,15,clean-two-phase;bracket-v2;cli-rerun-v2
+Applitools Demo,Automation Testing,9840,0.007407,1,41396,0.063913,11,clean-two-phase;bracket-v2;cli-rerun-v2
+ATM Practice App,Automation Testing,13669,0.041149,2,37400,0.077089,12,clean-two-phase;bracket-v2;cli-rerun-v2
+Automate Now Sandbox,Automation Testing,22968,0.030675,2,30727,0.052748,8,clean-two-phase;bracket-v2;cli-rerun-v2
+Automation Bookstore,Automation Testing,14132,0.023766,3,33758,0.065068,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Automation Camp,Automation Testing,9878,0.007407,1,43601,0.065921,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Automation Exercise,Automation Testing,13616,0.041149,2,54692,0.094056,14,clean-two-phase;bracket-v2;cli-rerun-v2
+Automation in Testing,Automation Testing,22205,0.007686,1,45691,0.08188,13,clean-two-phase;bracket-v2;cli-rerun-v2
+Automation Test Store,Automation Testing,16988,0.023766,3,53344,0.101249,15,clean-two-phase;bracket-v2;cli-rerun-v2
+Automation Testing Practice,Automation Testing,12345,0.014402,2,53389,0.083856,13,clean-two-phase;bracket-v2;cli-rerun-v2
+Coffee Cart,Automation Testing,12293,0.013876,2,60082,0.115202,19,clean-two-phase;bracket-v2;cli-rerun-v2
+Commit Quality,Automation Testing,21856,0.007686,1,49518,0.133942,14,clean-two-phase;bracket-v2;cli-rerun-v2
+Contact List App,Automation Testing,16955,0.023766,3,53999,0.09017,16,clean-two-phase;bracket-v2;cli-rerun-v2
+Demo SaaS,Automation Testing,14056,0.025222,3,29383,0.052707,8,clean-two-phase;bracket-v2;cli-rerun-v2
+DemoQA,Automation Testing,18911,0.008655,1,27151,0.052034,8,clean-two-phase;bracket-v2;cli-rerun-v2
+Expand Testing,Automation Testing,12378,0.007052,1,50277,0.084036,13,clean-two-phase;bracket-v2;cli-rerun-v2
+GitHub Users Search,Automation Testing,14264,0.023766,3,37530,0.092666,12,clean-two-phase;bracket-v2;cli-rerun-v2
+Global SQA Demo,Automation Testing,14001,0.025222,3,54398,0.084332,14,clean-two-phase;bracket-v2;cli-rerun-v2
+GreenKart,Automation Testing,19034,0.008655,1,80317,0.122451,18,clean-two-phase;bracket-v2;cli-rerun-v2
+Hands-On Selenium WebDriver,Automation Testing,9035,0.02134,2,70520,0.155014,24,clean-two-phase;bracket-v2;cli-rerun-v2
+Selenium Playground,Automation Testing,11270,0.008074,1,60106,0.125215,19,clean-two-phase;bracket-v2;cli-rerun-v2
+Let Code,Automation Testing,14267,0.007674,1,48524,0.08788,14,clean-two-phase;bracket-v2;cli-rerun-v2
+Locator Game,Automation Testing,4984,0.008046,1,42541,0.077707,12,clean-two-phase;bracket-v2;cli-rerun-v2
+NearForm Testing Playground,Automation Testing,6332,0.008314,1,38105,0.082677,13,clean-two-phase;bracket-v2;cli-rerun-v2
+OrangeHRM,Automation Testing,19102,0.008655,1,55479,0.083359,13,clean-two-phase;bracket-v2;cli-rerun-v2
+Practice Automation,Automation Testing,9098,0.008822,1,57032,0.120442,19,clean-two-phase;bracket-v2;cli-rerun-v2
+Practice Test Automation,Automation Testing,5789,0.007499,1,42545,0.081718,13,clean-two-phase;bracket-v2;cli-rerun-v2
+QA Cloud,Automation Testing,7252,0.053125,1,32641,0.056723,8,clean-two-phase;bracket-v2;cli-rerun-v2
+QA Playground,Automation Testing,5842,0.022025,2,27283,0.058283,8,clean-two-phase;bracket-v2;cli-rerun-v2
+QE Buggy Todo,Automation Testing,5612,0.008284,1,36256,0.062428,11,clean-two-phase;bracket-v2;cli-rerun-v2
+React Shopping Cart,Automation Testing,13587,0.034668,2,40799,0.086341,13,clean-two-phase;bracket-v2;cli-rerun-v2
+SeleniumBase,Automation Testing,7543,0.034577,2,54932,0.140192,18,clean-two-phase;bracket-v2;cli-rerun-v2
+Selectors Hub,Automation Testing,14036,0.029301,2,39352,0.074743,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Swag Labs,Automation Testing,18862,0.0233,2,66470,0.141627,23,clean-two-phase;bracket-v2;cli-rerun-v2
+Sweet Shop,Automation Testing,14680,0.066267,4,40955,0.082929,13,clean-two-phase;bracket-v2;cli-rerun-v2
+TestDino,Automation Testing,7411,0.031999,2,104986,0.240582,30,clean-two-phase;bracket-v2;cli-rerun-v2
+Travel Agileway,Automation Testing,6199,0.028507,1,43452,0.088586,14,clean-two-phase;bracket-v2;cli-rerun-v2
+Tricentis Obstacle Course,Automation Testing,6079,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+var.parts,Automation Testing,7356,0.007526,1,40307,0.066748,10,clean-two-phase;bracket-v2;cli-rerun-v2
+Weather Shopper,Automation Testing,8653,0.008238,1,45472,0.080683,14,clean-two-phase;bracket-v2;cli-rerun-v2
+XYZ Bank,Automation Testing,7770,0.016605,2,67361,0.116146,19,clean-two-phase;bracket-v2;cli-rerun-v2
+Firing Range,Security Testing,4578,0.007854,1,23047,0.08558,8,clean-two-phase;bracket-v2
+Gin & Juice Shop,Security Testing,12474,0.039248,2,24606,0.065823,8,clean-two-phase;bracket-v2
+Google Gruyere,Security Testing,6438,0.007402,1,21645,0.06628,8,clean-two-phase;bracket-v2
+OWASP Juice Shop,Security Testing,18158,0.04684,3,22947,0.066697,8,clean-two-phase;bracket-v2
+OWASP VWAD,Security Testing,12250,0.01874,2,23504,0.072677,9,clean-two-phase;bracket-v2
+Try Hack Me,Security Testing,10781,0.005786,1,26476,0.066089,8,clean-two-phase;bracket-v2
+Zero Bank,Security Testing,5945,0.013825,2,21938,0.060521,7,clean-two-phase;bracket-v2
+Airport Gap,API Testing,6327,0.007402,1,24371,0.06586,8,clean-two-phase;bracket-v2
+AP+ Developers,API Testing,18106,0.037315,2,23542,0.06599,8,clean-two-phase;bracket-v2
+Automation Exercise API,API Testing,12643,0.01874,2,26858,0.065175,8,clean-two-phase;bracket-v2
+Chuck Norris API,API Testing,6571,0.006462,1,24648,0.064352,8,clean-two-phase;bracket-v2
+Countries GraphQL,API Testing,5343,0.016998,3,21610,0.066079,8,clean-two-phase;bracket-v2
+FakeRestAPI,API Testing,16933,0.016742,2,33304,0.066525,8,clean-two-phase;bracket-v2
+Go REST,API Testing,12599,0.023946,3,28311,0.06584,8,clean-two-phase;bracket-v2
+httpbin,API Testing,9285,0.019221,2,26028,0.062663,8,clean-two-phase;bracket-v2
+JSON Placeholder,API Testing,8461,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+Poké API,API Testing,4974,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+Restful Booker,API Testing,14426,0.044908,3,22596,0.066249,8,clean-two-phase;bracket-v2
+Rick and Morty API,API Testing,5930,0.014758,3,25247,0.066508,8,clean-two-phase;bracket-v2
+ServeRest,API Testing,5520,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+SpaceTraders,API Testing,5648,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+Swagger Petstore,API Testing,4190,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+The Cat API,API Testing,4232,0.000000,0,23500,0.000000,0,fresh-2026-06-05;bracket-v2;parallel-cli;sequential-mcp
+Blaze Demo,Performance Testing,18033,0.016742,2,23810,0.066454,8,clean-two-phase;bracket-v2
+Demoblaze,Performance Testing,11176,0.01874,2,23598,0.065004,8,clean-two-phase;bracket-v2
+Pet Store Web,Performance Testing,5803,0.014799,3,21987,0.066172,8,clean-two-phase;bracket-v2
+Black Box Puzzles,General Practice,5000,0.026265,2,35509,0.057553,10,clean-two-phase;bracket-v2;cli-rerun-v2
+BookCart,General Practice,21515,0.007686,1,38433,0.071403,11,clean-two-phase;bracket-v2;cli-rerun-v2
+Lambdatest Playground,Automation Testing,7126,0.031145,2,36775,0.097266,11,clean-two-phase;bracket-v2;cli-rerun-v2
+BearQ,General Practice,4961,0.009033,1,43902,0.069399,11,clean-two-phase;bracket-v2;cli-rerun-v2
+PromptQA Playground,General Practice,14243,0.023766,3,64915,0.09601,14,clean-two-phase;bracket-v2;cli-rerun-v2
+API Challenges,API Testing,5685,0.008284,1,47283,0.090543,14,clean-two-phase;bracket-v2;cli-rerun-v2
+QuickPizza,API Testing,6793,0.008603,1,43165,0.065433,11,clean-two-phase;bracket-v2;cli-rerun-v2
+Bill Payment API,General Practice,8764,0.00939,1,45997,0.145228,12,clean-two-phase;bracket-v2;cli-rerun-v2
