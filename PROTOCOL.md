@@ -167,10 +167,8 @@ Level 2 complete (2026-06-03). Level 3 complete for 74/100 sites (2026-06-04).
 CLI v2 rerun complete (2026-06-04): all 74 GP+AT+API(4) sites now use token_bracket.py v2 (`--snapshot --session`).
 Remaining 26 sites (Security 7, Performance 3, API 16) need fresh L3 measurements (both CLI+MCP).
 
-**Known data issues (2026-06-04 v2 batch reruns):**
-- The iframe Search Engine: v2 row missing — R4 daemon collision wrote "The Internet" instead; needs solo rerun
-- Expand Testing: v2 row has literal `<CLI_MS>,<CLI_USD>,<CLI_TURNS>` placeholders — bad row, needs solo rerun
-- Some URLs may have changed: DemoQA, Global SQA Demo, GreenKart, Hands-On Selenium WebDriver — verify before relying on CLI ms data for those sites
+**Known data issues (2026-06-04):**
+- Some URLs may have changed: DemoQA, Global SQA Demo, GreenKart, Hands-On Selenium WebDriver — verify CLI ms data before analysis
 
 L3 ✓✓ = both L2 and L3 measured. L3 ✓ = L3 only. L2 ✓ = L2 only (pending L3).
 
@@ -182,7 +180,7 @@ Parking Cost Calculator L3✓✓, PHP Travels L3✓✓, Polymer Shop L3✓✓, P
 Practice Software Testing L3✓✓, PrestaShop L3✓✓, PromptQA Playground L3✓,
 QA Practice L3✓✓, QA Training Simulator L3✓✓, Real World Example Apps L3✓✓,
 testers.ai L3✓✓, Test Track L3✓✓, The Boozang Test Lab L3✓✓,
-The iframe Search Engine L3✓✓ (⚠ v2 row missing — needs solo rerun),
+The iframe Search Engine L3✓✓,
 ToDo List L3✓✓, UI5 Demo Kit L3✓✓
 
 **Automation Testing (42/42 L3, all cli-rerun-v2):**
@@ -190,7 +188,7 @@ Applitools Demo L3✓✓, ATM Practice App L3✓✓, Automate Now Sandbox L3✓�
 Automation Bookstore L3✓✓, Automation Camp L3✓✓, Automation Exercise L3✓✓,
 Automation in Testing L3✓✓, Automation Test Store L3✓✓, Automation Testing Practice L3✓✓,
 Coffee Cart L3✓✓, Commit Quality L3✓✓, Contact List App L3✓✓, Demo SaaS L3✓✓,
-DemoQA L3✓✓, Expand Testing L3✓✓ (⚠ v2 row has placeholder values — needs solo rerun),
+DemoQA L3✓✓, Expand Testing L3✓✓,
 GitHub Users Search L3✓✓, Global SQA Demo L3✓✓, GreenKart L3✓✓,
 Hands-On Selenium WebDriver L3✓✓, Lambdatest Playground L3✓✓, Let Code L3✓✓,
 Locator Game L3✓✓, NearForm Testing Playground L3✓✓, OrangeHRM L3✓✓,
