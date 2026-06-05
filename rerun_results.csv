@@ -302,3 +302,5 @@ QE Buggy Todo,Automation Testing,5612,0.008284,1,36256,0.062428,11,clean-two-pha
 API Challenges,API Testing,5685,0.008284,1,47283,0.090543,14,clean-two-phase;l3;cli-rerun-v2
 QuickPizza,API Testing,6793,0.008603,1,43165,0.065433,11,clean-two-phase;l3;cli-rerun-v2
 Lambdatest Playground,Automation Testing,7126,0.031145,2,36775,0.097266,11,clean-two-phase;l3;cli-rerun-v2
+The iframe Search Engine,General Practice,4156,0.006577,1,43240,0.099711,15,clean-two-phase;l3;cli-rerun-v2
+Expand Testing,Automation Testing,12378,0.007052,1,50277,0.084036,13,clean-two-phase;l3;cli-rerun-v2
