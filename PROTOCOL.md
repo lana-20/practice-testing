@@ -163,39 +163,42 @@ After all MCP agents in a batch complete:
 
 ## Site List for Rerun
 
-Level 2 complete (2026-06-03). Level 3 in progress (2026-06-03+): fixed CLI bracket, turns tracking, fresh subagents.
-L3 ✓✓ = measured in both L2 and L3. L3 ✓ = L3 only (new sites). L2 ✓ = L2 only (pending L3).
-Batch 11 complete (2026-06-03): Automation Testing 19/42 done.
-Batch 12 complete (2026-06-03): Automation Testing 24/42 done.
-Batch 13 complete (2026-06-03): Automation Testing 29/42 done.
-Batch 14 complete (2026-06-04): Automation Testing 35/42 done.
-Batch 15 complete (2026-06-04): Automation Testing 42/42 done.
-CLI reruns complete (2026-06-04): all 12 AT sites from batches 14–15 re-measured with token_bracket.py v2 (per-session isolation via st_birthtime). CLI turns now 1–2 per site (clean). tag: cli-rerun-v2.
+Level 2 complete (2026-06-03). Level 3 complete for 74/100 sites (2026-06-04).
+CLI v2 rerun complete (2026-06-04): all 74 GP+AT+API(4) sites now use token_bracket.py v2 (`--snapshot --session`).
+Remaining 26 sites (Security 7, Performance 3, API 16) need fresh L3 measurements (both CLI+MCP).
 
-**General Practice (28/28 L3):** AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓,
-BearQ L3✓ (new site 2026-06-03), Black Box Puzzles L3✓✓ (restored 2026-06-03),
-BookCart L3✓✓ (restored 2026-06-03), Candy Mapper L3✓✓, Cnarios L3✓✓,
-Evil Tester L3✓✓, Gefälscht CompuTech L3✓✓, Parabank L3✓✓,
-Parking Cost Calculator L3✓✓, PHP Travels L3✓✓ (redesigned 2026-06-03), Polymer Shop L3✓✓,
-Potion Shop L3✓✓, Practice Software Testing L3✓✓, PrestaShop L3✓✓, QA Practice L3✓✓,
-QA Training Simulator L3✓✓, Real World Example Apps L3✓✓,
-testers.ai L3✓✓, Test Track L3✓✓, The Boozang Test Lab L3✓✓, The iframe Search Engine L3✓✓,
-ToDo List L3✓✓, UI5 Demo Kit L3✓✓, Bill Payment API L3✓, PromptQA Playground L3✓
+**Known data issues (2026-06-04 v2 batch reruns):**
+- The iframe Search Engine: v2 row missing — R4 daemon collision wrote "The Internet" instead; needs solo rerun
+- Expand Testing: v2 row has literal `<CLI_MS>,<CLI_USD>,<CLI_TURNS>` placeholders — bad row, needs solo rerun
+- Some URLs may have changed: DemoQA, Global SQA Demo, GreenKart, Hands-On Selenium WebDriver — verify before relying on CLI ms data for those sites
 
-**Automation Testing (42/42 L2; 19/42 L3 — in progress):** Applitools Demo L3✓✓, ATM Practice App L3✓✓,
-Automate Now Sandbox L3✓✓, Automation Bookstore L3✓✓, Automation Camp L3✓✓,
-Automation Exercise L3✓✓, Automation in Testing L3✓✓, Automation Test Store L3✓✓,
-Automation Testing Practice L3✓✓, Coffee Cart L3✓✓, Commit Quality L3✓✓,
-Contact List App L3✓✓, Demo SaaS L3✓✓, DemoQA L3✓✓, The Internet L3✓✓,
-Expand Testing L3✓✓, GitHub Users Search L3✓✓, Global SQA Demo L3✓✓, GreenKart L3✓✓,
+L3 ✓✓ = both L2 and L3 measured. L3 ✓ = L3 only. L2 ✓ = L2 only (pending L3).
+
+**General Practice (28/28 L3, all cli-rerun-v2):**
+AcademyBugs L3✓✓, A11y Coffee L3✓✓, Basic Calculator L3✓✓, BearQ L3✓,
+Bill Payment API L3✓, Black Box Puzzles L3✓✓, BookCart L3✓✓, Candy Mapper L3✓✓,
+Cnarios L3✓✓, Evil Tester L3✓✓, Gefälscht CompuTech L3✓✓, Parabank L3✓✓,
+Parking Cost Calculator L3✓✓, PHP Travels L3✓✓, Polymer Shop L3✓✓, Potion Shop L3✓✓,
+Practice Software Testing L3✓✓, PrestaShop L3✓✓, PromptQA Playground L3✓,
+QA Practice L3✓✓, QA Training Simulator L3✓✓, Real World Example Apps L3✓✓,
+testers.ai L3✓✓, Test Track L3✓✓, The Boozang Test Lab L3✓✓,
+The iframe Search Engine L3✓✓ (⚠ v2 row missing — needs solo rerun),
+ToDo List L3✓✓, UI5 Demo Kit L3✓✓
+
+**Automation Testing (42/42 L3, all cli-rerun-v2):**
+Applitools Demo L3✓✓, ATM Practice App L3✓✓, Automate Now Sandbox L3✓✓,
+Automation Bookstore L3✓✓, Automation Camp L3✓✓, Automation Exercise L3✓✓,
+Automation in Testing L3✓✓, Automation Test Store L3✓✓, Automation Testing Practice L3✓✓,
+Coffee Cart L3✓✓, Commit Quality L3✓✓, Contact List App L3✓✓, Demo SaaS L3✓✓,
+DemoQA L3✓✓, Expand Testing L3✓✓ (⚠ v2 row has placeholder values — needs solo rerun),
+GitHub Users Search L3✓✓, Global SQA Demo L3✓✓, GreenKart L3✓✓,
 Hands-On Selenium WebDriver L3✓✓, Lambdatest Playground L3✓✓, Let Code L3✓✓,
 Locator Game L3✓✓, NearForm Testing Playground L3✓✓, OrangeHRM L3✓✓,
-Practice Automation L3✓✓, Practice Test Automation L3✓✓, QA Cloud L3✓✓, QA Playground L3✓✓, QE Buggy Todo L3✓✓,
- React Shopping Cart L3✓✓⚠, SeleniumBase L3✓✓⚠,
-Selectors Hub L3✓✓⚠, Selenium Playground L3✓✓⚠, Swag Labs L3✓✓⚠, Sweet Shop L3✓✓⚠,
-TestDino L3✓✓⚠, Travel Agileway L3✓✓⚠, Tricentis Obstacle Course L3✓✓⚠, var.parts L3✓✓⚠,
-Weather Shopper L3✓✓⚠, XYZ Bank L3✓✓⚠
-(cli-rerun-v2 = re-measured with per-session token bracket; clean 1–2 turns)
+Practice Automation L3✓✓, Practice Test Automation L3✓✓, QA Cloud L3✓✓,
+QA Playground L3✓✓, QE Buggy Todo L3✓✓, React Shopping Cart L3✓✓,
+SeleniumBase L3✓✓, Selenium Playground L3✓✓, Selectors Hub L3✓✓, Swag Labs L3✓✓,
+Sweet Shop L3✓✓, TestDino L3✓✓, The Internet L3✓✓, Travel Agileway L3✓✓,
+Tricentis Obstacle Course L3✓✓, var.parts L3✓✓, Weather Shopper L3✓✓, XYZ Bank L3✓✓
 
 **Security Testing (7/11 L2; 0/7 L3):** Firing Range L2✓, Gin & Juice Shop L2✓, Google Gruyere L2✓,
 OWASP Juice Shop L2✓, OWASP VWAD L2✓, Try Hack Me L2✓, Zero Bank L2✓

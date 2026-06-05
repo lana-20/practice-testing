@@ -59,12 +59,27 @@ diff → compute ms → write CLI JSON
 
 By isolating the snapshot in Bash A, the LLM generates the Bash B script *after* the snapshot — so generation cost falls inside the bracket.
 
-### L3 cost baseline (from GP sample, all 28 sites)
+### L3 cost baseline (from all 74 GP+AT+API sites with v2 data, 2026-06-04)
 
-- **CLI cost**: $0.013–$0.043/site (higher for complex SPAs)
-- **CLI turns**: consistently 2/site (Bash B generation + Bash C diff)
-- **MCP cost**: $0.057–$0.129/site (fresh sessions eliminate session-inflation)
-- **MCP turns**: 9–19/site (varies by site complexity and tool call count)
+- **CLI cost**: $0.007–$0.066/site (v2 per-session isolation; higher for SPAs with large maps)
+- **CLI turns**: 1–2/site — 1 = agent combined Bash B + Bash C in one LLM response (short output); 2 = standard two-response sequence. Both are valid. 3–4 rare (minor contamination or retry).
+- **MCP cost**: $0.052–$0.155/site (fresh sessions eliminate session-inflation)
+- **MCP turns**: 8–24/site (varies by site complexity and tool call count)
+
+### token_bracket.py v2 — per-session isolation (2026-06-04)
+
+The original `--snapshot --time` (v1) reads ALL `~/.claude/projects/**/*.jsonl` files globally. When CLI agents run in parallel, each agent's diff captures tokens from ALL parallel agents → inflated cost and turn counts.
+
+**Fix:** `--snapshot --session` (v2) records the current session's JSONL file path + byte offset using `st_birthtime` (macOS true file creation time). The diff reads ONLY new messages in that one file after the recorded offset. Immune to parallel-session cross-contamination.
+
+```sh
+# v2 usage (recommended for all new CLI and MCP measurements)
+python3 token_bracket.py --snapshot --session > /tmp/rerun_{SLUG}_base.txt
+# ... run test ...
+python3 token_bracket.py --diff "$(cat /tmp/rerun_{SLUG}_base.txt)" --json
+```
+
+v1 snapshots (comma-separated format) are still accepted by `--diff` for backward compatibility.
 
 ### Haiku vs Sonnet
 
