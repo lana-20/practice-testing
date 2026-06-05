@@ -162,7 +162,7 @@ To regenerate with new measurements:
 **Dashboard generated:** 2026-06-05
 **Last updated:** 2026-06-05 (7 fresh measurements, metrics verified)
 **Data sources:** Bracket v2 measurements (100/100 sites, 7 fresh)
-**Measurement approach:** Hybrid parallel CLI + sequential MCP (L3 three-bash bracket with token isolation v2)
+**Measurement approach:** Hybrid parallel CLI + sequential MCP (three-bash bracket with token isolation v2)
 **Visualization library:** Chart.js 4.4.0
 **Metrics verification:** ✓ All 10 calculations verified accurate
 **Data accuracy:** Timing ±50% variance expected (I/O bound), token metrics stable and reliable

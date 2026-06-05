@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-05  
 **Scope:** MCP vs Native APIs for multi-page/multi-context browser automation  
-**Context:** Measuring 7 QA practice sites with CLI + MCP to validate L3 protocol stability
+**Context:** Measuring 7 QA practice sites with CLI + MCP to validate bracket protocol stability
 
 ---
 
@@ -362,7 +362,7 @@ From official docs: **Use CLI+SKILLS for parallel/concurrent work.** MCP is bett
 
 ---
 
-## Part 10: Recommendation for L3 Verification (7 Sites)
+## Part 10: Recommendation for Concurrent Measurement (7 Sites)
 
 **Best approach: Hybrid parallel CLI + sequential MCP**
 
@@ -402,11 +402,11 @@ for site in sites:
 - **Playwright MCP Docs:** https://playwright.dev/docs/getting-started-mcp
 - **Playwright MCP GitHub:** https://github.com/microsoft/playwright-mcp
 - **Vibium API Reference:** `/vibium-src/docs/reference/api.md` (Row 3, 4, 42)
-- **Practice-testing PROTOCOL.md:** Parallel contexts pattern, L3 measurement bracket
+- **Practice-testing PROTOCOL.md:** Parallel contexts pattern, bracket protocol documentation
 - **MCP Spec:** Model Context Protocol design (stateful tool interface via stdio)
 
 ---
 
 **Document Status:** Complete  
 **Verified Against:** Vibium API reference, Playwright official docs, MCP protocol design  
-**Next Action:** Proceed with hybrid approach for 7-site L3 verification
+**Next Action:** Proceed with hybrid approach for 7-site concurrent measurement

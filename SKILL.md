@@ -290,7 +290,7 @@ browser_screenshot {filename: "final.png", fullPage: true}
 
 ---
 
-> **See also:** [PROTOCOL.md](references/PROTOCOL.md) — Level N Rerun Protocol, agent prompt templates, site list for rerun · [METHODOLOGY.md](references/METHODOLOGY.md) — CSV schema, L3 rationale, aggregate calculation, CLI vs MCP behavioral comparison
+> **See also:** [PROTOCOL.md](references/PROTOCOL.md) — Measurement protocol, agent templates, site list for rerun · [METHODOLOGY.md](references/METHODOLOGY.md) — CSV schema, bracket protocol versions, aggregate calculation, CLI vs MCP behavioral comparison
 
 
 ## Reporting format

@@ -3,8 +3,8 @@
 populate_readme.py — Fill CLI ($), MCP ($), Cost× columns in README.md
 from clean-two-phase rows in rerun_results.csv.
 
-L3 rows (notes contains 'l3') take priority over L2 rows for the same site.
-Within each level, last occurrence wins.
+Bracket v2 rows (notes contains 'bracket-v2') take priority over legacy rows for the same site.
+Within each tier, last occurrence wins.
 
 Usage:
   python3 populate_readme.py            # update README.md in place
@@ -22,20 +22,20 @@ BASE = Path(__file__).parent
 MCP_NA: set = set()
 
 def load_clean_results(csv_path):
-    """Return dict of site → best clean-two-phase row (L3 > L2, last wins)."""
-    l2, l3 = {}, {}
+    """Return dict of site → best clean-two-phase row (bracket-v2 > legacy, last wins)."""
+    legacy, bracket_v2 = {}, {}
     with open(csv_path, newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
             notes = row.get("notes", "")
             if "clean-two-phase" not in notes:
                 continue
-            if "l3" in notes:
-                l3[row["site"]] = row
+            if "bracket-v2" in notes:
+                bracket_v2[row["site"]] = row
             else:
-                l2[row["site"]] = row
-    # Merge: L3 takes priority
-    results = {**l2, **l3}
+                legacy[row["site"]] = row
+    # Merge: bracket-v2 takes priority
+    results = {**legacy, **bracket_v2}
     return results
 
 def fmt_cost(usd_str):
