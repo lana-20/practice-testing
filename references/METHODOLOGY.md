@@ -22,32 +22,32 @@ site,category,cli_ms,cli_usd,turns_cli,mcp_ms,mcp_usd,turns_mcp,notes
 | `mcp_ms` | Wall-clock ms for MCP phase |
 | `mcp_usd` | Token cost for MCP phase |
 | `turns_mcp` | LLM turns inside MCP bracket |
-| `notes` | Tag string; must contain `clean-two-phase` to be used by scripts; `l3` tag elevates priority |
+| `notes` | Tag string; must contain `clean-two-phase` to be used by scripts; `bracket-v2` tag indicates isolated 3-call bracket |
 
 **Priority rules (last-wins within tier):**
-- L3 rows (`clean-two-phase;l3`) always beat L2 rows (`clean-two-phase`) for the same site
+- Bracket v2 rows (`clean-two-phase;bracket-v2`) always beat legacy rows (`clean-two-phase`) for the same site
 - Within the same tier, the last row in the file wins
 - Scripts: `populate_readme.py --force` and `update_timing.py` both apply this logic
 
 ---
 
-## L3 vs L2 Rationale
+## Bracket Protocol Versions
 
-### Why L2 CLI costs were wrong
+### Legacy (Bracket v1): Cost escapes bracket
 
-In L2, the token snapshot was taken inside the same Bash call as the vibium commands:
+In early measurements, the token snapshot was taken inside the same Bash call as vibium commands:
 
 ```sh
-# L2 (wrong — script generation cost escapes bracket)
+# Bracket v1 (flawed — script generation cost escapes)
 snapshot → vibium go → vibium map → ... → diff
 ```
 
-The LLM generates the CLI test script before the snapshot runs, so the generation cost is outside the bracket. Result: most L2 CLI costs show $0.000 even for Sonnet runs.
+The LLM generates the CLI test script before the snapshot runs, so generation cost is outside the bracket. Result: most costs show $0.000 even for Sonnet runs.
 
-### L3 fix: 3-call bracket
+### Current (Bracket v2): Isolated 3-call approach
 
 ```sh
-# Bash A — snapshot only
+# Bash A — snapshot only (isolated token baseline)
 snapshot → write t0
 
 # Bash B — CLI test (generation cost now inside bracket)
