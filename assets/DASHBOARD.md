@@ -1,6 +1,6 @@
-# Practice Testing — L3 Dashboard
+# Practice Testing Dashboard
 
-**Interactive visualization of 100-site measurement dataset**
+**Interactive visualization of 100-site CLI vs MCP measurement dataset (2026-06-05)**
 
 ## View the Dashboard
 
@@ -12,16 +12,25 @@ Open `dashboard.html` in a web browser to see real-time visualizations of CLI vs
 
 ### 1. Summary Metrics (Cards)
 
-Eight key statistics at a glance:
+Nine key statistics organized by type with color-coded sections:
 
+**Meta (Blue):**
 - **Total Sites:** 100 across 5 categories
-- **CLI Total Cost:** Cumulative USD for all CLI measurements
-- **MCP Total Cost:** Cumulative USD for all MCP measurements
-- **Cost Ratio:** How many times more expensive MCP is vs CLI (e.g., 11.3× means MCP costs 11× more)
-- **CLI Total Time:** Wall-clock aggregate across all sites
-- **MCP Total Time:** Wall-clock aggregate across all sites
-- **Speed Ratio:** How many times slower MCP is vs CLI (e.g., 3.8× means MCP takes 3.8× longer)
-- **CLI Turns Total:** LLM message count across all CLI tests
+
+**Speed (Purple):**
+- **CLI Total Time:** 17.6 minutes wall-clock aggregate
+- **MCP Total Time:** 68.9 minutes wall-clock aggregate
+- **Speed Ratio:** 3.9× (MCP is 3.9× slower than CLI)
+
+**Cost (Green):**
+- **CLI Total Cost:** $1.82 cumulative USD
+- **MCP Total Cost:** $7.96 cumulative USD
+- **Cost Ratio:** 4.4× (MCP costs 4.4× more than CLI)
+
+**Turns (Orange):**
+- **CLI Turns Total:** 164 LLM messages across all CLI tests
+- **MCP Turns Total:** 1,146 LLM messages across all MCP tests
+- **Turns Ratio:** 7.0× (MCP requires 7× more turns than CLI)
 
 ### 2. Category Breakdown
 
@@ -99,15 +108,17 @@ Eight key statistics at a glance:
 
 | Metric | Value | Note |
 |--------|-------|------|
-| **Total CLI Cost** | $2.07 | All 100 sites |
-| **Total MCP Cost** | $23.32 | All 100 sites |
-| **Cost Ratio** | 11.3× | MCP is ~11× more expensive |
-| **CLI Speed** | 1,020s total | Average 10.2s per site |
-| **MCP Speed** | 3,860s total | Average 38.6s per site |
-| **Speed Ratio** | 3.8× | MCP is ~3.8× slower |
-| **Highest Cost Site** | (varies) | Check dashboard |
-| **Fastest CLI Site** | ~4s | Basic Calculator |
-| **Slowest CLI Site** | ~26s | Gefälscht CompuTech |
+| **Total CLI Cost** | $1.82 | All 100 sites (2026-06-05) |
+| **Total MCP Cost** | $7.96 | All 100 sites |
+| **Cost Ratio** | 4.4× | MCP costs 4.4× more |
+| **CLI Speed** | 17.6m total | Average 10.6s per site |
+| **MCP Speed** | 68.9m total | Average 41.4s per site |
+| **Speed Ratio** | 3.9× | MCP is 3.9× slower |
+| **CLI Turns** | 164 total | Average 1.6 turns per site |
+| **MCP Turns** | 1,146 total | Average 11.5 turns per site |
+| **Turns Ratio** | 7.0× | MCP requires 7× more turns |
+| **Fastest CLI Site** | 4.2s | The iframe Search Engine |
+| **Slowest CLI Site** | 25.8s | Gefälscht CompuTech |
 
 ## Interpretation
 
@@ -127,12 +138,16 @@ Eight key statistics at a glance:
 
 ## Updates
 
-This dashboard is embedded with CSV data as of **2026-06-05** (L3 complete).
+This dashboard is embedded with CSV data as of **2026-06-05** (measurement complete, all 100 sites measured with bracket v2 protocol).
+
+Data includes 7 fresh measurements taken 2026-06-05:
+- Tricentis Obstacle Course, JSON Placeholder, Poké API
+- ServeRest, SpaceTraders, Swagger Petstore, The Cat API
 
 To regenerate with new measurements:
-1. Update `data/rerun_results.csv` with new rows
-2. Run `scripts/populate_readme.py` to sync dashboard data
-3. Rebuild `dashboard.html` or script data population step
+1. Update `data/rerun_results.csv` with new measurement rows
+2. Run Python script to extract csvData array and update `dashboard.html`
+3. Verify metrics calculations (all 10 checks must pass)
 
 ## Browser Compatibility
 
@@ -145,5 +160,9 @@ To regenerate with new measurements:
 ---
 
 **Dashboard generated:** 2026-06-05
-**Data sources:** L3 measurements (100/100 sites)
+**Last updated:** 2026-06-05 (7 fresh measurements, metrics verified)
+**Data sources:** Bracket v2 measurements (100/100 sites, 7 fresh)
+**Measurement approach:** Hybrid parallel CLI + sequential MCP (L3 three-bash bracket with token isolation v2)
 **Visualization library:** Chart.js 4.4.0
+**Metrics verification:** ✓ All 10 calculations verified accurate
+**Data accuracy:** Timing ±50% variance expected (I/O bound), token metrics stable and reliable

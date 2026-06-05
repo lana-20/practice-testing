@@ -7,8 +7,9 @@ description: Explore and test QA practice sites. Pass a site name or URL to navi
 
 Run exploratory tests on QA practice sites using vibium browser automation.
 
-**Status:** Measurement complete (2026-06-05) — 100/100 sites measured · Bracket v2 isolation deployed · Findings: token metrics stable, timing ±50% variance expected (I/O bound), parallel CLI 6.3× faster than sequential MCP
-**References:** [README (benchmarks)](references/README.md) · [METHODOLOGY (L3 protocol, v2 isolation, token_bracket.py)](references/METHODOLOGY.md) · [PROTOCOL (agent templates, parallel context pattern)](references/PROTOCOL.md) · [VERIFICATION_FINDINGS (stability check, 12-site re-measure)](references/VERIFICATION_FINDINGS.md)
+**Status:** Measurement complete (2026-06-05) — 100/100 sites measured · Bracket v2 isolation deployed · Dashboard live with interactive metrics and charts
+**Key Findings:** Token metrics stable · Timing ±50% variance expected (I/O bound) · Parallel CLI 6.3× faster than sequential MCP · MCP averages 3.9× longer, 4.4× more costly, 7.0× more turns than CLI
+**References:** [Dashboard](assets/dashboard.html) · [README (benchmarks)](references/README.md) · [METHODOLOGY (bracket protocol, v2 isolation, token_bracket.py)](references/METHODOLOGY.md) · [PROTOCOL (agent templates, parallel context pattern)](references/PROTOCOL.md) · [HYBRID_MEASUREMENT (parallel+sequential approach, findings)](references/HYBRID_MEASUREMENT_2026-06-05.md) · [PARALLEL_EXECUTION_ANALYSIS (MCP vs native API architecture)](references/PARALLEL_EXECUTION_ANALYSIS.md)
 
 ## How to run
 

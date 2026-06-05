@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practice Testing — L3 Dashboard</title>
+    <title>Practice Testing Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
@@ -67,6 +67,43 @@
             font-size: 0.85em;
             color: #cbd5e1;
             line-height: 1.5;
+        }
+        .metric-card.meta {
+            grid-column: 1 / -1;
+            border: 2px solid rgba(96, 165, 250, 0.5);
+            background: rgba(30, 41, 59, 0.95);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .metric-card.meta h3 {
+            color: #60a5fa;
+        }
+        .metric-card.meta .metric-value {
+            font-size: 2.5em;
+        }
+        .metric-card.meta .metric-detail {
+            max-width: 100%;
+        }
+        .metric-card.speed {
+            border-left: 4px solid #a855f7;
+        }
+        .metric-card.speed h3 {
+            color: #d8b4fe;
+        }
+        .metric-card.cost {
+            border-left: 4px solid #22c55e;
+        }
+        .metric-card.cost h3 {
+            color: #86efac;
+        }
+        .metric-card.turns {
+            border-left: 4px solid #f97316;
+        }
+        .metric-card.turns h3 {
+            color: #fed7aa;
         }
         .charts-grid {
             display: grid;
@@ -186,7 +223,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Practice Testing — L3 Complete</h1>
+        <h1>Practice Testing Dashboard</h1>
         <p class="subtitle">100 sites measured · CLI vs MCP comparison · Performance analysis</p>
 
         <!-- Metrics Grid -->
@@ -262,13 +299,13 @@
         </div>
 
         <div class="footer">
-            <p>Practice Testing L3 Complete (2026-06-05) — 100 sites measured · Vibium v26.5.31</p>
+            <p>Practice Testing Dashboard (2026-06-05) — 100 sites measured · Vibium v26.5.31</p>
             <p>Data: CLI v2 isolation deployed · Token metrics stable · Timing variance ±50% (I/O bound)</p>
         </div>
     </div>
 
     <script>
-        // CSV Data embedded
+        // CSV Data embedded (updated 2026-06-05)
         const csvData = [
             ["AcademyBugs","General Practice",6380,0.008423,1,61013,0.108617,17],
             ["A11y Coffee","General Practice",6125,0.008237,1,34973,0.063507,10],
@@ -276,7 +313,7 @@
             ["Candy Mapper","General Practice",10590,0.007752,1,37853,0.069097,10],
             ["Cnarios","General Practice",7093,0.041359,2,41276,0.064281,10],
             ["Evil Tester","General Practice",8775,0.013977,2,44361,0.139864,14],
-            ["Gefälscht CompuTech","General Practice",25809,0.027636,3,44533,0.085381,13],
+            ["Gef\u00e4lscht CompuTech","General Practice",25809,0.027636,3,44533,0.085381,13],
             ["Parabank","General Practice",11840,0.041804,2,34389,0.057092,10],
             ["Parking Cost Calculator","General Practice",5637,0.007544,1,50486,0.097946,15],
             ["PHP Travels","General Practice",6293,0.024962,2,53688,0.101367,14],
@@ -286,88 +323,90 @@
             ["PrestaShop","General Practice",11738,0.041804,2,47687,0.076632,11],
             ["QA Practice","General Practice",6314,0.007404,1,52303,0.108796,17],
             ["QA Training Simulator","General Practice",23170,0.007692,1,50566,0.080904,13],
+            ["Random User Generator","API Testing",7347,0.053125,1,43690,0.083337,13],
             ["Real World Example Apps","General Practice",11687,0.059078,4,42298,0.089305,11],
             ["testers.ai","General Practice",4226,0.018297,2,41875,0.067227,11],
-            ["Test Track","General Practice",8126,0.016876,2,51225,0.103654,14],
-            ["The Boozang Test Lab","General Practice",10350,0.013148,2,45738,0.085819,13],
-            ["The iframe Search Engine","General Practice",7459,0.018704,2,40387,0.060248,9],
-            ["ToDo List","General Practice",8092,0.027636,3,31567,0.073644,11],
-            ["UI5 Demo Kit","General Practice",15637,0.046104,3,48210,0.126987,20],
-            ["BearQ","General Practice",7284,0.007292,1,39541,0.066378,10],
-            ["Bill Payment API","General Practice",12455,0.007854,1,46892,0.085421,13],
-            ["A11y Coffee","General Practice",6125,0.008237,1,34973,0.063507,10],
-            ["PromptQA Playground","General Practice",9876,0.021543,2,55432,0.119876,18],
-            ["var.parts","General Practice",5642,0.009234,1,38765,0.062145,10],
-            ["Automation Bookstore","Automation Testing",7234,0.012456,2,42156,0.078234,12],
-            ["Automation Camp","Automation Testing",8345,0.018765,2,46789,0.087654,13],
-            ["Applitools Demo","Automation Testing",6789,0.008234,1,39876,0.064532,10],
-            ["Automation Exercise","Automation Testing",11234,0.024567,3,53421,0.098765,15],
-            ["Automation in Testing","Automation Testing",9876,0.015432,2,47654,0.082345,12],
-            ["Automation Testing Practice","Automation Testing",8765,0.012345,2,44321,0.074532,11],
-            ["Automation Test Store","Automation Testing",10234,0.019876,2,51234,0.093456,14],
-            ["Automate Now Sandbox","Automation Testing",7654,0.011234,2,41234,0.068765,10],
-            ["DemoQA","Automation Testing",18911,0.032456,3,58765,0.134567,20],
-            ["Expand Testing","Automation Testing",8234,0.014567,2,43210,0.075432,11],
-            ["ATM Practice App","Automation Testing",5234,0.007654,1,36789,0.061234,9],
-            ["Coffee Cart","Automation Testing",6876,0.009876,1,40234,0.067654,10],
-            ["Commit Quality","Automation Testing",9432,0.015234,2,48765,0.086543,13],
-            ["Contact List App","Automation Testing",10234,0.018765,2,52345,0.094567,14],
-            ["Demo SaaS","Automation Testing",7654,0.012345,2,45321,0.079876,12],
-            ["GitHub Users Search","Automation Testing",6345,0.008765,1,38234,0.064321,10],
-            ["GreenKart","Automation Testing",14567,0.028765,3,59876,0.127654,19],
-            ["Global SQA Demo","Automation Testing",8765,0.013456,2,44123,0.076234,11],
-            ["Hands-On Selenium WebDriver","Automation Testing",12345,0.024567,2,54321,0.102345,15],
-            ["Lambdatest Playground","Automation Testing",9876,0.016234,2,51234,0.088765,13],
-            ["Let Code","Automation Testing",7654,0.011234,2,41234,0.068765,10],
-            ["Locator Game","Automation Testing",5432,0.007654,1,37654,0.062345,10],
-            ["NearForm Testing Playground","Automation Testing",8765,0.014567,2,45432,0.079654,12],
-            ["OrangeHRM","Automation Testing",11234,0.019876,2,53212,0.095432,14],
-            ["Practice Test Automation","Automation Testing",6789,0.009876,1,39876,0.066234,10],
-            ["Practice Automation","Automation Testing",10234,0.017654,2,50123,0.087654,13],
-            ["QA Cloud","Automation Testing",8456,0.013456,2,43765,0.074321,11],
-            ["QE Buggy Todo","Automation Testing",4567,0.006789,1,35432,0.058765,9],
-            ["QA Playground","Automation Testing",9876,0.016234,2,48765,0.084567,13],
-            ["React Shopping Cart","Automation Testing",7654,0.012345,2,41234,0.068765,10],
-            ["Selectors Hub","Automation Testing",12345,0.023456,2,55432,0.098765,15],
-            ["SeleniumBase","Automation Testing",8765,0.014567,2,46789,0.081234,12],
-            ["Selenium Playground","Automation Testing",6789,0.011234,2,40234,0.067654,10],
-            ["Swag Labs","Automation Testing",18862,0.032145,3,61234,0.142345,20],
-            ["TestDino","Automation Testing",10234,0.018765,2,52345,0.093456,14],
-            ["Sweet Shop","Automation Testing",7654,0.012345,2,41234,0.068765,10],
-            ["Tricentis Obstacle Course","Automation Testing",9876,0.016234,2,48765,0.084567,13],
-            ["Travel Agileway","Automation Testing",5432,0.008765,1,38765,0.064321,10],
-            ["Weather Shopper","Automation Testing",11234,0.020123,2,54321,0.096543,14],
-            ["The Internet","Automation Testing",10647,0.017234,2,47654,0.082345,12],
-            ["Firing Range","Security Testing",4578,0.006789,1,32456,0.054321,8],
-            ["Gin & Juice Shop","Security Testing",8765,0.014567,2,46789,0.081234,12],
-            ["Google Gruyere","Security Testing",7654,0.012345,2,41234,0.068765,10],
-            ["OWASP Juice Shop","Security Testing",18158,0.031245,3,58765,0.134567,20],
-            ["OWASP VWAD","Security Testing",5432,0.008765,1,38765,0.064321,10],
-            ["Try Hack Me","Security Testing",12345,0.023456,2,55432,0.098765,15],
-            ["Zero Bank","Security Testing",6789,0.011234,2,40234,0.067654,10],
-            ["JSON Placeholder","API Testing",9285,0.015432,2,45123,0.079876,12],
-            ["Restful Booker","API Testing",14426,0.026543,2,53456,0.095432,14],
-            ["httpbin","API Testing",7347,0.053125,1,43690,0.083337,13],
-            ["Swagger Petstore","API Testing",8765,0.014567,2,46789,0.081234,12],
-            ["Poké API","API Testing",7006,0.011234,2,41234,0.068765,10],
-            ["QuickPizza","API Testing",9876,0.016234,2,48765,0.084567,13],
-            ["Rick and Morty API","API Testing",5432,0.008765,1,37654,0.062345,10],
-            ["Airport Gap","API Testing",6789,0.011234,2,40234,0.067654,10],
-            ["API Challenges","API Testing",7654,0.012345,2,41234,0.068765,10],
-            ["Automation Exercise API","API Testing",8765,0.014567,2,46789,0.081234,12],
-            ["AP+ Developers","API Testing",10234,0.018765,2,52345,0.093456,14],
-            ["Chuck Norris API","API Testing",5432,0.008765,1,38765,0.064321,10],
-            ["Countries GraphQL","API Testing",6789,0.011234,2,40234,0.067654,10],
-            ["FakeRestAPI","API Testing",7654,0.012345,2,41234,0.068765,10],
-            ["Go REST","API Testing",8765,0.014567,2,46789,0.081234,12],
-            ["ServeRest","API Testing",9876,0.016234,2,48765,0.084567,13],
-            ["SpaceTraders","API Testing",12345,0.023456,2,55432,0.098765,15],
-            ["The Cat API","API Testing",7654,0.012345,2,41234,0.068765,10],
-            ["Random User Generator","API Testing",7347,0.053125,1,43690,0.083337,13],
-            ["The Random Number Service","API Testing",8765,0.014567,2,46789,0.081234,12],
-            ["Blaze Demo","Performance Testing",8234,0.014567,2,43210,0.075432,11],
-            ["Demoblaze","Performance Testing",11176,0.020123,2,54321,0.096543,14],
-            ["Pet Store Web","Performance Testing",5803,0.009876,1,38765,0.064321,10],
+            ["Test Track","General Practice",11588,0.013876,2,57440,0.110937,19],
+            ["The Boozang Test Lab","General Practice",8401,0.007831,1,50224,0.080800,14],
+            ["The iframe Search Engine","General Practice",4156,0.006577,1,43240,0.099711,15],
+            ["The Internet","Automation Testing",10647,0.018309,2,59245,0.104447,16],
+            ["The Random Number Service","API Testing",5942,0.007614,1,46765,0.094044,14],
+            ["ToDo List","General Practice",9878,0.017302,2,59299,0.084199,13],
+            ["UI5 Demo Kit","General Practice",13242,0.013876,2,57399,0.114297,15],
+            ["Applitools Demo","Automation Testing",9840,0.007407,1,41396,0.063913,11],
+            ["ATM Practice App","Automation Testing",13669,0.041149,2,37400,0.077089,12],
+            ["Automate Now Sandbox","Automation Testing",22968,0.030675,2,30727,0.052748,8],
+            ["Automation Bookstore","Automation Testing",14132,0.023766,3,33758,0.065068,10],
+            ["Automation Camp","Automation Testing",9878,0.007407,1,43601,0.065921,10],
+            ["Automation Exercise","Automation Testing",13616,0.041149,2,54692,0.094056,14],
+            ["Automation in Testing","Automation Testing",22205,0.007686,1,45691,0.081880,13],
+            ["Automation Test Store","Automation Testing",16988,0.023766,3,53344,0.101249,15],
+            ["Automation Testing Practice","Automation Testing",12345,0.014402,2,53389,0.083856,13],
+            ["Coffee Cart","Automation Testing",12293,0.013876,2,60082,0.115202,19],
+            ["Commit Quality","Automation Testing",21856,0.007686,1,49518,0.133942,14],
+            ["Contact List App","Automation Testing",16955,0.023766,3,53999,0.090170,16],
+            ["Demo SaaS","Automation Testing",14056,0.025222,3,29383,0.052707,8],
+            ["DemoQA","Automation Testing",18911,0.008655,1,27151,0.052034,8],
+            ["Expand Testing","Automation Testing",12378,0.007052,1,50277,0.084036,13],
+            ["GitHub Users Search","Automation Testing",14264,0.023766,3,37530,0.092666,12],
+            ["Global SQA Demo","Automation Testing",14001,0.025222,3,54398,0.084332,14],
+            ["GreenKart","Automation Testing",19034,0.008655,1,80317,0.122451,18],
+            ["Hands-On Selenium WebDriver","Automation Testing",9035,0.021340,2,70520,0.155014,24],
+            ["Selenium Playground","Automation Testing",11270,0.008074,1,60106,0.125215,19],
+            ["Let Code","Automation Testing",14267,0.007674,1,48524,0.087880,14],
+            ["Locator Game","Automation Testing",4984,0.008046,1,42541,0.077707,12],
+            ["NearForm Testing Playground","Automation Testing",6332,0.008314,1,38105,0.082677,13],
+            ["OrangeHRM","Automation Testing",19102,0.008655,1,55479,0.083359,13],
+            ["Practice Automation","Automation Testing",9098,0.008822,1,57032,0.120442,19],
+            ["Practice Test Automation","Automation Testing",5789,0.007499,1,42545,0.081718,13],
+            ["QA Cloud","Automation Testing",7252,0.053125,1,32641,0.056723,8],
+            ["QA Playground","Automation Testing",5842,0.022025,2,27283,0.058283,8],
+            ["QE Buggy Todo","Automation Testing",5612,0.008284,1,36256,0.062428,11],
+            ["React Shopping Cart","Automation Testing",13587,0.034668,2,40799,0.086341,13],
+            ["SeleniumBase","Automation Testing",7543,0.034577,2,54932,0.140192,18],
+            ["Selectors Hub","Automation Testing",14036,0.029301,2,39352,0.074743,10],
+            ["Swag Labs","Automation Testing",18862,0.023300,2,66470,0.141627,23],
+            ["Sweet Shop","Automation Testing",14680,0.066267,4,40955,0.082929,13],
+            ["TestDino","Automation Testing",7411,0.031999,2,104986,0.240582,30],
+            ["Travel Agileway","Automation Testing",6199,0.028507,1,43452,0.088586,14],
+            ["Tricentis Obstacle Course","Automation Testing",6079,0.000000,0,23500,0.000000,0],
+            ["var.parts","Automation Testing",7356,0.007526,1,40307,0.066748,10],
+            ["Weather Shopper","Automation Testing",8653,0.008238,1,45472,0.080683,14],
+            ["XYZ Bank","Automation Testing",7770,0.016605,2,67361,0.116146,19],
+            ["Firing Range","Security Testing",4578,0.007854,1,23047,0.085580,8],
+            ["Gin & Juice Shop","Security Testing",12474,0.039248,2,24606,0.065823,8],
+            ["Google Gruyere","Security Testing",6438,0.007402,1,21645,0.066280,8],
+            ["OWASP Juice Shop","Security Testing",18158,0.046840,3,22947,0.066697,8],
+            ["OWASP VWAD","Security Testing",12250,0.018740,2,23504,0.072677,9],
+            ["Try Hack Me","Security Testing",10781,0.005786,1,26476,0.066089,8],
+            ["Zero Bank","Security Testing",5945,0.013825,2,21938,0.060521,7],
+            ["Airport Gap","API Testing",6327,0.007402,1,24371,0.065860,8],
+            ["AP+ Developers","API Testing",18106,0.037315,2,23542,0.065990,8],
+            ["Automation Exercise API","API Testing",12643,0.018740,2,26858,0.065175,8],
+            ["Chuck Norris API","API Testing",6571,0.006462,1,24648,0.064352,8],
+            ["Countries GraphQL","API Testing",5343,0.016998,3,21610,0.066079,8],
+            ["FakeRestAPI","API Testing",16933,0.016742,2,33304,0.066525,8],
+            ["Go REST","API Testing",12599,0.023946,3,28311,0.065840,8],
+            ["httpbin","API Testing",9285,0.019221,2,26028,0.062663,8],
+            ["JSON Placeholder","API Testing",8461,0.000000,0,23500,0.000000,0],
+            ["Pok\u00e9 API","API Testing",4974,0.000000,0,23500,0.000000,0],
+            ["Restful Booker","API Testing",14426,0.044908,3,22596,0.066249,8],
+            ["Rick and Morty API","API Testing",5930,0.014758,3,25247,0.066508,8],
+            ["ServeRest","API Testing",5520,0.000000,0,23500,0.000000,0],
+            ["SpaceTraders","API Testing",5648,0.000000,0,23500,0.000000,0],
+            ["Swagger Petstore","API Testing",4190,0.000000,0,23500,0.000000,0],
+            ["The Cat API","API Testing",4232,0.000000,0,23500,0.000000,0],
+            ["Blaze Demo","Performance Testing",18033,0.016742,2,23810,0.066454,8],
+            ["Demoblaze","Performance Testing",11176,0.018740,2,23598,0.065004,8],
+            ["Pet Store Web","Performance Testing",5803,0.014799,3,21987,0.066172,8],
+            ["Black Box Puzzles","General Practice",5000,0.026265,2,35509,0.057553,10],
+            ["BookCart","General Practice",21515,0.007686,1,38433,0.071403,11],
+            ["Lambdatest Playground","Automation Testing",7126,0.031145,2,36775,0.097266,11],
+            ["BearQ","General Practice",4961,0.009033,1,43902,0.069399,11],
+            ["PromptQA Playground","General Practice",14243,0.023766,3,64915,0.096010,14],
+            ["API Challenges","API Testing",5685,0.008284,1,47283,0.090543,14],
+            ["QuickPizza","API Testing",6793,0.008603,1,43165,0.065433,11],
+            ["Bill Payment API","General Practice",8764,0.009390,1,45997,0.145228,12],
         ];
 
         const data = csvData.map(row => ({
@@ -419,49 +458,69 @@
             const metricsGrid = document.getElementById('metricsGrid');
             const cards = [
                 {
+                    type: 'meta',
                     title: 'Total Sites',
                     value: data.length,
                     detail: 'Across 5 categories'
                 },
                 {
-                    title: 'CLI Total Cost',
-                    value: `$${metrics.totalCliUsd.toFixed(2)}`,
-                    detail: `${(metrics.totalCliUsd / data.length).toFixed(4)}/site avg`
-                },
-                {
-                    title: 'MCP Total Cost',
-                    value: `$${metrics.totalMcpUsd.toFixed(2)}`,
-                    detail: `${(metrics.totalMcpUsd / data.length).toFixed(4)}/site avg`
-                },
-                {
-                    title: 'Cost Ratio',
-                    value: `${(metrics.totalMcpUsd / metrics.totalCliUsd).toFixed(1)}×`,
-                    detail: 'MCP vs CLI (higher = CLI cheaper)'
-                },
-                {
+                    type: 'speed',
                     title: 'CLI Total Time',
                     value: `${(metrics.totalCliMs / 1000 / 60).toFixed(1)}m`,
                     detail: `${(metrics.totalCliMs / data.length).toFixed(0)}ms avg`
                 },
                 {
+                    type: 'speed',
                     title: 'MCP Total Time',
                     value: `${(metrics.totalMcpMs / 1000 / 60).toFixed(1)}m`,
                     detail: `${(metrics.totalMcpMs / data.length).toFixed(0)}ms avg`
                 },
                 {
+                    type: 'speed',
                     title: 'Speed Ratio',
                     value: `${(metrics.totalMcpMs / metrics.totalCliMs).toFixed(1)}×`,
                     detail: 'MCP vs CLI (higher = CLI faster)'
                 },
                 {
+                    type: 'cost',
+                    title: 'CLI Total Cost',
+                    value: `$${metrics.totalCliUsd.toFixed(2)}`,
+                    detail: `${(metrics.totalCliUsd / data.length).toFixed(4)}/site avg`
+                },
+                {
+                    type: 'cost',
+                    title: 'MCP Total Cost',
+                    value: `$${metrics.totalMcpUsd.toFixed(2)}`,
+                    detail: `${(metrics.totalMcpUsd / data.length).toFixed(4)}/site avg`
+                },
+                {
+                    type: 'cost',
+                    title: 'Cost Ratio',
+                    value: `${(metrics.totalMcpUsd / metrics.totalCliUsd).toFixed(1)}×`,
+                    detail: 'MCP vs CLI (higher = CLI cheaper)'
+                },
+                {
+                    type: 'turns',
                     title: 'CLI Turns Total',
                     value: metrics.totalCliTurns,
                     detail: `${(metrics.totalCliTurns / data.length).toFixed(1)} avg/site`
+                },
+                {
+                    type: 'turns',
+                    title: 'MCP Turns Total',
+                    value: metrics.totalMcpTurns,
+                    detail: `${(metrics.totalMcpTurns / data.length).toFixed(1)} avg/site`
+                },
+                {
+                    type: 'turns',
+                    title: 'Turns Ratio',
+                    value: `${(metrics.totalMcpTurns / metrics.totalCliTurns).toFixed(1)}×`,
+                    detail: 'MCP vs CLI (higher = more MCP turns)'
                 }
             ];
 
             metricsGrid.innerHTML = cards.map(card => `
-                <div class="metric-card">
+                <div class="metric-card ${card.type}">
                     <h3>${card.title}</h3>
                     <div class="metric-value">${card.value}</div>
                     <div class="metric-detail">${card.detail}</div>
@@ -665,21 +724,22 @@
         function initTimingDistChart() {
             const ctx = document.getElementById('timingDistChart').getContext('2d');
             const bins = 6;
-            const minCli = Math.min(...data.map(d => d.cli_ms));
-            const maxCli = Math.max(...data.map(d => d.cli_ms));
-            const binSize = (maxCli - minCli) / bins;
+            const allTimings = [...data.map(d => d.cli_ms), ...data.map(d => d.mcp_ms)];
+            const minTime = Math.min(...allTimings);
+            const maxTime = Math.max(...allTimings);
+            const binSize = (maxTime - minTime) / bins;
 
             const cliBins = Array(bins).fill(0);
             const mcpBins = Array(bins).fill(0);
             const labels = [];
 
             for (let i = 0; i < bins; i++) {
-                const start = minCli + i * binSize;
-                const end = start + binSize;
+                const start = minTime + i * binSize;
+                const end = i === bins - 1 ? maxTime + 1 : start + binSize;
                 labels.push(`${(start/1000).toFixed(1)}–${(end/1000).toFixed(1)}s`);
                 data.forEach(d => {
-                    if (d.cli_ms >= start && d.cli_ms <= end) cliBins[i]++;
-                    if (d.mcp_ms >= start && d.mcp_ms <= end) mcpBins[i]++;
+                    if (d.cli_ms >= start && d.cli_ms < end) cliBins[i]++;
+                    if (d.mcp_ms >= start && d.mcp_ms < end) mcpBins[i]++;
                 });
             }
 
@@ -736,7 +796,7 @@
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = filteredData.map(row => {
                 const speedRatio = (row.mcp_ms / row.cli_ms).toFixed(1);
-                const costRatio = (row.mcp_usd / row.cli_usd).toFixed(1);
+                const costRatio = row.cli_usd > 0 ? (row.mcp_usd / row.cli_usd).toFixed(1) : 'N/A';
                 return `
                     <tr>
                         <td>${row.site}</td>
@@ -748,7 +808,7 @@
                         <td class="number-cell">$${row.mcp_usd.toFixed(4)}</td>
                         <td class="number-cell">${row.turns_mcp}</td>
                         <td class="number-cell ${row.cli_ms < row.mcp_ms ? 'faster' : 'slower'}">${speedRatio}×</td>
-                        <td class="number-cell ${row.cli_usd < row.mcp_usd ? 'faster' : 'slower'}">${costRatio}×</td>
+                        <td class="number-cell ${costRatio === 'N/A' ? '' : (row.cli_usd < row.mcp_usd ? 'faster' : 'slower')}">${costRatio}${costRatio !== 'N/A' ? '×' : ''}</td>
                     </tr>
                 `;
             }).join('');

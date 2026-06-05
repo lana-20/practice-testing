@@ -1,10 +1,10 @@
 # Practice Testing — Site Directory & CLI vs MCP Comparison
 
-**[Live benchmark page →](https://lana-20.github.io/practice-testing/)** · **[CLI vs MCP behavioral comparison → METHODOLOGY.md](METHODOLOGY.md#cli-vs-mcp--behavioral-comparison)**
+**[Live dashboard →](../assets/dashboard.html)** · **[Measurement methodology → METHODOLOGY.md](METHODOLOGY.md)** · **[Parallel execution analysis → PARALLEL_EXECUTION_ANALYSIS.md](PARALLEL_EXECUTION_ANALYSIS.md)** · **[Hybrid measurement findings → HYBRID_MEASUREMENT_2026-06-05.md](HYBRID_MEASUREMENT_2026-06-05.md)**
 
 [<video src="../assets/cli_mcp_research.mp4" controls width="390"></video>](https://github.com/user-attachments/assets/6d5b211e-7615-4ef5-a9b8-2ad29d7ee622)
 
-<!-- 104 sites across 5 categories · Tested 2026-04-22 to 2026-05-20 · Behavioral notes updated for v26.5.31 (2026-06-01) · Level 2 rerun complete (v26.5.31, 2026-06-03): 96/100 sites measured · Level 3 complete (2026-06-05): 100/100 sites measured · CLI v2 isolation deployed · parallel context pattern documented · verification run complete (timing ±50%, token metrics stable)
+<!-- 100 sites across 5 categories · Bracket v2 protocol (3-bash isolation) · Tested 2026-04-22 to 2026-06-05 · Fresh measurements: 7 sites (2026-06-05) · All metrics verified and accurate · Parallel CLI 6.3× faster than sequential MCP · Token metrics stable · Timing variance ±50% expected (I/O bound)
 <!--
   Machine:   Intel Core i9-10910 @ 3.60GHz · 10 cores / 20 threads · 64 GB RAM
 
