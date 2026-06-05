@@ -165,15 +165,15 @@ Each section below includes an aggregate token/cost table — turn counts from v
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
 | bWAPP | local only | — | — | — | — | — | — | 100+ web vulnerabilities; requires local Docker/Apache setup; no public demo; info at itsecgames.com |
 | DVGA | local only | — | — | — | — | — | — | Damn Vulnerable GraphQL Application; GraphQL-specific vulnerabilities; requires local Docker; no public hosted demo |
-| Firing Range | https://public-firing-range.appspot.com/ | 1,663 | $0.000 | 26,402 | $0.591 | 15.9× | N/A | Google's XSS/CORS/Clickjacking test bed; **MCP map returns 44 DOM XSS entries** on sub-page vs CLI's 10 — MCP more comprehensive on categorized listing pages |
-| Gin & Juice Shop | https://ginandjuice.shop/ | 4,052 | $0.000 | 25,193 | $0.397 | 6.2× | N/A | PortSwigger's vulnerable e-commerce; home → 500 server error — use /catalog; search + 17 products accessible; MCP found search form + category filters |
-| Google Gruyere | https://google-gruyere.appspot.com/ | 1,741 | $0.000 | 40,519 | $0.499 | 23.3× | N/A | Google security codelab; 60 topic links covering XSS, XSRF, path traversal, code exec; use /start for an isolated session instance |
+| Firing Range | https://public-firing-range.appspot.com/ | 4,578 | $0.008 | 23,047 | $0.086 | 5.0× | 10.9× | Google's XSS/CORS/Clickjacking test bed; **MCP map returns 44 DOM XSS entries** on sub-page vs CLI's 10 — MCP more comprehensive on categorized listing pages |
+| Gin & Juice Shop | https://ginandjuice.shop/ | 12,474 | $0.039 | 24,606 | $0.066 | 2.0× | 1.7× | PortSwigger's vulnerable e-commerce; home → 500 server error — use /catalog; search + 17 products accessible; MCP found search form + category filters |
+| Google Gruyere | https://google-gruyere.appspot.com/ | 6,438 | $0.007 | 21,645 | $0.066 | 3.4× | 9.0× | Google security codelab; 60 topic links covering XSS, XSRF, path traversal, code exec; use /start for an isolated session instance |
 | LabEx Cybersecurity | https://labex.io/ | — | — | — | — | — | — | Account required; 403 on course pages without login; interactive cybersecurity learning paths |
-| OWASP Juice Shop | https://demo.owasp-juice.shop/ | 4,567 | $0.000 | 22,760 | $0.405 | 5.0× | N/A | **Critical behavioral difference:** CLI receives Application Error (Angular SSR crash); **MCP fully loads the app** with 15 products — most significant cross-interface divergence in the dataset |
-| OWASP VWAD | https://owasp.org/www-project-vulnerable-web-applications-directory/ | 2,599 | $0.000 | 20,456 | $0.407 | 7.9× | N/A | Directory of vulnerable web apps (not itself a test target); links to the full registry at vwad.owasp.org |
-| Try Hack Me | https://tryhackme.com/ | 2,903 | $0.000 | 23,945 | $0.407 | 8.2× | N/A | **Narrowest ratio in Security batch** — heavy Next.js app (7–15s load time) narrows gap; landing page fully accessible; MCP map returns 72 elements; labs require account |
+| OWASP Juice Shop | https://demo.owasp-juice.shop/ | 18,158 | $0.047 | 22,947 | $0.067 | 1.3× | 1.4× | **Critical behavioral difference:** CLI receives Application Error (Angular SSR crash); **MCP fully loads the app** with 15 products — most significant cross-interface divergence in the dataset |
+| OWASP VWAD | https://owasp.org/www-project-vulnerable-web-applications-directory/ | 12,250 | $0.019 | 23,504 | $0.073 | 1.9× | 3.9× | Directory of vulnerable web apps (not itself a test target); links to the full registry at vwad.owasp.org |
+| Try Hack Me | https://tryhackme.com/ | 10,781 | $0.006 | 26,476 | $0.066 | 2.5× | 11.4× | **Narrowest ratio in Security batch** — heavy Next.js app (7–15s load time) narrows gap; landing page fully accessible; MCP map returns 72 elements; labs require account |
 | VAmPI | local only | — | — | — | — | — | — | Vulnerable REST API; OWASP top 10 API vulnerabilities; requires local Docker; no public hosted demo |
-| Zero Bank | http://zero.webappsecurity.com/ | 3,645 | $0.000 | 28,043 | $0.408 | 7.7× | N/A | Micro Focus Fortify demo; **HTTP-only** — BiDi error in both CLI and MCP; curl returns 200 but Chrome/BiDi blocks HTTP origins entirely |
+| Zero Bank | http://zero.webappsecurity.com/ | 5,945 | $0.014 | 21,938 | $0.061 | 3.7× | 4.4× | Micro Focus Fortify demo; **HTTP-only** — BiDi error in both CLI and MCP; curl returns 200 but Chrome/BiDi blocks HTTP origins entirely |
 
 ---
 
@@ -189,23 +189,23 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
-| Airport Gap | https://airportgap.com/ | 2,428 | $0.000 | 18,691 | $0.446 | 7.7× | N/A | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
+| Airport Gap | https://airportgap.com/ | 6,327 | $0.007 | 24,371 | $0.066 | 3.9× | 8.9× | GET list, GET by IATA code, POST distance (KIX→SFO: 8,692km); JSON:API format (data.attributes.*); no auth required |
 | API Challenges | https://apichallenges.eviltester.com | 5,685 | $0.008 | 47,283 | $0.091 | 8.3× | 10.9× | **New site (added 2026-06-03):** Evil Tester; 4 sections: Simple API, API Challenges, API Simulator, HTTP Mirror; 15 refs on homepage; structured challenge format with auth, verb practice, payload manipulation |
-| AP+ Developers | https://developer.bpaygroup.com.au/ | 3,016 | $0.000 | 20,971 | $0.451 | 7.0× | N/A | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
-| Automation Exercise API | https://www.automationexercise.com/api_list | 5,734 | $0.000 | 23,232 | $0.415 | 4.1× | N/A | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
-| Chuck Norris API | https://api.chucknorris.io/ | 3,489 | $0.000 | 24,366 | $0.524 | 7.0× | N/A | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
-| Countries GraphQL | https://countries.trevorblades.com/ | 2,285 | $0.000 | 21,401 | $0.418 | 9.4× | N/A | Live GraphiQL editor; query countries, continents, languages; no auth; execute queries directly in browser |
-| FakeRestAPI | https://fakerestapi.azurewebsites.net/ | 5,550 | $0.000 | 22,848 | $0.420 | 4.1× | N/A | Azure-hosted Swagger UI; Activities, Authors, Books, CoverPhotos, Users endpoints; Azure cold start affects both CLI and MCP equally |
-| Go REST | https://gorest.co.in/ | 4,543 | $0.000 | 18,924 | $0.421 | 4.2× | N/A | Free REST API; token auth for write operations; code tabs (CURL/JS/Python/Ruby/Go) with live Run button; public read endpoints require no auth |
-| httpbin | https://httpbin.org/ | 25,008 | $0.000 | 24,094 | $0.422 | 1.0× | N/A | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
-| JSON Placeholder | https://jsonplaceholder.typicode.com/ | 2,400 | $0.000 | 20,272 | $0.423 | 8.4× | N/A | Full CRUD works; writes return 201 but don't persist (shared mock state); no auth; one of the fastest API sites in the dataset |
-| Poké API | https://pokeapi.co/ | 3,964 | $0.000 | 24,014 | $0.426 | 6.1× | N/A | Read-only; 1,350 Pokémon; aggressive caching; no auth |
+| AP+ Developers | https://developer.bpaygroup.com.au/ | 18,106 | $0.037 | 23,542 | $0.066 | 1.3× | 1.8× | Australian payment network developer portal (BPAY, eftpos, NPP, ConnectID); 17 elements; registration required for API access |
+| Automation Exercise API | https://www.automationexercise.com/api_list | 12,643 | $0.019 | 26,858 | $0.065 | 2.1× | 3.5× | GET products/brands, POST searchProduct (form-encoded), POST verifyLogin; uses custom responseCode in body not HTTP status |
+| Chuck Norris API | https://api.chucknorris.io/ | 6,571 | $0.006 | 24,648 | $0.064 | 3.8× | 10.0× | Joke API; 20 MCP elements; category browsing, free-text search, email subscription; no auth for GET endpoints |
+| Countries GraphQL | https://countries.trevorblades.com/ | 5,343 | $0.017 | 21,610 | $0.066 | 4.0× | 3.9× | Live GraphiQL editor; query countries, continents, languages; no auth; execute queries directly in browser |
+| FakeRestAPI | https://fakerestapi.azurewebsites.net/ | 16,933 | $0.017 | 33,304 | $0.067 | 2.0× | 4.0× | Azure-hosted Swagger UI; Activities, Authors, Books, CoverPhotos, Users endpoints; Azure cold start affects both CLI and MCP equally |
+| Go REST | https://gorest.co.in/ | 12,599 | $0.024 | 28,311 | $0.066 | 2.2× | 2.7× | Free REST API; token auth for write operations; code tabs (CURL/JS/Python/Ruby/Go) with live Run button; public read endpoints require no auth |
+| httpbin | https://httpbin.org/ | 9,285 | $0.019 | 26,028 | $0.063 | 2.8× | 3.3× | Full request inspection; GET/POST/status codes/delay/IP all work; CORS-friendly; no auth |
+| JSON Placeholder | https://jsonplaceholder.typicode.com/ | 4,909 | $0.000 | 24,123 | $0.065 | 4.9× | N/A | Full CRUD works; writes return 201 but don't persist (shared mock state); no auth; one of the fastest API sites in the dataset |
+| Poké API | https://pokeapi.co/ | 7,006 | $0.000 | 25,696 | $0.065 | 3.7× | N/A | Read-only; 1,350 Pokémon; aggressive caching; no auth |
 | QuickPizza | https://test-api.k6.io/ | 6,793 | $0.009 | 43,165 | $0.065 | 6.4× | 7.6× | **New site (added 2026-06-03):** Grafana k6 demo; **first WebSocket site in dataset** — live visitor count via WS; "Pizza, Please!" button returns pizza recommendation via REST; Login at `/my/login` (JWT); 6 refs; use eval click on button |
-| Restful Booker | https://restful-booker.herokuapp.com/ | 2,185 | $0.000 | 19,457 | $0.539 | 8.9× | N/A | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
-| Rick and Morty API | https://rickandmortyapi.com/graphql | 3,473 | $0.000 | 18,800 | $0.318 | 5.4× | N/A | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
-| ServeRest | https://serverest.dev/ | 2,598 | $0.000 | 18,713 | $0.429 | 7.2× | N/A | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
-| SpaceTraders | https://spacetraders.io/ | 3,827 | $0.000 | 18,587 | $0.430 | 4.9× | N/A | Space game REST API; 58-link docs site; register/play via API calls; no auth for documentation browsing |
-| Swagger Petstore | https://petstore.swagger.io/ | 3,349 | $0.000 | 19,685 | $0.543 | 5.9× | N/A | GET findByStatus, POST pet; shared mutable state — counts vary across sessions; no auth |
+| Restful Booker | https://restful-booker.herokuapp.com/ | 14,426 | $0.045 | 22,596 | $0.066 | 1.6× | 1.5× | GET list/by-ID, POST auth (admin/password123), POST create booking all work; Heroku cold-start possible |
+| Rick and Morty API | https://rickandmortyapi.com/graphql | 5,930 | $0.015 | 25,247 | $0.067 | 4.3× | 4.5× | GraphQL POST /graphql + REST /api/character/N both work; 826 characters; no auth |
+| ServeRest | https://serverest.dev/ | 4,963 | $0.000 | 28,191 | $0.065 | 5.7× | N/A | Brazilian Swagger API for users/products/shopping carts; 113 MCP elements (full Swagger UI); Portuguese/Spanish/English switcher; no auth needed for GET endpoints |
+| SpaceTraders | https://spacetraders.io/ | 7,037 | $0.000 | 27,549 | $0.072 | 3.9× | N/A | Space game REST API; 58-link docs site; register/play via API calls; no auth for documentation browsing |
+| Swagger Petstore | https://petstore.swagger.io/ | 7,937 | $0.000 | 32,482 | $0.064 | 4.1× | N/A | GET findByStatus, POST pet; shared mutable state — counts vary across sessions; no auth |
 | The Cat API | https://thecatapi.com/ | 2,206 | $0.000 | 20,726 | $0.321 | 9.4× | N/A | Cat image API; live voting/breeds/favorites demo on homepage; 29 MCP elements; free API key for write operations |
 
 **API testing note:** CLI is cheaper than MCP for API-only workflows. MCP overhead comes from the protocol layer — each `browser_navigate` + `browser_evaluate` pair generates its own LLM turn. CLI dispatches via bash and the LLM barely participates in execution.  
@@ -225,6 +225,6 @@ Each section below includes an aggregate token/cost table — turn counts from v
 
 | Site | URL | CLI (ms) | CLI ($) | MCP (ms) | MCP ($) | Speed | Cost× | Key Finding |
 |------|-----|----------|---------|----------|---------|-------|-------|-------------|
-| Blaze Demo | http://blazedemo.com/index.php | 7,179 | $0.000 | 27,049 | $0.653 | 3.8× | N/A | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
-| Demoblaze | https://demoblaze.com/ | 2,344 | $0.000 | 28,002 | $0.547 | 11.9× | N/A | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces (B3/MB3 still open, deferred); Demoblaze API at api.demoblaze.com |
-| Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 3,027 | $0.000 | 26,747 | $0.658 | 8.8× | N/A | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |
+| Blaze Demo | http://blazedemo.com/index.php | 18,033 | $0.017 | 23,810 | $0.066 | 1.3× | 4.0× | Full booking flow: search → reserve (5 flights) → purchase form (9 fields); submit via eval select.value + button.click(); 7 departure/destination options |
+| Demoblaze | https://demoblaze.com/ | 11,176 | $0.019 | 23,598 | $0.065 | 2.1× | 3.5× | Categories via #itemc (3s async load); **add-to-cart deadlocks daemon** — pre-stub window.alert before clicking in both interfaces (B3/MB3 still open, deferred); Demoblaze API at api.demoblaze.com |
+| Pet Store Web | https://petstore.octoperf.com/actions/Catalog.action | 5,803 | $0.015 | 21,987 | $0.066 | 3.8× | 4.5× | Login: j2ee / j2ee → "Welcome ABC!"; jsessionid in URL (path-based session, not cookie); map misses image map areas — use area[href] selectors or direct URL navigation |
