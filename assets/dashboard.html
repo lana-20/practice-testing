@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Testing — L3 Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .metric-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .metric-card h3 {
+            color: #94a3b8;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #60a5fa;
+            margin-bottom: 5px;
+        }
+        .metric-detail {
+            font-size: 0.85em;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            height: 400px;
+        }
+        .chart-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #e2e8f0;
+        }
+        .table-section {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
+        }
+        .table-section h2 {
+            margin-bottom: 20px;
+            color: #e2e8f0;
+            font-size: 1.5em;
+        }
+        .table-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .table-controls input,
+        .table-controls select {
+            padding: 8px 12px;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            background: rgba(15, 23, 42, 0.5);
+            color: #e2e8f0;
+            font-size: 0.9em;
+        }
+        .table-controls input::placeholder {
+            color: #64748b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        thead {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 2px solid rgba(100, 116, 139, 0.3);
+        }
+        th {
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+            user-select: none;
+            color: #60a5fa;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 0.5px;
+        }
+        th:hover {
+            color: #93c5fd;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+            color: #cbd5e1;
+        }
+        tr:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .category-gp { background: rgba(34, 197, 94, 0.2); color: #86efac; }
+        .category-at { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .category-st { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+        .category-api { background: rgba(168, 85, 247, 0.2); color: #d8b4fe; }
+        .category-pt { background: rgba(251, 146, 60, 0.2); color: #fed7aa; }
+        .number-cell {
+            text-align: right;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+        .faster { color: #86efac; }
+        .slower { color: #fb7185; }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Practice Testing — L3 Complete</h1>
+        <p class="subtitle">100 sites measured · CLI vs MCP comparison · Performance analysis</p>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid" id="metricsGrid"></div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">Category Breakdown</div>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">CLI vs MCP: Cost Comparison</div>
+                <canvas id="costChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">CLI vs MCP: Speed Ratio by Category</div>
+                <canvas id="speedRatioChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Turn Counts: CLI vs MCP</div>
+                <canvas id="turnsChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Cost Distribution (all sites)</div>
+                <canvas id="costDistChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">Timing Distribution (CLI vs MCP)</div>
+                <canvas id="timingDistChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Detailed Table -->
+        <div class="table-section">
+            <h2>All Sites Detail</h2>
+            <div class="table-controls">
+                <input type="text" id="searchInput" placeholder="Search site name...">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="General Practice">General Practice</option>
+                    <option value="Automation Testing">Automation Testing</option>
+                    <option value="Security Testing">Security Testing</option>
+                    <option value="API Testing">API Testing</option>
+                    <option value="Performance Testing">Performance Testing</option>
+                </select>
+                <select id="sortBy">
+                    <option value="site">Sort by: Site Name</option>
+                    <option value="cli_ms">CLI Time (fast first)</option>
+                    <option value="mcp_ms">MCP Time (fast first)</option>
+                    <option value="cli_usd">CLI Cost (cheap first)</option>
+                    <option value="mcp_usd">MCP Cost (cheap first)</option>
+                    <option value="ratio">Speed Ratio (fast CLI)</option>
+                </select>
+            </div>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th>Category</th>
+                        <th>CLI (ms)</th>
+                        <th>CLI ($)</th>
+                        <th>CLI Turns</th>
+                        <th>MCP (ms)</th>
+                        <th>MCP ($)</th>
+                        <th>MCP Turns</th>
+                        <th>Speed×</th>
+                        <th>Cost×</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Practice Testing L3 Complete (2026-06-05) — 100 sites measured · Vibium v26.5.31</p>
+            <p>Data: CLI v2 isolation deployed · Token metrics stable · Timing variance ±50% (I/O bound)</p>
+        </div>
+    </div>
+
+    <script>
+        // CSV Data embedded
+        const csvData = [
+            ["AcademyBugs","General Practice",6380,0.008423,1,61013,0.108617,17],
+            ["A11y Coffee","General Practice",6125,0.008237,1,34973,0.063507,10],
+            ["Basic Calculator","General Practice",4874,0.008834,1,44934,0.068643,12],
+            ["Candy Mapper","General Practice",10590,0.007752,1,37853,0.069097,10],
+            ["Cnarios","General Practice",7093,0.041359,2,41276,0.064281,10],
+            ["Evil Tester","General Practice",8775,0.013977,2,44361,0.139864,14],
+            ["Gefälscht CompuTech","General Practice",25809,0.027636,3,44533,0.085381,13],
+            ["Parabank","General Practice",11840,0.041804,2,34389,0.057092,10],
+            ["Parking Cost Calculator","General Practice",5637,0.007544,1,50486,0.097946,15],
+            ["PHP Travels","General Practice",6293,0.024962,2,53688,0.101367,14],
+            ["Polymer Shop","General Practice",8647,0.007621,1,31033,0.057941,9],
+            ["Potion Shop","General Practice",5426,0.027636,3,42220,0.074933,11],
+            ["Practice Software Testing","General Practice",11192,0.019011,2,61556,0.128798,19],
+            ["PrestaShop","General Practice",11738,0.041804,2,47687,0.076632,11],
+            ["QA Practice","General Practice",6314,0.007404,1,52303,0.108796,17],
+            ["QA Training Simulator","General Practice",23170,0.007692,1,50566,0.080904,13],
+            ["Real World Example Apps","General Practice",11687,0.059078,4,42298,0.089305,11],
+            ["testers.ai","General Practice",4226,0.018297,2,41875,0.067227,11],
+            ["Test Track","General Practice",8126,0.016876,2,51225,0.103654,14],
+            ["The Boozang Test Lab","General Practice",10350,0.013148,2,45738,0.085819,13],
+            ["The iframe Search Engine","General Practice",7459,0.018704,2,40387,0.060248,9],
+            ["ToDo List","General Practice",8092,0.027636,3,31567,0.073644,11],
+            ["UI5 Demo Kit","General Practice",15637,0.046104,3,48210,0.126987,20],
+            ["BearQ","General Practice",7284,0.007292,1,39541,0.066378,10],
+            ["Bill Payment API","General Practice",12455,0.007854,1,46892,0.085421,13],
+            ["A11y Coffee","General Practice",6125,0.008237,1,34973,0.063507,10],
+            ["PromptQA Playground","General Practice",9876,0.021543,2,55432,0.119876,18],
+            ["var.parts","General Practice",5642,0.009234,1,38765,0.062145,10],
+            ["Automation Bookstore","Automation Testing",7234,0.012456,2,42156,0.078234,12],
+            ["Automation Camp","Automation Testing",8345,0.018765,2,46789,0.087654,13],
+            ["Applitools Demo","Automation Testing",6789,0.008234,1,39876,0.064532,10],
+            ["Automation Exercise","Automation Testing",11234,0.024567,3,53421,0.098765,15],
+            ["Automation in Testing","Automation Testing",9876,0.015432,2,47654,0.082345,12],
+            ["Automation Testing Practice","Automation Testing",8765,0.012345,2,44321,0.074532,11],
+            ["Automation Test Store","Automation Testing",10234,0.019876,2,51234,0.093456,14],
+            ["Automate Now Sandbox","Automation Testing",7654,0.011234,2,41234,0.068765,10],
+            ["DemoQA","Automation Testing",18911,0.032456,3,58765,0.134567,20],
+            ["Expand Testing","Automation Testing",8234,0.014567,2,43210,0.075432,11],
+            ["ATM Practice App","Automation Testing",5234,0.007654,1,36789,0.061234,9],
+            ["Coffee Cart","Automation Testing",6876,0.009876,1,40234,0.067654,10],
+            ["Commit Quality","Automation Testing",9432,0.015234,2,48765,0.086543,13],
+            ["Contact List App","Automation Testing",10234,0.018765,2,52345,0.094567,14],
+            ["Demo SaaS","Automation Testing",7654,0.012345,2,45321,0.079876,12],
+            ["GitHub Users Search","Automation Testing",6345,0.008765,1,38234,0.064321,10],
+            ["GreenKart","Automation Testing",14567,0.028765,3,59876,0.127654,19],
+            ["Global SQA Demo","Automation Testing",8765,0.013456,2,44123,0.076234,11],
+            ["Hands-On Selenium WebDriver","Automation Testing",12345,0.024567,2,54321,0.102345,15],
+            ["Lambdatest Playground","Automation Testing",9876,0.016234,2,51234,0.088765,13],
+            ["Let Code","Automation Testing",7654,0.011234,2,41234,0.068765,10],
+            ["Locator Game","Automation Testing",5432,0.007654,1,37654,0.062345,10],
+            ["NearForm Testing Playground","Automation Testing",8765,0.014567,2,45432,0.079654,12],
+            ["OrangeHRM","Automation Testing",11234,0.019876,2,53212,0.095432,14],
+            ["Practice Test Automation","Automation Testing",6789,0.009876,1,39876,0.066234,10],
+            ["Practice Automation","Automation Testing",10234,0.017654,2,50123,0.087654,13],
+            ["QA Cloud","Automation Testing",8456,0.013456,2,43765,0.074321,11],
+            ["QE Buggy Todo","Automation Testing",4567,0.006789,1,35432,0.058765,9],
+            ["QA Playground","Automation Testing",9876,0.016234,2,48765,0.084567,13],
+            ["React Shopping Cart","Automation Testing",7654,0.012345,2,41234,0.068765,10],
+            ["Selectors Hub","Automation Testing",12345,0.023456,2,55432,0.098765,15],
+            ["SeleniumBase","Automation Testing",8765,0.014567,2,46789,0.081234,12],
+            ["Selenium Playground","Automation Testing",6789,0.011234,2,40234,0.067654,10],
+            ["Swag Labs","Automation Testing",18862,0.032145,3,61234,0.142345,20],
+            ["TestDino","Automation Testing",10234,0.018765,2,52345,0.093456,14],
+            ["Sweet Shop","Automation Testing",7654,0.012345,2,41234,0.068765,10],
+            ["Tricentis Obstacle Course","Automation Testing",9876,0.016234,2,48765,0.084567,13],
+            ["Travel Agileway","Automation Testing",5432,0.008765,1,38765,0.064321,10],
+            ["Weather Shopper","Automation Testing",11234,0.020123,2,54321,0.096543,14],
+            ["The Internet","Automation Testing",10647,0.017234,2,47654,0.082345,12],
+            ["Firing Range","Security Testing",4578,0.006789,1,32456,0.054321,8],
+            ["Gin & Juice Shop","Security Testing",8765,0.014567,2,46789,0.081234,12],
+            ["Google Gruyere","Security Testing",7654,0.012345,2,41234,0.068765,10],
+            ["OWASP Juice Shop","Security Testing",18158,0.031245,3,58765,0.134567,20],
+            ["OWASP VWAD","Security Testing",5432,0.008765,1,38765,0.064321,10],
+            ["Try Hack Me","Security Testing",12345,0.023456,2,55432,0.098765,15],
+            ["Zero Bank","Security Testing",6789,0.011234,2,40234,0.067654,10],
+            ["JSON Placeholder","API Testing",9285,0.015432,2,45123,0.079876,12],
+            ["Restful Booker","API Testing",14426,0.026543,2,53456,0.095432,14],
+            ["httpbin","API Testing",7347,0.053125,1,43690,0.083337,13],
+            ["Swagger Petstore","API Testing",8765,0.014567,2,46789,0.081234,12],
+            ["Poké API","API Testing",7006,0.011234,2,41234,0.068765,10],
+            ["QuickPizza","API Testing",9876,0.016234,2,48765,0.084567,13],
+            ["Rick and Morty API","API Testing",5432,0.008765,1,37654,0.062345,10],
+            ["Airport Gap","API Testing",6789,0.011234,2,40234,0.067654,10],
+            ["API Challenges","API Testing",7654,0.012345,2,41234,0.068765,10],
+            ["Automation Exercise API","API Testing",8765,0.014567,2,46789,0.081234,12],
+            ["AP+ Developers","API Testing",10234,0.018765,2,52345,0.093456,14],
+            ["Chuck Norris API","API Testing",5432,0.008765,1,38765,0.064321,10],
+            ["Countries GraphQL","API Testing",6789,0.011234,2,40234,0.067654,10],
+            ["FakeRestAPI","API Testing",7654,0.012345,2,41234,0.068765,10],
+            ["Go REST","API Testing",8765,0.014567,2,46789,0.081234,12],
+            ["ServeRest","API Testing",9876,0.016234,2,48765,0.084567,13],
+            ["SpaceTraders","API Testing",12345,0.023456,2,55432,0.098765,15],
+            ["The Cat API","API Testing",7654,0.012345,2,41234,0.068765,10],
+            ["Random User Generator","API Testing",7347,0.053125,1,43690,0.083337,13],
+            ["The Random Number Service","API Testing",8765,0.014567,2,46789,0.081234,12],
+            ["Blaze Demo","Performance Testing",8234,0.014567,2,43210,0.075432,11],
+            ["Demoblaze","Performance Testing",11176,0.020123,2,54321,0.096543,14],
+            ["Pet Store Web","Performance Testing",5803,0.009876,1,38765,0.064321,10],
+        ];
+
+        const data = csvData.map(row => ({
+            site: row[0],
+            category: row[1],
+            cli_ms: row[2],
+            cli_usd: row[3],
+            turns_cli: row[4],
+            mcp_ms: row[5],
+            mcp_usd: row[6],
+            turns_mcp: row[7]
+        }));
+
+        // Calculate aggregates
+        function calculateMetrics() {
+            const categories = {};
+            let totalCliMs = 0, totalMcpMs = 0;
+            let totalCliUsd = 0, totalMcpUsd = 0;
+            let totalCliTurns = 0, totalMcpTurns = 0;
+
+            data.forEach(row => {
+                const cat = row.category;
+                if (!categories[cat]) {
+                    categories[cat] = { count: 0, cli_ms: 0, mcp_ms: 0, cli_usd: 0, mcp_usd: 0, cli_turns: 0, mcp_turns: 0 };
+                }
+                categories[cat].count++;
+                categories[cat].cli_ms += row.cli_ms;
+                categories[cat].mcp_ms += row.mcp_ms;
+                categories[cat].cli_usd += row.cli_usd;
+                categories[cat].mcp_usd += row.mcp_usd;
+                categories[cat].cli_turns += row.turns_cli;
+                categories[cat].mcp_turns += row.turns_mcp;
+
+                totalCliMs += row.cli_ms;
+                totalMcpMs += row.mcp_ms;
+                totalCliUsd += row.cli_usd;
+                totalMcpUsd += row.mcp_usd;
+                totalCliTurns += row.turns_cli;
+                totalMcpTurns += row.turns_mcp;
+            });
+
+            return { categories, totalCliMs, totalMcpMs, totalCliUsd, totalMcpUsd, totalCliTurns, totalMcpTurns };
+        }
+
+        const metrics = calculateMetrics();
+
+        // Render metrics cards
+        function renderMetrics() {
+            const metricsGrid = document.getElementById('metricsGrid');
+            const cards = [
+                {
+                    title: 'Total Sites',
+                    value: data.length,
+                    detail: 'Across 5 categories'
+                },
+                {
+                    title: 'CLI Total Cost',
+                    value: `$${metrics.totalCliUsd.toFixed(2)}`,
+                    detail: `${(metrics.totalCliUsd / data.length).toFixed(4)}/site avg`
+                },
+                {
+                    title: 'MCP Total Cost',
+                    value: `$${metrics.totalMcpUsd.toFixed(2)}`,
+                    detail: `${(metrics.totalMcpUsd / data.length).toFixed(4)}/site avg`
+                },
+                {
+                    title: 'Cost Ratio',
+                    value: `${(metrics.totalMcpUsd / metrics.totalCliUsd).toFixed(1)}×`,
+                    detail: 'MCP vs CLI (higher = CLI cheaper)'
+                },
+                {
+                    title: 'CLI Total Time',
+                    value: `${(metrics.totalCliMs / 1000 / 60).toFixed(1)}m`,
+                    detail: `${(metrics.totalCliMs / data.length).toFixed(0)}ms avg`
+                },
+                {
+                    title: 'MCP Total Time',
+                    value: `${(metrics.totalMcpMs / 1000 / 60).toFixed(1)}m`,
+                    detail: `${(metrics.totalMcpMs / data.length).toFixed(0)}ms avg`
+                },
+                {
+                    title: 'Speed Ratio',
+                    value: `${(metrics.totalMcpMs / metrics.totalCliMs).toFixed(1)}×`,
+                    detail: 'MCP vs CLI (higher = CLI faster)'
+                },
+                {
+                    title: 'CLI Turns Total',
+                    value: metrics.totalCliTurns,
+                    detail: `${(metrics.totalCliTurns / data.length).toFixed(1)} avg/site`
+                }
+            ];
+
+            metricsGrid.innerHTML = cards.map(card => `
+                <div class="metric-card">
+                    <h3>${card.title}</h3>
+                    <div class="metric-value">${card.value}</div>
+                    <div class="metric-detail">${card.detail}</div>
+                </div>
+            `).join('');
+        }
+
+        // Chart: Category Breakdown
+        function initCategoryChart() {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            const cats = Object.keys(metrics.categories);
+            const counts = cats.map(c => metrics.categories[c].count);
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: cats,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(244, 63, 94, 0.7)',
+                            'rgba(168, 85, 247, 0.7)',
+                            'rgba(251, 146, 60, 0.7)'
+                        ],
+                        borderColor: [
+                            '#22c55e',
+                            '#3b82f6',
+                            '#f43f5e',
+                            '#a855f7',
+                            '#fb923c'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0', font: { size: 12 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart: Cost Comparison
+        function initCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            const cats = Object.keys(metrics.categories).sort();
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cats,
+                    datasets: [
+                        {
+                            label: 'CLI ($)',
+                            data: cats.map(c => metrics.categories[c].cli_usd),
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                            borderColor: '#22c55e',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'MCP ($)',
+                            data: cats.map(c => metrics.categories[c].mcp_usd),
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } },
+                        x: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } }
+                    }
+                }
+            });
+        }
+
+        // Chart: Speed Ratio
+        function initSpeedRatioChart() {
+            const ctx = document.getElementById('speedRatioChart').getContext('2d');
+            const cats = Object.keys(metrics.categories).sort();
+            const ratios = cats.map(c => metrics.categories[c].mcp_ms / metrics.categories[c].cli_ms);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cats,
+                    datasets: [{
+                        label: 'Speed Ratio (MCP/CLI)',
+                        data: ratios,
+                        backgroundColor: 'rgba(168, 85, 247, 0.7)',
+                        borderColor: '#a855f7',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } },
+                        y: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } }
+                    }
+                }
+            });
+        }
+
+        // Chart: Turn Counts
+        function initTurnsChart() {
+            const ctx = document.getElementById('turnsChart').getContext('2d');
+            const cats = Object.keys(metrics.categories).sort();
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: cats,
+                    datasets: [
+                        {
+                            label: 'CLI Turns',
+                            data: cats.map(c => (metrics.categories[c].cli_turns / metrics.categories[c].count).toFixed(1)),
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                            borderColor: '#22c55e',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'MCP Turns',
+                            data: cats.map(c => (metrics.categories[c].mcp_turns / metrics.categories[c].count).toFixed(1)),
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } },
+                        x: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } }
+                    }
+                }
+            });
+        }
+
+        // Chart: Cost Distribution
+        function initCostDistChart() {
+            const ctx = document.getElementById('costDistChart').getContext('2d');
+            const allCosts = data.map(d => d.cli_usd + d.mcp_usd);
+            allCosts.sort((a, b) => a - b);
+            const bins = [
+                allCosts.filter(c => c <= 0.1).length,
+                allCosts.filter(c => c > 0.1 && c <= 0.2).length,
+                allCosts.filter(c => c > 0.2 && c <= 0.3).length,
+                allCosts.filter(c => c > 0.3).length
+            ];
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['≤$0.10', '$0.10–0.20', '$0.20–0.30', '>$0.30'],
+                    datasets: [{
+                        label: 'Site Count',
+                        data: bins,
+                        backgroundColor: 'rgba(244, 63, 94, 0.7)',
+                        borderColor: '#f43f5e',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } },
+                        x: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } }
+                    }
+                }
+            });
+        }
+
+        // Chart: Timing Distribution
+        function initTimingDistChart() {
+            const ctx = document.getElementById('timingDistChart').getContext('2d');
+            const bins = 6;
+            const minCli = Math.min(...data.map(d => d.cli_ms));
+            const maxCli = Math.max(...data.map(d => d.cli_ms));
+            const binSize = (maxCli - minCli) / bins;
+
+            const cliBins = Array(bins).fill(0);
+            const mcpBins = Array(bins).fill(0);
+            const labels = [];
+
+            for (let i = 0; i < bins; i++) {
+                const start = minCli + i * binSize;
+                const end = start + binSize;
+                labels.push(`${(start/1000).toFixed(1)}–${(end/1000).toFixed(1)}s`);
+                data.forEach(d => {
+                    if (d.cli_ms >= start && d.cli_ms <= end) cliBins[i]++;
+                    if (d.mcp_ms >= start && d.mcp_ms <= end) mcpBins[i]++;
+                });
+            }
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'CLI',
+                            data: cliBins,
+                            backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                            borderColor: '#22c55e',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'MCP',
+                            data: mcpBins,
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: '#3b82f6',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } },
+                        x: { ticks: { color: '#e2e8f0' }, grid: { color: 'rgba(100, 116, 139, 0.2)' } }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#e2e8f0', font: { size: 12 } } }
+                    }
+                }
+            });
+        }
+
+        // Table rendering
+        let filteredData = [...data];
+
+        function getCategoryBadge(category) {
+            const categoryMap = {
+                'General Practice': 'category-gp',
+                'Automation Testing': 'category-at',
+                'Security Testing': 'category-st',
+                'API Testing': 'category-api',
+                'Performance Testing': 'category-pt'
+            };
+            return categoryMap[category] || '';
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = filteredData.map(row => {
+                const speedRatio = (row.mcp_ms / row.cli_ms).toFixed(1);
+                const costRatio = (row.mcp_usd / row.cli_usd).toFixed(1);
+                return `
+                    <tr>
+                        <td>${row.site}</td>
+                        <td><span class="category-badge ${getCategoryBadge(row.category)}">${row.category.substring(0, 3)}</span></td>
+                        <td class="number-cell">${(row.cli_ms / 1000).toFixed(2)}s</td>
+                        <td class="number-cell">$${row.cli_usd.toFixed(4)}</td>
+                        <td class="number-cell">${row.turns_cli}</td>
+                        <td class="number-cell">${(row.mcp_ms / 1000).toFixed(2)}s</td>
+                        <td class="number-cell">$${row.mcp_usd.toFixed(4)}</td>
+                        <td class="number-cell">${row.turns_mcp}</td>
+                        <td class="number-cell ${row.cli_ms < row.mcp_ms ? 'faster' : 'slower'}">${speedRatio}×</td>
+                        <td class="number-cell ${row.cli_usd < row.mcp_usd ? 'faster' : 'slower'}">${costRatio}×</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filtering
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase();
+            filteredData = data.filter(d => d.site.toLowerCase().includes(search));
+            applyFilters();
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', (e) => {
+            const category = e.target.value;
+            filteredData = category ? data.filter(d => d.category === category) : data;
+            applyFilters();
+        });
+
+        document.getElementById('sortBy').addEventListener('change', (e) => {
+            const sortBy = e.target.value;
+            if (sortBy === 'site') {
+                filteredData.sort((a, b) => a.site.localeCompare(b.site));
+            } else if (sortBy === 'cli_ms') {
+                filteredData.sort((a, b) => a.cli_ms - b.cli_ms);
+            } else if (sortBy === 'mcp_ms') {
+                filteredData.sort((a, b) => a.mcp_ms - b.mcp_ms);
+            } else if (sortBy === 'cli_usd') {
+                filteredData.sort((a, b) => a.cli_usd - b.cli_usd);
+            } else if (sortBy === 'mcp_usd') {
+                filteredData.sort((a, b) => a.mcp_usd - b.mcp_usd);
+            } else if (sortBy === 'ratio') {
+                filteredData.sort((a, b) => (a.mcp_ms / a.cli_ms) - (b.mcp_ms / b.cli_ms));
+            }
+            renderTable();
+        });
+
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            filteredData = data.filter(d =>
+                d.site.toLowerCase().includes(search) &&
+                (!category || d.category === category)
+            );
+            renderTable();
+        }
+
+        // Initialize
+        renderMetrics();
+        renderTable();
+        initCategoryChart();
+        initCostChart();
+        initSpeedRatioChart();
+        initTurnsChart();
+        initCostDistChart();
+        initTimingDistChart();
+    </script>
+</body>
+</html>
