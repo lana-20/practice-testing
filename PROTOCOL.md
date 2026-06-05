@@ -229,3 +229,31 @@ ServeRest L3 (0 turns — solo rerun pending), SpaceTraders L3 (0 turns — solo
 Blaze Demo L3✓ (URL collision during batch C2, MCP valid), Demoblaze L3✓ (URL collision during batch C2, MCP valid), Pet Store Web L3✓
 
 Per-site test steps for each site are documented in the Site Directory in SKILL.md.
+
+---
+
+## Parallel context isolation pattern (vibium, 2026-06-04)
+
+**Problem:** Parallel CLI agents all call `vibium go` on shared daemon → last agent's URL wins, earlier agents measure wrong pages.
+
+**Solution (from agent-test-automation M05):** Use vibium's parallel contexts — one browser, N contexts, N pages. Each agent in its own context = isolated, no collision.
+
+```python
+from vibium import browser as vibium_browser
+from concurrent.futures import ThreadPoolExecutor
+
+browser = vibium_browser.start()
+try:
+    contexts = [browser.new_context() for _ in sites]
+    pages = [ctx.new_page() for ctx in contexts]
+    with ThreadPoolExecutor(max_workers=2) as pool:  # Vibium cap: 2 workers
+        futures = {pool.submit(run_site, site, page): site for site, page in zip(sites, pages)}
+        for future in as_completed(futures):
+            results.append(future.result())
+finally:
+    for ctx in contexts:
+        ctx.close()
+    browser.stop()
+```
+
+Reference: agent-test-automation/05-multi-agent/vibium/run.py (lines 127–139 in SKILL.md).
